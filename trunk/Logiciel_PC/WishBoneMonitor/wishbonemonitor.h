@@ -1,8 +1,8 @@
 #ifndef WISHBONEMONITOR_H
 #define WISHBONEMONITOR_H
 
-#include "wishboneregister.h"
-#include "mailboxdriver.h"
+#include "PanelDoc.h"
+#include "MailboxDriver.h"
 #include <QList>
 
 class WishBoneMonitor
@@ -11,16 +11,15 @@ public:
     WishBoneMonitor();
     ~WishBoneMonitor();
 
-    QList<WishBoneRegister*>*   GetWishBoneRegisterList(){return & m_listWishBoneRegister;}
-    MailBoxDriver*              GetMailBox(){return m_pMailBox;}
+    QList<PanelDoc*>*       GetPanelList(){return & m_listPanel;}
+    MailBoxDriver*          GetMailBox(){return m_pMailBox;}
 
-    void    AddRegister(WishBoneRegister* Reg);
+    void    AddPanel(PanelDoc* Panel);
     void    ClearList();
-    int     FindRegisters(unsigned long Address, int* IdxTab);
 
 private:
-    QList<WishBoneRegister*>    m_listWishBoneRegister;
-    MailBoxDriver*              m_pMailBox;
+    QList<PanelDoc*>        m_listPanel;
+    MailBoxDriver*          m_pMailBox;
 };
 
 #endif // WISHBONEMONITOR_H

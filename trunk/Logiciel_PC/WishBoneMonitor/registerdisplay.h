@@ -9,14 +9,14 @@
 #include <QPushButton>
 #include <QIntValidator>
 
-#include "wishbonemonitor.h"
+#include "mailboxdriver.h"
 #include "wishboneregister.h"
 
 class RegisterDisplay : public QWidget
 {
     Q_OBJECT
 public:
-    explicit RegisterDisplay(WishBoneMonitor *pDoc, WishBoneRegister *pRegister = 0, QWidget *parent = 0);
+    explicit RegisterDisplay(MailBoxDriver *m_pMailBox, WishBoneRegister *pRegister = 0, QWidget *parent = 0);
     RegisterDisplay(const RegisterDisplay & Reg);
     RegisterDisplay& operator=(const RegisterDisplay & Reg);
     ~RegisterDisplay();
@@ -36,7 +36,7 @@ private:
     QGroupBox   m_GroupBox;
     QGridLayout m_Layout;
 
-    WishBoneMonitor*    m_pDoc;
+    MailBoxDriver*      m_pMailBox;
     WishBoneRegister*   m_pRegister;
     QLabel      m_LabelPeriod;
     QLineEdit   m_EditPeriod;

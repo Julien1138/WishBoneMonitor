@@ -8,8 +8,9 @@
 #include <QAction>
 #include <QComboBox>
 
-#include "controltab.h"
 #include "wishbonemonitor.h"
+#include "paneldoc.h"
+#include "controltab.h"
 #include "QextSerialBase/qextserialenumerator.h"
 #include "QextSerialBase/qextserialport.h"
 
@@ -27,10 +28,13 @@ public slots :
     void    NewConfig();
     void    OpenConfig();
     void    SaveConfig();
-    void    AddRegister();
     void    ConnectSerial();
     void    DisconnectSerial();
     void    ReceiveSerial();
+    void    AddRegister();
+    void    AddTab();
+    void    CloseTab(int i);
+    void    ChangeTab(int i);
 
 private:
     QToolBar*   m_pToolBar;
@@ -41,9 +45,9 @@ private:
     QAction*    m_pActionConnectSerial;
     QAction*    m_pActionDisconnectSerial;
     QAction*    m_pActionAddRegister;
+    QAction*    m_pActionAddTab;
 
     QTabWidget* m_pOnglets;
-    ControlTab* m_pControlTab;
 
 private:
     WishBoneMonitor*    m_pDoc;

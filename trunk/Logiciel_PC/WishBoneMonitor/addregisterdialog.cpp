@@ -13,9 +13,9 @@ AddRegisterDialog::AddRegisterDialog(QWidget *parent) :
     m_pEditAddress = new QLineEdit;
     m_pFormLayout->addRow("Adresse du registre", m_pEditAddress);
     m_pEditValueMin = new QLineEdit;
-    m_pFormLayout->addRow("Valeur max du registre", m_pEditValueMin);
+    m_pFormLayout->addRow("Valeur min du registre", m_pEditValueMin);
     m_pEditValueMax = new QLineEdit;
-    m_pFormLayout->addRow("Valeur min du registre", m_pEditValueMax);
+    m_pFormLayout->addRow("Valeur max du registre", m_pEditValueMax);
     m_pEditUnit = new QLineEdit;
     m_pFormLayout->addRow("Unité du registre", m_pEditUnit);
     m_pMainLayout->addLayout(m_pFormLayout);
