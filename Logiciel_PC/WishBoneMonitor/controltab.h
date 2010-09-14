@@ -4,14 +4,16 @@
 #include <QWidget>
 #include <QList>
 #include <QGridLayout>
-#include "wishbonemonitor.h"
+#include "virtualtab.h"
+#include "PanelDoc.h"
 #include "registerdisplay.h"
+#include "mailboxdriver.h"
 
-class ControlTab : public QWidget
+class ControlTab : public VirtualTab
 {
     Q_OBJECT
 public:
-    explicit ControlTab(WishBoneMonitor *pDoc, QWidget *parent = 0);
+    explicit ControlTab(MailBoxDriver *pMailBox, PanelDoc *pDoc, QWidget *parent = 0);
     ~ControlTab();
 
     bool UpdateRegisters();
@@ -19,14 +21,19 @@ public:
     bool UpdateData();
     bool UpdateButtons();
 
+    TabType     GetType(){return eControlTab;}
+    PanelDoc*   GetPanel(){return m_pDoc;}
+
 signals:
 
 public slots:
+    void AddRegister();
 
 private:
     QGridLayout             m_Layout;
     QList<RegisterDisplay*> m_listRegisterDisplay;
-    WishBoneMonitor*        m_pDoc;
+    MailBoxDriver*          m_pMailBox;
+    PanelDoc*               m_pDoc;
 
 };
 

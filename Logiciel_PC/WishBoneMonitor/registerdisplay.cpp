@@ -2,10 +2,10 @@
 #include <QMessageBox>
 #include <QFont>
 
-RegisterDisplay::RegisterDisplay(WishBoneMonitor *pDoc, WishBoneRegister *pRegister, QWidget *parent)
+RegisterDisplay::RegisterDisplay(MailBoxDriver *pMailBox, WishBoneRegister *pRegister, QWidget *parent)
     : QWidget(parent)
     , m_GroupBox(this)
-    , m_pDoc(pDoc)
+    , m_pMailBox(pMailBox)
     , m_pRegister(pRegister)
     , m_pPeriodValidator(NULL)
 {
@@ -16,7 +16,7 @@ RegisterDisplay::RegisterDisplay(WishBoneMonitor *pDoc, WishBoneRegister *pRegis
 RegisterDisplay::RegisterDisplay(const RegisterDisplay & Reg)
     : QWidget(0)
     , m_GroupBox(this)
-    , m_pDoc(Reg.m_pDoc)
+    , m_pMailBox(Reg.m_pMailBox)
     , m_pRegister(Reg.m_pRegister)
 {
     Init();
@@ -26,7 +26,7 @@ RegisterDisplay::RegisterDisplay(const RegisterDisplay & Reg)
 RegisterDisplay& RegisterDisplay::operator=(const RegisterDisplay & Reg)
 {
     m_GroupBox.setParent(this);
-    m_pDoc = Reg.m_pDoc;
+    m_pMailBox = Reg.m_pMailBox;
     m_pRegister = Reg.m_pRegister;
 
     return *this;
@@ -112,7 +112,7 @@ void RegisterDisplay::Send()
 {
     m_pRegister->SetValue(m_EditValue.text().toUInt());
     m_pRegister->SetPeriod(m_EditPeriod.text().toUInt());
-    m_pDoc->GetMailBox()->SendRegister(m_pRegister);
+    m_pMailBox->SendRegister(m_pRegister);
 }
 
 void RegisterDisplay::UpdateReadValue()
@@ -125,7 +125,8 @@ void RegisterDisplay::UpdateReadValue()
         m_EditValue.setText(sTemp);
     }
 }
+
 void RegisterDisplay::UpdateButtonEnable()
 {
-    m_ButtonSend.setEnabled(m_pDoc->GetMailBox()->IsConnected());
+    m_ButtonSend.setEnabled(m_pMailBox->IsConnected());
 }

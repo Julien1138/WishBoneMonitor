@@ -20,7 +20,9 @@ SOURCES += main.cpp\
     wishboneregister.cpp \
     registerdisplay.cpp \
     addregisterdialog.cpp \
-    mailboxdriver.cpp
+    mailboxdriver.cpp \
+    paneldoc.cpp \
+    virtualtab.cpp
 
 HEADERS  += mainwindow.h \
     wishbonemonitor.h \
@@ -28,7 +30,9 @@ HEADERS  += mainwindow.h \
     wishboneregister.h \
     registerdisplay.h \
     addregisterdialog.h \
-    mailboxdriver.h
+    mailboxdriver.h \
+    paneldoc.h \
+    virtualtab.h
 
 CONFIG(debug, debug|release):LIBS  += -lqextserialportd
 else:LIBS  += -lqextserialport
