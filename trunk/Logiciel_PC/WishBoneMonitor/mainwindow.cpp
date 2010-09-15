@@ -77,6 +77,7 @@ void MainWindow::OpenConfig()
 
     if (!FileName.isEmpty())
     {
+        m_pOnglets->clear();
         m_pDoc->ClearList();
 
         QSettings settings(FileName, QSettings::IniFormat);
