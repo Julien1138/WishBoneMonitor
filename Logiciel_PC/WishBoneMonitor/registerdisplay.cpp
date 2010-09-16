@@ -1,6 +1,8 @@
 #include "registerdisplay.h"
 #include <QMessageBox>
 #include <QFont>
+#include <QContextMenuEvent>
+#include <QMenu>
 
 RegisterDisplay::RegisterDisplay(MailBoxDriver *pMailBox, WishBoneRegister *pRegister, QWidget *parent)
     : QWidget(parent)
@@ -91,11 +93,6 @@ void RegisterDisplay::Init()
     m_GroupBox.setTitle(m_pRegister->Name() + " : 0x" + sTemp);
     m_GroupBox.setLayout(&m_Layout);
     m_GroupBox.setGeometry(5, 5, 300, 100);
-
-//    QFont Font;
-//    Font = m_GroupBox.font();
-//    Font.setBold(true);
-//    m_GroupBox.setFont(Font);
 }
 
 void RegisterDisplay::Update()
@@ -130,3 +127,21 @@ void RegisterDisplay::UpdateButtonEnable()
 {
     m_ButtonSend.setEnabled(m_pMailBox->IsConnected());
 }
+
+void RegisterDisplay::contextMenuEvent(QContextMenuEvent * event)
+{
+    if(event->x() > 5 && event->x() < 300 &&
+       event->y() > 5 && event->y() < 100)
+    {
+        QMenu * menu = new QMenu(this);
+        m_pDeleteAction = menu->addAction("Supprimer", this, SLOT(Delete()));
+
+        menu->exec(event->globalPos());
+    }
+}
+
+void RegisterDisplay::Delete()
+{
+    emit Delete(this);
+}
+

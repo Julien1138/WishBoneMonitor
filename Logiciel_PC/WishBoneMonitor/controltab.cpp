@@ -30,6 +30,7 @@ bool ControlTab::UpdateRegisters()
     for (int i(0) ; i < m_pDoc->GetWishBoneRegisterList()->size() ; i++)
     {
         RegisterDisplay* Reg = new RegisterDisplay(m_pMailBox, m_pDoc->GetWishBoneRegisterList()->value(i));
+        connect(Reg, SIGNAL(Delete(RegisterDisplay*)), this, SLOT(DelRegister(RegisterDisplay*)));
         m_listRegisterDisplay.push_back(Reg);
     }
     return true;
@@ -83,4 +84,11 @@ void ControlTab::AddRegister()
         UpdateRegisters();
         UpdateLayout();
     }
+}
+
+void ControlTab::DelRegister(RegisterDisplay* pReg)
+{
+    m_pDoc->GetWishBoneRegisterList()->removeOne(pReg->Register());
+    UpdateRegisters();
+    UpdateLayout();
 }

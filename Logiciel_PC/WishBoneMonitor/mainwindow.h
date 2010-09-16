@@ -11,6 +11,7 @@
 #include "wishbonemonitor.h"
 #include "paneldoc.h"
 #include "controltab.h"
+#include "graphtab.h"
 #include "QextSerialBase/qextserialenumerator.h"
 #include "QextSerialBase/qextserialport.h"
 
@@ -45,6 +46,8 @@ private:
     QAction*    m_pActionConnectSerial;
     QAction*    m_pActionDisconnectSerial;
     QAction*    m_pActionAddRegister;
+
+    QToolBar*   m_pPanelToolBar;
     QAction*    m_pActionAddTab;
 
     QTabWidget* m_pOnglets;
