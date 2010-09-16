@@ -36,6 +36,8 @@ private:
     MailBoxDriver*          m_pMailBox;
     PanelDoc*               m_pDoc;
 
+    void contextMenuEvent(QContextMenuEvent * event);
+
 };
 
 #endif // CONTROLTAB_H

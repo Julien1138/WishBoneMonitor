@@ -12,7 +12,7 @@ MainWindow::MainWindow(WishBoneMonitor *pDoc, QWidget *parent)
 {
     setGeometry(100, 100, 800, 500);
 
-    // Barre d'outils
+    // Barre d'outils principale
     m_pToolBar = addToolBar("Barre d'outils");
     m_pActionNewConfig          = m_pToolBar->addAction(QIcon("New.png"), "Sauvegarder le configuration", this, SLOT(NewConfig()));
     m_pActionOpenConfig         = m_pToolBar->addAction(QIcon("Open.png"), "Sauvegarder le configuration", this, SLOT(OpenConfig()));
@@ -34,7 +34,9 @@ MainWindow::MainWindow(WishBoneMonitor *pDoc, QWidget *parent)
     m_pActionAddTab             = m_pToolBar->addAction(QIcon("AddTab.png"), "Ajouter un onglet", this, SLOT(AddTab()));
     m_pToolBar->addSeparator();
 
-    m_pActionAddRegister        = m_pToolBar->addAction(QIcon("AddRegister.png"), "Ajouter un registre", this, SLOT(AddRegister()));
+    // Barre d'outils d'onglet
+    m_pPanelToolBar = addToolBar("Barre d'outils Onglet");
+    m_pActionAddRegister        = m_pPanelToolBar->addAction(QIcon("AddRegister.png"), "Ajouter un registre", this, SLOT(AddRegister()));
 
     // Onglets
     m_pOnglets = new QTabWidget;

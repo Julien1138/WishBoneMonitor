@@ -29,16 +29,19 @@ public:
 
 signals:
     void Delete(RegisterDisplay* pReg);
+    void AddNew();
 
 public slots:
     void Send();
     void Delete();
+    void AddOther();
 
 private:
     void Init();
     void Update();
 
     void contextMenuEvent(QContextMenuEvent * event);
+    QAction*    m_pAddAction;
     QAction*    m_pDeleteAction;
 
     QGroupBox   m_GroupBox;

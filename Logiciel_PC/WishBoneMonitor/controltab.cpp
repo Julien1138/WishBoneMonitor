@@ -2,6 +2,8 @@
 #include "addregisterdialog.h"
 #include "wishboneregister.h"
 #include <math.h>
+#include <QContextMenuEvent>
+#include <QMenu>
 
 ControlTab::ControlTab(MailBoxDriver *pMailBox, PanelDoc *pDoc, QWidget *parent)
     : VirtualTab(parent)
@@ -31,6 +33,7 @@ bool ControlTab::UpdateRegisters()
     {
         RegisterDisplay* Reg = new RegisterDisplay(m_pMailBox, m_pDoc->GetWishBoneRegisterList()->value(i));
         connect(Reg, SIGNAL(Delete(RegisterDisplay*)), this, SLOT(DelRegister(RegisterDisplay*)));
+        connect(Reg, SIGNAL(AddNew()), this, SLOT(AddRegister()));
         m_listRegisterDisplay.push_back(Reg);
     }
     return true;
@@ -91,4 +94,16 @@ void ControlTab::DelRegister(RegisterDisplay* pReg)
     m_pDoc->GetWishBoneRegisterList()->removeOne(pReg->Register());
     UpdateRegisters();
     UpdateLayout();
+}
+
+void ControlTab::contextMenuEvent(QContextMenuEvent * event)
+{
+    if(event->x() > 5 && event->x() < width() &&
+       event->y() > 5 && event->y() < height())
+    {
+        QMenu * menu = new QMenu(this);
+        menu->addAction("Ajouter", this, SLOT(AddRegister()));
+
+        menu->exec(event->globalPos());
+    }
 }
