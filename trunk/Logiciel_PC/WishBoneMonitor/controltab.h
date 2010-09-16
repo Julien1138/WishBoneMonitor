@@ -28,6 +28,7 @@ signals:
 
 public slots:
     void AddRegister();
+    void DelRegister(RegisterDisplay* pReg);
 
 private:
     QGridLayout             m_Layout;

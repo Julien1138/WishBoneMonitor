@@ -35,7 +35,6 @@ MainWindow::MainWindow(WishBoneMonitor *pDoc, QWidget *parent)
     m_pToolBar->addSeparator();
 
     m_pActionAddRegister        = m_pToolBar->addAction(QIcon("AddRegister.png"), "Ajouter un registre", this, SLOT(AddRegister()));
-    //m_pActionAddRegister->setEnabled(false);
 
     // Onglets
     m_pOnglets = new QTabWidget;
@@ -43,6 +42,9 @@ MainWindow::MainWindow(WishBoneMonitor *pDoc, QWidget *parent)
     m_pOnglets->setMovable(true);
     connect(m_pOnglets, SIGNAL(tabCloseRequested(int)), this, SLOT(CloseTab(int)));
     connect(m_pOnglets, SIGNAL(currentChanged(int)), this, SLOT(ChangeTab(int)));
+
+    GraphTab* pGraphTab = new GraphTab;
+    m_pOnglets->addTab(pGraphTab, "Graph");
 
     setCentralWidget(m_pOnglets);
 }

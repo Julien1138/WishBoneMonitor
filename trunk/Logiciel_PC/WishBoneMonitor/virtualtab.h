@@ -10,6 +10,7 @@ class VirtualTab : public QWidget
     Q_OBJECT
 public:
     explicit VirtualTab(QWidget *parent = 0);
+
     virtual TabType GetType() = 0;
 
 signals:

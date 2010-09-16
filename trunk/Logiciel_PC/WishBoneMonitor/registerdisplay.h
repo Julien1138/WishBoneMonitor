@@ -8,6 +8,7 @@
 #include <QLineEdit>
 #include <QPushButton>
 #include <QIntValidator>
+#include <QAction>
 
 #include "mailboxdriver.h"
 #include "wishboneregister.h"
@@ -21,17 +22,24 @@ public:
     RegisterDisplay& operator=(const RegisterDisplay & Reg);
     ~RegisterDisplay();
 
+    WishBoneRegister*   Register(){return m_pRegister;}
+
     void UpdateReadValue();
     void UpdateButtonEnable();
 
 signals:
+    void Delete(RegisterDisplay* pReg);
 
 public slots:
     void Send();
+    void Delete();
 
 private:
     void Init();
     void Update();
+
+    void contextMenuEvent(QContextMenuEvent * event);
+    QAction*    m_pDeleteAction;
 
     QGroupBox   m_GroupBox;
     QGridLayout m_Layout;
