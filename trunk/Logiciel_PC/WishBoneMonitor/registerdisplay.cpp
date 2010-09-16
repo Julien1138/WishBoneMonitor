@@ -138,10 +138,22 @@ void RegisterDisplay::contextMenuEvent(QContextMenuEvent * event)
 
         menu->exec(event->globalPos());
     }
+    else
+    {
+        QMenu * menu = new QMenu(this);
+        m_pAddAction = menu->addAction("Ajouter", this, SLOT(AddOther()));
+
+        menu->exec(event->globalPos());
+    }
 }
 
 void RegisterDisplay::Delete()
 {
     emit Delete(this);
+}
+
+void RegisterDisplay::AddOther()
+{
+    emit AddNew();
 }
 
