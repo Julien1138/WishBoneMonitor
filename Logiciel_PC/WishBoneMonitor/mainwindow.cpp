@@ -45,9 +45,6 @@ MainWindow::MainWindow(WishBoneMonitor *pDoc, QWidget *parent)
     connect(m_pOnglets, SIGNAL(tabCloseRequested(int)), this, SLOT(CloseTab(int)));
     connect(m_pOnglets, SIGNAL(currentChanged(int)), this, SLOT(ChangeTab(int)));
 
-    GraphTab* pGraphTab = new GraphTab;
-    m_pOnglets->addTab(pGraphTab, "Graph");
-
     setCentralWidget(m_pOnglets);
 }
 
@@ -63,6 +60,11 @@ void MainWindow::resizeEvent(QResizeEvent * event)
         if (((VirtualTab*)(m_pOnglets->currentWidget()))->GetType() == eControlTab)
         {
            ((ControlTab*)(m_pOnglets->currentWidget()))->UpdateLayout();
+        }
+        // S'il s'agit d'un onglet de graphe
+        else if (((VirtualTab*)(m_pOnglets->currentWidget()))->GetType() == eGraphTab)
+        {
+           ((GraphTab*)(m_pOnglets->currentWidget()))->UpdateLayout();
         }
     }
 
@@ -282,6 +284,8 @@ void MainWindow::AddTab()
             }
             else if (PanelType == "Graphe")
             {
+                GraphTab* pGraphTab = new GraphTab;
+                m_pOnglets->addTab(pGraphTab, "Graph");
             }
         }
     }
@@ -293,6 +297,12 @@ void MainWindow::CloseTab(int i)
     if (((VirtualTab*)(m_pOnglets->widget(i)))->GetType() == eControlTab)
     {
         m_pDoc->GetPanelList()->removeOne(((ControlTab*)(m_pOnglets->widget(i)))->GetPanel());
+        m_pOnglets->removeTab(i);
+    }
+    // S'il s'agit d'un onglet de graphe
+    else if (((VirtualTab*)(m_pOnglets->widget(i)))->GetType() == eGraphTab)
+    {
+        //m_pDoc->GetPanelList()->removeOne(((GraphTab*)(m_pOnglets->widget(i)))->GetPanel());
         m_pOnglets->removeTab(i);
     }
 }
