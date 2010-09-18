@@ -9,6 +9,7 @@
 #include <QPushButton>
 #include <QRadioButton>
 #include <QLabel>
+#include <QComboBox>
 
 class AddRegisterDialog : public QDialog
 {
@@ -18,6 +19,7 @@ public:
 
     QString         Name(){return m_pEditName->text();}
     unsigned long   Address(){return m_pEditAddress->text().toULong(0,0);}
+    bool            Signed(){return (m_pComboSign->currentText() == "Signé");}
     long            ValueMin(){return m_pEditValueMin->text().toLong(0,0);}
     long            ValueMax(){return m_pEditValueMax->text().toLong(0,0);}
     QString         Unit(){return m_pEditUnit->text();}
@@ -26,6 +28,7 @@ public:
 signals:
 
 public slots:
+    void            ComboSignChange(QString);
 
 private:
     QVBoxLayout*    m_pMainLayout;
@@ -42,6 +45,7 @@ private:
     QHBoxLayout*    m_pButtonsLayout;
     QPushButton*    m_pOKButton;
     QPushButton*    m_pCancelButton;
+    QComboBox*      m_pComboSign;
 
 };
 

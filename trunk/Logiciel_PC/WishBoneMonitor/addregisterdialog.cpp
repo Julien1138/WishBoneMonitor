@@ -9,12 +9,21 @@ AddRegisterDialog::AddRegisterDialog(QWidget *parent) :
 
     m_pFormLayout = new QFormLayout;
     m_pEditName = new QLineEdit;
+    m_pEditName->setText("Registre");
     m_pFormLayout->addRow("Nom du registre", m_pEditName);
     m_pEditAddress = new QLineEdit;
+    m_pEditAddress->setText("0x0000");
     m_pFormLayout->addRow("Adresse du registre", m_pEditAddress);
+    m_pComboSign = new QComboBox;
+    m_pComboSign->addItem("Signé");
+    m_pComboSign->addItem("Non signé");
+    connect(m_pComboSign, SIGNAL(currentIndexChanged(QString)), this, SLOT(ComboSignChange(QString)));
+    m_pFormLayout->addRow("Signe du registre", m_pComboSign);
     m_pEditValueMin = new QLineEdit;
+    m_pEditValueMin->setText("-2147483648");
     m_pFormLayout->addRow("Valeur min du registre", m_pEditValueMin);
     m_pEditValueMax = new QLineEdit;
+    m_pEditValueMax->setText("2147483647");
     m_pFormLayout->addRow("Valeur max du registre", m_pEditValueMax);
     m_pEditUnit = new QLineEdit;
     m_pFormLayout->addRow("Unité du registre", m_pEditUnit);
@@ -43,3 +52,6 @@ AddRegisterDialog::AddRegisterDialog(QWidget *parent) :
     setLayout(m_pMainLayout);
 }
 
+void AddRegisterDialog::ComboSignChange(QString ComboText)
+{
+}
