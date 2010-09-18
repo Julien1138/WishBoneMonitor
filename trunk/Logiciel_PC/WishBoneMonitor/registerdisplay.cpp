@@ -88,9 +88,7 @@ void RegisterDisplay::Init()
     m_Layout.addWidget(&m_ButtonSend, 0, 3, 2, 1);
     connect(&m_ButtonSend, SIGNAL(clicked()), this, SLOT(Send()));
 
-    QString sTemp;
-    sTemp.setNum(m_pRegister->Address(), 16);
-    m_GroupBox.setTitle(m_pRegister->Name() + " : 0x" + sTemp);
+    m_GroupBox.setTitle(m_pRegister->Name() + " : 0x" + QString::number(m_pRegister->Address(), 16));
     m_GroupBox.setLayout(&m_Layout);
     m_GroupBox.setGeometry(5, 5, 300, 100);
 }
@@ -141,14 +139,14 @@ void RegisterDisplay::contextMenuEvent(QContextMenuEvent * event)
        event->y() > 5 && event->y() < 100)
     {
         QMenu * menu = new QMenu(this);
-        m_pDeleteAction = menu->addAction("Supprimer", this, SLOT(Delete()));
+        m_pDeleteAction = menu->addAction("Supprimer Registre", this, SLOT(Delete()));
 
         menu->exec(event->globalPos());
     }
     else
     {
         QMenu * menu = new QMenu(this);
-        m_pAddAction = menu->addAction("Ajouter", this, SLOT(AddOther()));
+        m_pAddAction = menu->addAction("Ajouter Registre", this, SLOT(AddOther()));
 
         menu->exec(event->globalPos());
     }

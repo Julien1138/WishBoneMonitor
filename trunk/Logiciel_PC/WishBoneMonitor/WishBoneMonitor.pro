@@ -23,7 +23,8 @@ SOURCES += main.cpp\
     mailboxdriver.cpp \
     paneldoc.cpp \
     virtualtab.cpp \
-    graphtab.cpp
+    graphtab.cpp \
+    graphdisplay.cpp
 
 HEADERS  += mainwindow.h \
     wishbonemonitor.h \
@@ -34,7 +35,8 @@ HEADERS  += mainwindow.h \
     mailboxdriver.h \
     paneldoc.h \
     virtualtab.h \
-    graphtab.h
+    graphtab.h \
+    graphdisplay.h
 
 CONFIG(debug, debug|release):LIBS  += -lqextserialportd
 else:LIBS  += -lqextserialport

@@ -99,11 +99,11 @@ void ControlTab::DelRegister(RegisterDisplay* pReg)
 
 void ControlTab::contextMenuEvent(QContextMenuEvent * event)
 {
-    if(event->x() > 5 && event->x() < width() &&
-       event->y() > 5 && event->y() < height())
+    if(event->x() > 0 && event->x() < width() &&
+       event->y() > 0 && event->y() < height())
     {
         QMenu * menu = new QMenu(this);
-        menu->addAction("Ajouter", this, SLOT(AddRegister()));
+        menu->addAction("Ajouter Registre", this, SLOT(AddRegister()));
 
         menu->exec(event->globalPos());
     }

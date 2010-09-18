@@ -3,9 +3,9 @@
 
 #include <QWidget>
 #include <QVBoxLayout>
-#include <qwt_plot.h>
-#include <qwt_plot_curve.h>
+#include <QList>
 #include "virtualtab.h"
+#include "graphdisplay.h"
 
 class GraphTab : public VirtualTab
 {
@@ -14,18 +14,21 @@ public:
     explicit GraphTab(QWidget *parent = 0);
     ~GraphTab();
 
+    bool UpdateLayout();
+
     TabType     GetType(){return eGraphTab;}
 
 signals:
 
 public slots:
+    void AddGraph();
+    void DelGraph(GraphDisplay*);
 
 private:
-    QVBoxLayout     m_Layout;
-    QwtPlot*        m_pPlot;
-    QwtPlotCurve*   m_pCurve;
-    double*         m_pX;
-    double*         m_pY;
+    QVBoxLayout             m_Layout;
+    QList<GraphDisplay*>    m_listGraphDisplay;
+
+    void contextMenuEvent(QContextMenuEvent * event);
 
 };
 
