@@ -81,6 +81,7 @@ void ControlTab::AddRegister()
                                                      Dlg.Address(),
                                                      Dlg.ValueMin(),
                                                      Dlg.ValueMax(),
+                                                     false,
                                                      Dlg.Unit(),
                                                      Dlg.Write_nRead());
         m_pDoc->AddRegister(Reg);

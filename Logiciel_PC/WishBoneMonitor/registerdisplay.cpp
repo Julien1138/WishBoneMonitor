@@ -118,7 +118,14 @@ void RegisterDisplay::UpdateReadValue()
     {
         QString sTemp;
 
-        sTemp.setNum(m_pRegister->Value());
+        if (m_pRegister->Signed())
+        {
+            sTemp.setNum(m_pRegister->Value());
+        }
+        else
+        {
+            sTemp.setNum((unsigned long)(m_pRegister->Value()));
+        }
         m_EditValue.setText(sTemp);
     }
 }
