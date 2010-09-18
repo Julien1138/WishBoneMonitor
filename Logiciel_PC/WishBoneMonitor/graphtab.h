@@ -14,18 +14,18 @@ public:
     explicit GraphTab(QWidget *parent = 0);
     ~GraphTab();
 
-//    TabType     GetType(){return eGraphTab;}
+    TabType     GetType(){return eGraphTab;}
 
 signals:
 
 public slots:
 
 private:
-//    QVBoxLayout     m_Layout;
-//    QwtPlot*        m_pPlot;
-//    QwtPlotCurve*   m_pCurve;
-//    double*         m_pX;
-//    double*         m_pY;
+    QVBoxLayout     m_Layout;
+    QwtPlot*        m_pPlot;
+    QwtPlotCurve*   m_pCurve;
+    double*         m_pX;
+    double*         m_pY;
 
 };
 

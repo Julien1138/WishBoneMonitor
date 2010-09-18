@@ -73,7 +73,7 @@ bool ControlTab::UpdateButtons()
 
 void ControlTab::AddRegister()
 {
-    AddRegisterDialog Dlg(this);
+    AddRegisterDialog Dlg(true, this);
     Dlg.setModal(true);
     if (Dlg.exec() == QDialog::Accepted)
     {

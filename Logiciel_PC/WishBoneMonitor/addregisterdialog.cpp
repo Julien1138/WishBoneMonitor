@@ -1,6 +1,6 @@
 #include "addregisterdialog.h"
 
-AddRegisterDialog::AddRegisterDialog(QWidget *parent) :
+AddRegisterDialog::AddRegisterDialog(bool Writable, QWidget *parent) :
     QDialog(parent)
 {
     setWindowTitle("Ajouter un Registre WishBone...");
@@ -41,6 +41,14 @@ AddRegisterDialog::AddRegisterDialog(QWidget *parent) :
     m_pRadioLayout->addWidget(m_pRadioRead);
     connect(m_pRadioRead, SIGNAL(clicked()), this, SLOT(ReadWriteChange()));
     connect(m_pRadioWrite, SIGNAL(clicked()), this, SLOT(ReadWriteChange()));
+    if (Writable)
+    {
+        m_pRadioWrite->setEnabled(true);
+    }
+    else
+    {
+        m_pRadioWrite->setEnabled(false);
+    }
     m_pMainLayout->addLayout(m_pRadioLayout);
 
     m_pButtonsLayout = new QHBoxLayout;
