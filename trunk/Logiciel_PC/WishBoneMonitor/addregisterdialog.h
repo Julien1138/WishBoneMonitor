@@ -15,7 +15,7 @@ class AddRegisterDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit AddRegisterDialog(QWidget *parent = 0);
+    explicit AddRegisterDialog(bool Writable, QWidget *parent = 0);
 
     QString         Name(){return m_pEditName->text();}
     unsigned long   Address(){return m_pEditAddress->text().toULong(0,0);}

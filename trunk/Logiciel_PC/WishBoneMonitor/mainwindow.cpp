@@ -45,8 +45,8 @@ MainWindow::MainWindow(WishBoneMonitor *pDoc, QWidget *parent)
     connect(m_pOnglets, SIGNAL(tabCloseRequested(int)), this, SLOT(CloseTab(int)));
     connect(m_pOnglets, SIGNAL(currentChanged(int)), this, SLOT(ChangeTab(int)));
 
-//    GraphTab* pGraphTab = new GraphTab;
-//    m_pOnglets->addTab(pGraphTab, "Graph");
+    GraphTab* pGraphTab = new GraphTab;
+    m_pOnglets->addTab(pGraphTab, "Graph");
 
     setCentralWidget(m_pOnglets);
 }

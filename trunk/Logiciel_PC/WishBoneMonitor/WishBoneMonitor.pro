@@ -51,7 +51,8 @@ INCLUDEPATH += $${QWT_ROOT}/src
 DEPENDPATH  += $${QWT_ROOT}/src
 OBJECTS_DIR  = obj
 
-QWTLIB       = qwt
+CONFIG(debug, debug|release):QWTLIB = qwtd
+else:QWTLIB  = qwt
 
 win32 {
     contains(CONFIG, QwtDll) {
