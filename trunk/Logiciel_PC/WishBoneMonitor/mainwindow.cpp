@@ -45,8 +45,8 @@ MainWindow::MainWindow(WishBoneMonitor *pDoc, QWidget *parent)
     connect(m_pOnglets, SIGNAL(tabCloseRequested(int)), this, SLOT(CloseTab(int)));
     connect(m_pOnglets, SIGNAL(currentChanged(int)), this, SLOT(ChangeTab(int)));
 
-    GraphTab* pGraphTab = new GraphTab;
-    m_pOnglets->addTab(pGraphTab, "Graph");
+//    GraphTab* pGraphTab = new GraphTab;
+//    m_pOnglets->addTab(pGraphTab, "Graph");
 
     setCentralWidget(m_pOnglets);
 }
@@ -104,6 +104,7 @@ void MainWindow::OpenConfig()
                                                                  settings.value("Registre_" + QString::number(j) + "_" + QString::number(i) + "/Adresse").toUInt(),
                                                                  settings.value("Registre_" + QString::number(j) + "_" + QString::number(i) + "/ValeurMin").toInt(),
                                                                  settings.value("Registre_" + QString::number(j) + "_" + QString::number(i) + "/ValeurMax").toInt(),
+                                                                 settings.value("Registre_" + QString::number(j) + "_" + QString::number(i) + "/Signed").toString() == "Signed" ? true : false,
                                                                  settings.value("Registre_" + QString::number(j) + "_" + QString::number(i) + "/Unite").toString(),
                                                                  settings.value("Registre_" + QString::number(j) + "_" + QString::number(i) + "/Direction").toString() == "Write" ? true : false,
                                                                  settings.value("Registre_" + QString::number(j) + "_" + QString::number(i) + "/Periode").toInt());
@@ -169,6 +170,7 @@ void MainWindow::SaveConfig()
                     settings.setValue("Adresse", QString::number(((ControlTab*)(m_pOnglets->widget(j)))->GetPanel()->GetWishBoneRegisterList()->value(i)->Address()));
                     settings.setValue("ValeurMin", QString::number(((ControlTab*)(m_pOnglets->widget(j)))->GetPanel()->GetWishBoneRegisterList()->value(i)->ValueMin()));
                     settings.setValue("ValeurMax", QString::number(((ControlTab*)(m_pOnglets->widget(j)))->GetPanel()->GetWishBoneRegisterList()->value(i)->ValueMax()));
+                    settings.setValue("Signed", ((ControlTab*)(m_pOnglets->widget(j)))->GetPanel()->GetWishBoneRegisterList()->value(i)->Signed() ? "Signed" : "Unsigned");
                     settings.setValue("Unite", ((ControlTab*)(m_pOnglets->widget(j)))->GetPanel()->GetWishBoneRegisterList()->value(i)->Unit());
                     settings.setValue("Direction", ((ControlTab*)(m_pOnglets->widget(j)))->GetPanel()->GetWishBoneRegisterList()->value(i)->Write_nRead() ? "Write" : "Read");
                     settings.setValue("Periode", QString::number(((ControlTab*)(m_pOnglets->widget(j)))->GetPanel()->GetWishBoneRegisterList()->value(i)->Period()));

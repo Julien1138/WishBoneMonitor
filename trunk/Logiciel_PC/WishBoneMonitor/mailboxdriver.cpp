@@ -112,16 +112,16 @@ bool MailBoxDriver::DecodeRegister(WishBoneRegister* Reg)
 
     if ((Data[0] == HEADER_RECEIVE) && Checksum(Data, 10) == 0)
     {
-        Reg->SetAddress((Data[1] << 8) +
-                         Data[2]);
+        Reg->SetAddress(((unsigned char)Data[1] << 8) +
+                         (unsigned char)Data[2]);
 
-        Reg->SetValue((Data[3] << 24) +
-                      (Data[4] << 16) +
-                      (Data[5] << 8) +
-                       Data[6]);
+        Reg->SetValue(((unsigned char)Data[3] << 24) +
+                      ((unsigned char)Data[4] << 16) +
+                      ((unsigned char)Data[5] << 8) +
+                       (unsigned char)Data[6]);
 
-        Reg->SetDate((Data[7] << 8) +
-                      Data[8]);
+        Reg->SetDate(((unsigned char)Data[7] << 8) +
+                      (unsigned char)Data[8]);
 
         return true;
     }
