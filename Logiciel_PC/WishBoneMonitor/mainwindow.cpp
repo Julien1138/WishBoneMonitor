@@ -269,7 +269,7 @@ void MainWindow::AddTab()
 
     if (ok)
     {
-        QString PanelName = QInputDialog::getText(this, "Nom du Panel", "Quel nom souhaites vous\ndonner à votre panel ?", QLineEdit::Normal, QString(), &ok);
+        QString PanelName = QInputDialog::getText(this, "Nom du Panel", "Quel nom souhaites vous\ndonner à votre panel ?", QLineEdit::Normal, PanelType, &ok);
 
         if (ok)
         {

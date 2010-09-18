@@ -17,13 +17,14 @@ AddRegisterDialog::AddRegisterDialog(QWidget *parent) :
     m_pComboSign = new QComboBox;
     m_pComboSign->addItem("Signé");
     m_pComboSign->addItem("Non signé");
-    connect(m_pComboSign, SIGNAL(currentIndexChanged(QString)), this, SLOT(ComboSignChange(QString)));
     m_pFormLayout->addRow("Signe du registre", m_pComboSign);
     m_pEditValueMin = new QLineEdit;
     m_pEditValueMin->setText("-2147483648");
+    m_pEditValueMin->setEnabled(false);
     m_pFormLayout->addRow("Valeur min du registre", m_pEditValueMin);
     m_pEditValueMax = new QLineEdit;
     m_pEditValueMax->setText("2147483647");
+    m_pEditValueMax->setEnabled(false);
     m_pFormLayout->addRow("Valeur max du registre", m_pEditValueMax);
     m_pEditUnit = new QLineEdit;
     m_pFormLayout->addRow("Unité du registre", m_pEditUnit);
@@ -38,6 +39,8 @@ AddRegisterDialog::AddRegisterDialog(QWidget *parent) :
     m_pRadioRead = new QRadioButton("Lecture");
     m_pRadioRead->setChecked(true);
     m_pRadioLayout->addWidget(m_pRadioRead);
+    connect(m_pRadioRead, SIGNAL(clicked()), this, SLOT(ReadWriteChange()));
+    connect(m_pRadioWrite, SIGNAL(clicked()), this, SLOT(ReadWriteChange()));
     m_pMainLayout->addLayout(m_pRadioLayout);
 
     m_pButtonsLayout = new QHBoxLayout;
@@ -52,6 +55,16 @@ AddRegisterDialog::AddRegisterDialog(QWidget *parent) :
     setLayout(m_pMainLayout);
 }
 
-void AddRegisterDialog::ComboSignChange(QString ComboText)
+void AddRegisterDialog::ReadWriteChange()
 {
+    if (m_pRadioWrite->isChecked())
+    {
+        m_pEditValueMin->setEnabled(true);
+        m_pEditValueMax->setEnabled(true);
+    }
+    else
+    {
+        m_pEditValueMin->setEnabled(false);
+        m_pEditValueMax->setEnabled(false);
+    }
 }
