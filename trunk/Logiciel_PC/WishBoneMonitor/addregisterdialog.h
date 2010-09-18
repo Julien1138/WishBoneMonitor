@@ -28,7 +28,9 @@ public:
 signals:
 
 public slots:
-    void            ComboSignChange(QString);
+
+private slots:
+    void            ReadWriteChange();
 
 private:
     QVBoxLayout*    m_pMainLayout;
