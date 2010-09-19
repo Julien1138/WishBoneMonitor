@@ -32,7 +32,6 @@ public slots :
     void    ConnectSerial();
     void    DisconnectSerial();
     void    ReceiveSerial();
-    void    AddRegister();
     void    AddTab();
     void    CloseTab(int i);
     void    ChangeTab(int i);

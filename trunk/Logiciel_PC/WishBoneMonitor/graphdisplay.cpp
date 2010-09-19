@@ -2,50 +2,23 @@
 #include "qwt_legend.h"
 #include <QContextMenuEvent>
 #include <QMenu>
+#include "addregisterdialog.h"
 
-GraphDisplay::GraphDisplay(QWidget *parent) :
+GraphDisplay::GraphDisplay(PanelDoc *pDoc, QWidget *parent) :
     QWidget(parent),
-    m_GroupBox(this)
+    m_GroupBox(this),
+    m_pDoc(pDoc)
 {
-    m_pX = new double[10];
-    m_pX[0] = 0;
-    m_pX[1] = 1;
-    m_pX[2] = 2;
-    m_pX[3] = 3;
-    m_pX[4] = 4;
-    m_pX[5] = 5;
-    m_pX[6] = 6;
-    m_pX[7] = 7;
-    m_pX[8] = 8;
-    m_pX[9] = 9;
-
-    m_pY = new double[10];
-    m_pY[0] = 0;
-    m_pY[1] = -1;
-    m_pY[2] = 2;
-    m_pY[3] = -3;
-    m_pY[4] = 4;
-    m_pY[5] = -5;
-    m_pY[6] = 6;
-    m_pY[7] = -7;
-    m_pY[8] = 8;
-    m_pY[9] = -9;
-
-    m_pPlot = new QwtPlot(QwtText("Test"));
+    m_pPlot = new QwtPlot();
     m_pPlot->insertLegend(new QwtLegend(), QwtPlot::RightLegend);
-    m_pPlot->setAxisTitle(QwtPlot::yLeft, "Toto");
     m_pPlot->setAxisTitle(QwtPlot::xBottom, "Sec");
-
-    m_pCurve = new QwtPlotCurve("Courbe 1");
-    m_pCurve->setData(m_pX, m_pY, 10);
-    m_pCurve->setStyle(QwtPlotCurve::Lines);
-    m_pCurve->setCurveAttribute(QwtPlotCurve::Fitted);
-    m_pCurve->setPen(QColor(Qt::darkGreen));
-    m_pCurve->attach(m_pPlot);
 
     m_Layout.addWidget(m_pPlot);
     m_GroupBox.setLayout(&m_Layout);
-    m_GroupBox.setGeometry(0, 0, width(), height());
+}
+
+GraphDisplay::~GraphDisplay()
+{
 }
 
 void GraphDisplay::UpdateDisplay(QRect Rect)
@@ -59,9 +32,9 @@ void GraphDisplay::contextMenuEvent(QContextMenuEvent * event)
        event->y() > 0 && event->y() < height())
     {
         QMenu * menu = new QMenu(this);
-        m_pDeleteAction = menu->addAction("Ajouter Courbe");
+        m_pAddCurveAction = menu->addAction("Ajouter Courbe", this, SLOT(AddCurve()));
         m_pDeleteAction = menu->addAction("Supprimer Graphe", this, SLOT(Delete()));
-        m_pDeleteAction = menu->addAction("Ajouter Graphe");
+        //m_pAddGraphAction = menu->addAction("Ajouter Graphe", this, SLOT(AddOther()));
 
         menu->exec(event->globalPos());
     }
@@ -71,3 +44,35 @@ void GraphDisplay::Delete()
 {
     emit Delete(this);
 }
+
+void GraphDisplay::AddCurve()
+{
+    AddRegisterDialog Dlg(false, this);
+    Dlg.setModal(true);
+    if (Dlg.exec() == QDialog::Accepted)
+    {
+        WishBoneRegister* pReg = new WishBoneRegister(Dlg.Name(),
+                                                      Dlg.Address(),
+                                                      Dlg.ValueMin(),
+                                                      Dlg.ValueMax(),
+                                                      Dlg.Signed(),
+                                                      Dlg.Unit(),
+                                                      Dlg.Write_nRead());
+        m_RegisterList.push_back(pReg);
+        m_pDoc->AddRegister(pReg);
+
+        QwtPlotCurve* pCurve = new QwtPlotCurve(Dlg.Name());
+        pCurve->setStyle(QwtPlotCurve::Lines);
+        pCurve->setCurveAttribute(QwtPlotCurve::Inverted);
+        pCurve->setPen(QColor(Qt::darkGreen));
+        pCurve->attach(m_pPlot);
+        m_CurveList.push_back(pCurve);
+
+        m_pPlot->setAxisTitle(QwtPlot::yLeft, Dlg.Unit());
+    }
+}
+
+//void GraphDisplay::AddOther()
+//{
+//    emit AddNew();
+//}

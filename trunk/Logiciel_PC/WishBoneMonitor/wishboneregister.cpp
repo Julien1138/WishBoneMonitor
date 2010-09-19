@@ -77,3 +77,9 @@ void WishBoneRegister::SetDate(unsigned long Date)
     m_Date = Date;
     m_DateTab.push_back(Date*0.001);
 }
+
+void WishBoneRegister::ResetTab()
+{
+    m_ValueTab.clear();
+    m_DateTab.clear();
+}

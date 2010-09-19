@@ -32,11 +32,11 @@ MainWindow::MainWindow(WishBoneMonitor *pDoc, QWidget *parent)
     m_pToolBar->addSeparator();
 
     m_pActionAddTab             = m_pToolBar->addAction(QIcon("AddTab.png"), "Ajouter un onglet", this, SLOT(AddTab()));
-    m_pToolBar->addSeparator();
+    //m_pToolBar->addSeparator();
 
     // Barre d'outils d'onglet
-    m_pPanelToolBar = addToolBar("Barre d'outils Onglet");
-    m_pActionAddRegister        = m_pPanelToolBar->addAction(QIcon("AddRegister.png"), "Ajouter un registre", this, SLOT(AddRegister()));
+//    m_pPanelToolBar = addToolBar("Barre d'outils Onglet");
+//    m_pActionAddRegister        = m_pPanelToolBar->addAction(QIcon("AddRegister.png"), "Ajouter un registre", this, SLOT(AddRegister()));
 
     // Onglets
     m_pOnglets = new QTabWidget;
@@ -244,21 +244,14 @@ void MainWindow::ReceiveSerial()
         {
            ((ControlTab*)(m_pOnglets->currentWidget()))->UpdateData();
         }
+        // S'il s'agit d'un onglet de contrôle
+        else if (((VirtualTab*)(m_pOnglets->currentWidget()))->GetType() == eGraphTab)
+        {
+           ((GraphTab*)(m_pOnglets->currentWidget()))->UpdateData();
+        }
     }
 
     delete TempReg;
-}
-
-void MainWindow::AddRegister()
-{
-    if (m_pOnglets->count() > 0)
-    {
-        // S'il s'agit d'un onglet de contrôle
-        if (((VirtualTab*)(m_pOnglets->currentWidget()))->GetType() == eControlTab)
-        {
-           ((ControlTab*)(m_pOnglets->currentWidget()))->AddRegister();
-        }
-    }
 }
 
 void MainWindow::AddTab()
@@ -284,7 +277,9 @@ void MainWindow::AddTab()
             }
             else if (PanelType == "Graphe")
             {
-                GraphTab* pGraphTab = new GraphTab;
+                PanelDoc* pPanel = new PanelDoc();
+                m_pDoc->AddPanel(pPanel);
+                GraphTab* pGraphTab = new GraphTab(m_pDoc->GetMailBox(), m_pDoc->GetPanelList()->last());
                 m_pOnglets->addTab(pGraphTab, "Graph");
             }
         }
@@ -302,7 +297,7 @@ void MainWindow::CloseTab(int i)
     // S'il s'agit d'un onglet de graphe
     else if (((VirtualTab*)(m_pOnglets->widget(i)))->GetType() == eGraphTab)
     {
-        //m_pDoc->GetPanelList()->removeOne(((GraphTab*)(m_pOnglets->widget(i)))->GetPanel());
+        m_pDoc->GetPanelList()->removeOne(((GraphTab*)(m_pOnglets->widget(i)))->GetPanel());
         m_pOnglets->removeTab(i);
     }
 }

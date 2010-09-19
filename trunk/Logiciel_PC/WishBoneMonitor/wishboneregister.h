@@ -22,7 +22,7 @@ public:
     QString             Name(){return m_Name;}
     unsigned long       Address(){return m_Address;}
     unsigned long       Value(){return m_Value;}
-    QVector<double>*    ValueTab(){return &m_ValueTab;}
+    QVector<double>     ValueTab(){return m_ValueTab;}
     long                ValueMin(){return m_ValueMin;}
     long                ValueMax(){return m_ValueMax;}
     bool                Signed(){return m_Signed;}
@@ -30,12 +30,14 @@ public:
     bool                Write_nRead(){return m_Write_nRead;}
     unsigned long       Period(){return m_Period;}
     unsigned long       Date(){return m_Date;}
-    QVector<double>*    DateTab(){return &m_DateTab;}
+    QVector<double>     DateTab(){return m_DateTab;}
 
     void                SetAddress(unsigned long Address){m_Address = Address;}
     void                SetValue(unsigned long Value);
     void                SetPeriod(unsigned long Period){m_Period = Period;}
     void                SetDate(unsigned long Date);
+
+    void                ResetTab();
 
 private:
     QString             m_Name;
