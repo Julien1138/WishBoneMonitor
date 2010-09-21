@@ -19,6 +19,17 @@ GraphDisplay::GraphDisplay(PanelDoc *pDoc, QWidget *parent) :
 
 GraphDisplay::~GraphDisplay()
 {
+    while (!m_RegisterList.empty())
+    {
+        m_pDoc->GetWishBoneRegisterList()->removeOne(m_RegisterList.front());
+        delete m_RegisterList.front();
+        m_RegisterList.pop_front();
+    }
+    while (!m_CurveList.empty())
+    {
+        delete m_CurveList.front();
+        m_CurveList.pop_front();
+    }
 }
 
 void GraphDisplay::UpdateDisplay(QRect Rect)
@@ -33,7 +44,7 @@ void GraphDisplay::contextMenuEvent(QContextMenuEvent * event)
     {
         QMenu * menu = new QMenu(this);
         m_pAddCurveAction = menu->addAction("Ajouter Courbe", this, SLOT(AddCurve()));
-        m_pDeleteAction = menu->addAction("Supprimer Graphe", this, SLOT(Delete()));
+        //m_pDeleteAction = menu->addAction("Supprimer Graphe", this, SLOT(Delete()));
         //m_pAddGraphAction = menu->addAction("Ajouter Graphe", this, SLOT(AddOther()));
 
         menu->exec(event->globalPos());
@@ -64,6 +75,7 @@ void GraphDisplay::AddCurve()
         QwtPlotCurve* pCurve = new QwtPlotCurve(Dlg.Name());
         pCurve->setStyle(QwtPlotCurve::Lines);
         pCurve->setCurveAttribute(QwtPlotCurve::Inverted);
+        pCurve->setRenderHint(QwtPlotItem::RenderAntialiased);
         pCurve->setPen(QColor(Qt::darkGreen));
         pCurve->attach(m_pPlot);
         m_CurveList.push_back(pCurve);
