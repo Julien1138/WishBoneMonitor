@@ -2,6 +2,10 @@
 #include <QContextMenuEvent>
 #include <QMenu>
 #include <QRect>
+#include "qwt_legend.h"
+#include "AddRegisterDialog.h"
+
+static int AddCurveToPlot;
 
 GraphTab::GraphTab(MailBoxDriver *pMailBox, PanelDoc *pDoc, QWidget *parent)
     : VirtualTab(parent)
@@ -10,10 +14,12 @@ GraphTab::GraphTab(MailBoxDriver *pMailBox, PanelDoc *pDoc, QWidget *parent)
 {
     m_StartAllButton.setText("Start All");
     m_StartAllButton.setFixedSize(60, 20);
+    m_StartAllButton.setEnabled(false);
     connect(&m_StartAllButton, SIGNAL(clicked()), this, SLOT(StartAll()));
     m_TopLayout.addWidget(&m_StartAllButton);
     m_StopAllButton.setText("Stop All");
     m_StopAllButton.setFixedSize(60, 20);
+    m_StopAllButton.setEnabled(false);
     connect(&m_StopAllButton, SIGNAL(clicked()), this, SLOT(StopAll()));
     m_TopLayout.addWidget(&m_StopAllButton);
     m_PeriodeLabel.setText("Periode d'échantillonnage :");
@@ -35,23 +41,66 @@ GraphTab::GraphTab(MailBoxDriver *pMailBox, PanelDoc *pDoc, QWidget *parent)
 
 GraphTab::~GraphTab()
 {
-    while (!m_listGraphDisplay.empty())
+    while (!m_listPlot.empty())
     {
-        delete m_listGraphDisplay.front();
-        m_listGraphDisplay.pop_front();
+        delete m_listPlot.front();
+        m_listPlot.pop_front();
     }
+}
+
+bool GraphTab::UpdateRegisters()
+{
+    while (!m_listPlot.empty())
+    {
+        delete m_listPlot.front();
+        m_listPlot.pop_front();
+    }
+    m_listPlot.clear();
+
+    for (int i(0) ; i < m_listNbrOfCurves.size() ; i++)
+    {
+        QwtPlot* pPlot = new QwtPlot();
+        pPlot->insertLegend(new QwtLegend(), QwtPlot::RightLegend);
+        pPlot->setAxisTitle(QwtPlot::xBottom, "Sec");
+
+        m_listPlot.push_back(pPlot);
+        m_GraphsLayout.addWidget(pPlot);
+    }
+
+    for (int i(0), j(0), k(0) ; i < m_pDoc->GetWishBoneRegisterList()->size() ; i++)
+    {
+        QwtPlotCurve* pCurve = new QwtPlotCurve(m_pDoc->GetWishBoneRegisterList()->value(i)->Name());
+        pCurve->setStyle(QwtPlotCurve::Lines);
+        pCurve->setCurveAttribute(QwtPlotCurve::Inverted);
+        pCurve->setRenderHint(QwtPlotItem::RenderAntialiased);
+        pCurve->setPen(QColor(Qt::darkGreen));
+
+        pCurve->attach(m_listPlot[k]);
+        m_listPlot[k]->setAxisTitle(QwtPlot::yLeft, m_pDoc->GetWishBoneRegisterList()->value(i)->Unit());
+        m_listCurve.push_back(pCurve);
+
+        if (++j == m_listNbrOfCurves[k])
+        {
+            j = 0;
+            k++;
+        }
+    }
+
+    return true;
 }
 
 bool GraphTab::UpdateLayout()
 {
-    if (!m_listGraphDisplay.empty())
+    if (!m_listPlot.empty())
     {
-        QRect Rect(contentsRect());
-        Rect.setWidth(Rect.width() - 20);
-        Rect.setHeight(Rect.height()/m_listGraphDisplay.size() - 35);
-        for (int i(0) ; i < m_listGraphDisplay.size() ; i++)
+        QRect Contents(contentsRect());
+        for (int i(0) ; i < m_listPlot.size() ; i++)
         {
-            m_listGraphDisplay[i]->UpdateDisplay(Rect);
+            QRect Rect(5,
+                       40 + ((Contents.height() - 35)/m_listPlot.size())*i,
+                       Contents.width() - 20,
+                       Contents.height()/m_listPlot.size() - 40);
+            m_listPlot[i]->setGeometry(Rect);
         }
     }
 
@@ -60,39 +109,61 @@ bool GraphTab::UpdateLayout()
 
 bool GraphTab::UpdateData()
 {
-    for (int i(0) ; i < m_listGraphDisplay.size() ; i++)
+    for (int i(0) ; i < m_listCurve.size() ; i++)
     {
-        for (int j(0) ; j < m_listGraphDisplay.value(i)->GetpRegisterList()->size() ; j++)
-        {
-            m_listGraphDisplay.value(i)->GetpCurveList()->value(j)->setData(m_listGraphDisplay.value(i)->GetpRegisterList()->value(j)->DateTab(),
-                                                                            m_listGraphDisplay.value(i)->GetpRegisterList()->value(j)->ValueTab());
-        }
-        m_listGraphDisplay[i]->GetPlot()->replot();
+        m_listCurve[i]->setData(m_pDoc->GetWishBoneRegisterList()->value(i)->DateTab(),
+                                m_pDoc->GetWishBoneRegisterList()->value(i)->ValueTab());
+    }
+
+    for (int i(0) ; i < m_listPlot.size(); i++)
+    {
+        m_listPlot[i]->replot();
     }
 
     return true;
 }
 
-void GraphTab::AddGraph()
+bool GraphTab::UpdateButtons()
 {
-    GraphDisplay* Graph = new GraphDisplay(m_pDoc);
-    connect(Graph, SIGNAL(Delete(GraphDisplay*)), this, SLOT(DelGraph(GraphDisplay*)));
-//    connect(Graph, SIGNAL(AddNew()), this, SLOT(AddGraph()));
-    m_listGraphDisplay.push_back(Graph);
+    m_StartAllButton.setEnabled(m_pMailBox->IsConnected());
+    m_StopAllButton.setEnabled(m_pMailBox->IsConnected());
 
-    m_GraphsLayout.addWidget(Graph);
-
-    UpdateLayout();
+    return true;
 }
 
-void GraphTab::DelGraph(GraphDisplay* Graph)
+void GraphTab::AddCurve()
 {
-    m_GraphsLayout.removeWidget(Graph);
+    AddRegisterDialog Dlg(false, this);
+    Dlg.setModal(true);
+    if (Dlg.exec() == QDialog::Accepted)
+    {
+        int CurveNbr(0);
+        WishBoneRegister* Reg = new WishBoneRegister(Dlg.Name(),
+                                                     Dlg.Address(),
+                                                     Dlg.ValueMin(),
+                                                     Dlg.ValueMax(),
+                                                     Dlg.Signed(),
+                                                     Dlg.Unit(),
+                                                     Dlg.Write_nRead());
 
-    delete Graph;
-    m_listGraphDisplay.removeOne(Graph);
+        while (m_listNbrOfCurves.size() < (AddCurveToPlot+1))
+            m_listNbrOfCurves.push_back(0);
+        for (int i(0) ; i < AddCurveToPlot ; i++)
+        {
+            CurveNbr += m_listNbrOfCurves[i];
+        }
+        m_pDoc->GetWishBoneRegisterList()->insert(CurveNbr, Reg);
+        m_listNbrOfCurves[AddCurveToPlot]++;
 
-    UpdateLayout();
+        UpdateRegisters();
+        UpdateLayout();
+    }
+}
+
+void GraphTab::AddGraph()
+{
+    AddCurveToPlot = m_listNbrOfCurves.size();
+    AddCurve();
 }
 
 void GraphTab::StartAll()
@@ -116,11 +187,28 @@ void GraphTab::StopAll()
 
 void GraphTab::contextMenuEvent(QContextMenuEvent * event)
 {
-    if(event->x() > 0 && event->x() < width() &&
-       event->y() > 0 && event->y() < height())
+    if (m_listNbrOfCurves.size() == 0)
     {
         QMenu * menu = new QMenu(this);
-        menu->addAction("Ajouter Graph", this, SLOT(AddGraph()));
+        menu->addAction("Ajouter une courbe à un nouveau graphe", this, SLOT(AddGraph()));
+
+        menu->exec(event->globalPos());
+    }
+    else if(event->x() > 0 && event->x() < width() &&
+       event->y() > 0 && event->y() < 40)
+    {
+        QMenu * menu = new QMenu(this);
+        menu->addAction("Ajouter une courbe à un nouveau graphe", this, SLOT(AddGraph()));
+
+        menu->exec(event->globalPos());
+    }
+    else if(event->x() > 0 && event->x() < width() &&
+            event->y() > 40 && event->y() < height())
+    {
+        AddCurveToPlot = (int)((event->y() - 35)/(double)((height() - 35)/(m_listNbrOfCurves.size())));
+        QMenu * menu = new QMenu(this);
+        menu->addAction("Ajouter une courbe à ce graphe", this, SLOT(AddCurve()));
+        menu->addAction("Ajouter une courbe à un nouveau graphe", this, SLOT(AddGraph()));
 
         menu->exec(event->globalPos());
     }

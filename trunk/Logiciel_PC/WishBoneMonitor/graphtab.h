@@ -20,8 +20,10 @@ public:
     explicit GraphTab(MailBoxDriver *pMailBox, PanelDoc *pDoc, QWidget *parent = 0);
     ~GraphTab();
 
+    bool UpdateRegisters();
     bool UpdateLayout();
     bool UpdateData();
+    bool UpdateButtons();
 
     TabType     GetType(){return eGraphTab;}
     PanelDoc*   GetPanel(){return m_pDoc;}
@@ -29,8 +31,8 @@ public:
 signals:
 
 public slots:
+    void AddCurve();
     void AddGraph();
-    void DelGraph(GraphDisplay*);
     void StartAll();
     void StopAll();
 
@@ -45,7 +47,10 @@ private:
     QLabel                  m_msLabel;
 
     QVBoxLayout             m_GraphsLayout;
-    QList<GraphDisplay*>    m_listGraphDisplay;
+
+    QList<QwtPlot*>         m_listPlot;
+    QList<int>              m_listNbrOfCurves;
+    QList<QwtPlotCurve*>    m_listCurve;
 
     MailBoxDriver*          m_pMailBox;
     PanelDoc*               m_pDoc;

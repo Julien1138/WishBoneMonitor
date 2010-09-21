@@ -200,6 +200,11 @@ void MainWindow::ConnectSerial()
         {
            ((ControlTab*)(m_pOnglets->currentWidget()))->UpdateButtons();
         }
+        // S'il s'agit d'un onglet de graphe
+        else if (((VirtualTab*)(m_pOnglets->currentWidget()))->GetType() == eGraphTab)
+        {
+           ((GraphTab*)(m_pOnglets->currentWidget()))->UpdateButtons();
+        }
     }
 }
 
@@ -213,6 +218,11 @@ void MainWindow::DisconnectSerial()
         if (((VirtualTab*)(m_pOnglets->currentWidget()))->GetType() == eControlTab)
         {
            ((ControlTab*)(m_pOnglets->currentWidget()))->UpdateButtons();
+        }
+        // S'il s'agit d'un onglet de graphe
+        else if (((VirtualTab*)(m_pOnglets->currentWidget()))->GetType() == eGraphTab)
+        {
+           ((GraphTab*)(m_pOnglets->currentWidget()))->UpdateButtons();
         }
     }
 }
@@ -244,7 +254,7 @@ void MainWindow::ReceiveSerial()
         {
            ((ControlTab*)(m_pOnglets->currentWidget()))->UpdateData();
         }
-        // S'il s'agit d'un onglet de contrôle
+        // S'il s'agit d'un onglet de graphe
         else if (((VirtualTab*)(m_pOnglets->currentWidget()))->GetType() == eGraphTab)
         {
            ((GraphTab*)(m_pOnglets->currentWidget()))->UpdateData();
