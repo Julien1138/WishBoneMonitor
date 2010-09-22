@@ -157,8 +157,8 @@ begin
         Endianness => '0',
         ParityBit => 0,
         Parity => '0',
-        StopBits => 2,
-        BufferSize => 64,
+        StopBits => 1,
+        BufferSize => 256,
         WB_Data_Width => 8
     )
     port map
