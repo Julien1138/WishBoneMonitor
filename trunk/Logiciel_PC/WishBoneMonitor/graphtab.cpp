@@ -50,12 +50,16 @@ GraphTab::~GraphTab()
 
 bool GraphTab::UpdateRegisters()
 {
+    while (!m_listCurve.empty())
+    {
+        delete m_listCurve.front();
+        m_listCurve.pop_front();
+    }
     while (!m_listPlot.empty())
     {
         delete m_listPlot.front();
         m_listPlot.pop_front();
     }
-    m_listPlot.clear();
 
     for (int i(0) ; i < m_listNbrOfCurves.size() ; i++)
     {
@@ -187,29 +191,29 @@ void GraphTab::StopAll()
 
 void GraphTab::contextMenuEvent(QContextMenuEvent * event)
 {
-    if (m_listNbrOfCurves.size() == 0)
-    {
-        QMenu * menu = new QMenu(this);
-        menu->addAction("Ajouter une courbe à un nouveau graphe", this, SLOT(AddGraph()));
+        if (m_listNbrOfCurves.size() == 0)
+        {
+            QMenu * menu = new QMenu(this);
+            menu->addAction("Ajouter une courbe à un nouveau graphe", this, SLOT(AddGraph()));
 
-        menu->exec(event->globalPos());
-    }
-    else if(event->x() > 0 && event->x() < width() &&
-       event->y() > 0 && event->y() < 40)
-    {
-        QMenu * menu = new QMenu(this);
-        menu->addAction("Ajouter une courbe à un nouveau graphe", this, SLOT(AddGraph()));
+            menu->exec(event->globalPos());
+        }
+        else if(event->x() > 0 && event->x() < width() &&
+           event->y() > 0 && event->y() < 40)
+        {
+            QMenu * menu = new QMenu(this);
+            menu->addAction("Ajouter une courbe à un nouveau graphe", this, SLOT(AddGraph()));
 
-        menu->exec(event->globalPos());
-    }
-    else if(event->x() > 0 && event->x() < width() &&
-            event->y() > 40 && event->y() < height())
-    {
-        AddCurveToPlot = (int)((event->y() - 35)/(double)((height() - 35)/(m_listNbrOfCurves.size())));
-        QMenu * menu = new QMenu(this);
-        menu->addAction("Ajouter une courbe à ce graphe", this, SLOT(AddCurve()));
-        menu->addAction("Ajouter une courbe à un nouveau graphe", this, SLOT(AddGraph()));
+            menu->exec(event->globalPos());
+        }
+        else if(event->x() > 0 && event->x() < width() &&
+                event->y() > 40 && event->y() < height())
+        {
+            AddCurveToPlot = (int)((event->y() - 35)/(double)((height() - 35)/(m_listNbrOfCurves.size())));
+            QMenu * menu = new QMenu(this);
+            menu->addAction("Ajouter une courbe à ce graphe", this, SLOT(AddCurve()));
+            menu->addAction("Ajouter une courbe à un nouveau graphe", this, SLOT(AddGraph()));
 
-        menu->exec(event->globalPos());
-    }
+            menu->exec(event->globalPos());
+        }
 }

@@ -12,7 +12,7 @@ MailBoxDriver::MailBoxDriver()
     m_pSettings->DataBits = DATA_8;
     m_pSettings->FlowControl = FLOW_OFF;
     m_pSettings->Parity = PAR_NONE;
-    m_pSettings->StopBits = STOP_2;
+    m_pSettings->StopBits = STOP_1;
 }
 
 MailBoxDriver::~MailBoxDriver()
@@ -39,7 +39,7 @@ bool MailBoxDriver::Connect(QString PortName)
     m_pPort->setFlowControl(FLOW_OFF);
     m_pPort->setParity(PAR_NONE);
     m_pPort->setDataBits(DATA_8);
-    m_pPort->setStopBits(STOP_2);
+    m_pPort->setStopBits(STOP_1);
     if (!(m_pPort->lineStatus() & LS_DSR))
     {
         return false;
@@ -83,6 +83,8 @@ void MailBoxDriver::SendRegister(WishBoneRegister* Reg)
     Data[7] = (char) (Reg->Period() >> 8);
     Data[8] = (char) (Reg->Period());
     Data[9] = Checksum(Data, 9);
+
+    while (m_pPort->bytesToWrite()); // On attend que le buffer d'envoi soit vide.
 
     m_pPort->write(Data, 10);
 }

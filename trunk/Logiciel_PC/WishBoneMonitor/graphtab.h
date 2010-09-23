@@ -27,6 +27,7 @@ public:
 
     TabType     GetType(){return eGraphTab;}
     PanelDoc*   GetPanel(){return m_pDoc;}
+    QList<int>* GetpListNbrOfCurves(){return & m_listNbrOfCurves;}
 
 signals:
 

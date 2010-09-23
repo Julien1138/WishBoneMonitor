@@ -32,11 +32,6 @@ MainWindow::MainWindow(WishBoneMonitor *pDoc, QWidget *parent)
     m_pToolBar->addSeparator();
 
     m_pActionAddTab             = m_pToolBar->addAction(QIcon("AddTab.png"), "Ajouter un onglet", this, SLOT(AddTab()));
-    //m_pToolBar->addSeparator();
-
-    // Barre d'outils d'onglet
-//    m_pPanelToolBar = addToolBar("Barre d'outils Onglet");
-//    m_pActionAddRegister        = m_pPanelToolBar->addAction(QIcon("AddRegister.png"), "Ajouter un registre", this, SLOT(AddRegister()));
 
     // Onglets
     m_pOnglets = new QTabWidget;
@@ -119,19 +114,39 @@ void MainWindow::OpenConfig()
                                    settings.value("Panel_" + QString::number(j) + "/NomDuPanel").toString());
 
             }
-        }
-
-        if (m_pOnglets->count() > 0)
-        {
-            // S'il s'agit d'un onglet de contrôle
-            if (((VirtualTab*)(m_pOnglets->currentWidget()))->GetType() == eControlTab)
+            else if (settings.value("Panel_" + QString::number(j) + "/TypeDePanel").toString() == "Graphe")
             {
-               ((ControlTab*)(m_pOnglets->currentWidget()))->UpdateRegisters();
-               ((ControlTab*)(m_pOnglets->currentWidget()))->UpdateLayout();
-               ((ControlTab*)(m_pOnglets->currentWidget()))->UpdateData();
-               ((ControlTab*)(m_pOnglets->currentWidget()))->UpdateButtons();
+                PanelDoc* pPanel = new PanelDoc();
+                int NombreDeRegistres = settings.value("Panel_" + QString::number(j) + "/NombreDeRegistres").toInt();
+
+            // Lecture des groupes [Registre]
+                for(int i(0) ; i < NombreDeRegistres ; i++)
+                {
+                    WishBoneRegister* Reg = new WishBoneRegister(settings.value("Registre_" + QString::number(j) + "_" + QString::number(i) + "/Nom").toString(),
+                                                                 settings.value("Registre_" + QString::number(j) + "_" + QString::number(i) + "/Adresse").toUInt(),
+                                                                 settings.value("Registre_" + QString::number(j) + "_" + QString::number(i) + "/ValeurMin").toInt(),
+                                                                 settings.value("Registre_" + QString::number(j) + "_" + QString::number(i) + "/ValeurMax").toInt(),
+                                                                 settings.value("Registre_" + QString::number(j) + "_" + QString::number(i) + "/Signed").toString() == "Signed" ? true : false,
+                                                                 settings.value("Registre_" + QString::number(j) + "_" + QString::number(i) + "/Unite").toString(),
+                                                                 settings.value("Registre_" + QString::number(j) + "_" + QString::number(i) + "/Direction").toString() == "Write" ? true : false,
+                                                                 settings.value("Registre_" + QString::number(j) + "_" + QString::number(i) + "/Periode").toInt());
+                    pPanel->AddRegister(Reg);
+                }
+
+                m_pDoc->AddPanel(pPanel);
+                GraphTab* pControlTab = new GraphTab(m_pDoc->GetMailBox(), m_pDoc->GetPanelList()->last());
+                int Nombre_de_Graphs = settings.value("Panel_" + QString::number(j) + "/NombreDeGraphs").toInt();
+                for (int i(0) ; i < Nombre_de_Graphs ; i++)
+                {
+                    pControlTab->GetpListNbrOfCurves()->push_back(settings.value("Panel_" + QString::number(j) + "/NombreDeCourbes_Graphe_" + QString::number(i)).toInt());
+                }
+                m_pOnglets->addTab(pControlTab,
+                                   settings.value("Panel_" + QString::number(j) + "/NomDuPanel").toString());
+
             }
         }
+
+        ChangeTab(0);
     }
 }
 
@@ -141,8 +156,10 @@ void MainWindow::SaveConfig()
 
     if (!FileName.isEmpty())
     {
+    // On supprime le fichier de sauvegarde s'il existe déja
         remove(FileName.toAscii());
 
+    // On crée un nouveau fichier de sauvegarde
         QSettings settings(FileName, QSettings::IniFormat);
 
     // Création du groupe [Configuration]
@@ -176,6 +193,39 @@ void MainWindow::SaveConfig()
                     settings.setValue("Unite", ((ControlTab*)(m_pOnglets->widget(j)))->GetPanel()->GetWishBoneRegisterList()->value(i)->Unit());
                     settings.setValue("Direction", ((ControlTab*)(m_pOnglets->widget(j)))->GetPanel()->GetWishBoneRegisterList()->value(i)->Write_nRead() ? "Write" : "Read");
                     settings.setValue("Periode", QString::number(((ControlTab*)(m_pOnglets->widget(j)))->GetPanel()->GetWishBoneRegisterList()->value(i)->Period()));
+
+                    settings.endGroup();
+                }
+            }
+            // S'il s'agit d'un onglet de graphe
+            else if (((VirtualTab*)(m_pOnglets->widget(j)))->GetType() == eGraphTab)
+            {
+            // Création des groupes [Panel]
+                settings.beginGroup("Panel_" + QString::number(j));
+                settings.setValue("TypeDePanel", "Graphe");
+                settings.setValue("NomDuPanel", m_pOnglets->tabText(j));
+                settings.setValue("NombreDeRegistres", QString::number(((GraphTab*)(m_pOnglets->widget(j)))->GetPanel()->GetWishBoneRegisterList()->size()));
+                settings.setValue("NombreDeGraphs", ((GraphTab*)(m_pOnglets->widget(j)))->GetpListNbrOfCurves()->size());
+                for (int i(0) ; i < ((GraphTab*)(m_pOnglets->widget(j)))->GetpListNbrOfCurves()->size() ; i++)
+                {
+                    settings.setValue("NombreDeCourbes_Graphe_" + QString::number(i), ((GraphTab*)(m_pOnglets->widget(j)))->GetpListNbrOfCurves()->value(i));
+                }
+                settings.endGroup();
+
+            // Création des groupes [Registre]
+                for(int i(0) ; i < ((GraphTab*)(m_pOnglets->widget(j)))->GetPanel()->GetWishBoneRegisterList()->size() ; i++)
+                {
+                    settings.beginGroup("Registre_" + QString::number(j) + "_" + QString::number(i));
+
+                    // Création des différentes clefs et valeurs correspondantes
+                    settings.setValue("Nom", ((GraphTab*)(m_pOnglets->widget(j)))->GetPanel()->GetWishBoneRegisterList()->value(i)->Name());
+                    settings.setValue("Adresse", QString::number(((GraphTab*)(m_pOnglets->widget(j)))->GetPanel()->GetWishBoneRegisterList()->value(i)->Address()));
+                    settings.setValue("ValeurMin", QString::number(((GraphTab*)(m_pOnglets->widget(j)))->GetPanel()->GetWishBoneRegisterList()->value(i)->ValueMin()));
+                    settings.setValue("ValeurMax", QString::number(((GraphTab*)(m_pOnglets->widget(j)))->GetPanel()->GetWishBoneRegisterList()->value(i)->ValueMax()));
+                    settings.setValue("Signed", ((GraphTab*)(m_pOnglets->widget(j)))->GetPanel()->GetWishBoneRegisterList()->value(i)->Signed() ? "Signed" : "Unsigned");
+                    settings.setValue("Unite", ((GraphTab*)(m_pOnglets->widget(j)))->GetPanel()->GetWishBoneRegisterList()->value(i)->Unit());
+                    settings.setValue("Direction", ((GraphTab*)(m_pOnglets->widget(j)))->GetPanel()->GetWishBoneRegisterList()->value(i)->Write_nRead() ? "Write" : "Read");
+                    settings.setValue("Periode", QString::number(((GraphTab*)(m_pOnglets->widget(j)))->GetPanel()->GetWishBoneRegisterList()->value(i)->Period()));
 
                     settings.endGroup();
                 }
@@ -249,15 +299,18 @@ void MainWindow::ReceiveSerial()
 
     if (m_pOnglets->count() > 0)
     {
-        // S'il s'agit d'un onglet de contrôle
-        if (((VirtualTab*)(m_pOnglets->currentWidget()))->GetType() == eControlTab)
+        for (int i(0) ; i < m_pOnglets->count() ; i++)
         {
-           ((ControlTab*)(m_pOnglets->currentWidget()))->UpdateData();
-        }
-        // S'il s'agit d'un onglet de graphe
-        else if (((VirtualTab*)(m_pOnglets->currentWidget()))->GetType() == eGraphTab)
-        {
-           ((GraphTab*)(m_pOnglets->currentWidget()))->UpdateData();
+            // S'il s'agit d'un onglet de contrôle
+            if (((VirtualTab*)(m_pOnglets->widget(i)))->GetType() == eControlTab)
+            {
+               ((ControlTab*)(m_pOnglets->widget(i)))->UpdateData();
+            }
+            // S'il s'agit d'un onglet de graphe
+            else if (((VirtualTab*)(m_pOnglets->widget(i)))->GetType() == eGraphTab)
+            {
+               ((GraphTab*)(m_pOnglets->widget(i)))->UpdateData();
+            }
         }
     }
 
@@ -323,6 +376,14 @@ void MainWindow::ChangeTab(int i)
             ((ControlTab*)(m_pOnglets->widget(i)))->UpdateLayout();
             ((ControlTab*)(m_pOnglets->widget(i)))->UpdateData();
             ((ControlTab*)(m_pOnglets->widget(i)))->UpdateButtons();
+        }
+        // S'il s'agit d'un onglet de contrôle
+        if (((VirtualTab*)(m_pOnglets->widget(i)))->GetType() == eGraphTab)
+        {
+            ((GraphTab*)(m_pOnglets->widget(i)))->UpdateRegisters();
+            ((GraphTab*)(m_pOnglets->widget(i)))->UpdateLayout();
+            ((GraphTab*)(m_pOnglets->widget(i)))->UpdateData();
+            ((GraphTab*)(m_pOnglets->widget(i)))->UpdateButtons();
         }
     }
 }
