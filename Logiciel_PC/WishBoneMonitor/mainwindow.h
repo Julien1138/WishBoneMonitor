@@ -44,9 +44,6 @@ private:
     QComboBox*  m_pComboSerialPort;
     QAction*    m_pActionConnectSerial;
     QAction*    m_pActionDisconnectSerial;
-    QAction*    m_pActionAddRegister;
-
-    QToolBar*   m_pPanelToolBar;
     QAction*    m_pActionAddTab;
 
     QTabWidget* m_pOnglets;
