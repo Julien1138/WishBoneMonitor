@@ -1,0 +1,27 @@
+
+
+NET "Led[0]" LOC = J14;
+NET "Led[1]" LOC = J15;
+NET "Led[2]" LOC = K15;
+NET "Led[3]" LOC = K14;
+NET "Led[4]" LOC = E16;
+NET "Led[5]" LOC = P16;
+NET "Led[6]" LOC = E4;
+NET "Led[7]" LOC = P4;
+NET "Rx" LOC = U6;
+NET "Slider[0]" LOC = G18;
+NET "Slider[1]" LOC = H18;
+NET "Slider[2]" LOC = K18;
+NET "Slider[3]" LOC = K17;
+NET "Slider[4]" LOC = L14;
+NET "Slider[5]" LOC = L13;
+NET "Slider[6]" LOC = N17;
+NET "Slider[7]" LOC = R17;
+NET "Tx" LOC = P9;
+NET "clk" LOC = B8;
+NET "rst" LOC = B18;
+
+# PlanAhead Generated IO constraints 
+
+NET "Tx" DRIVE = 2;
+NET "Rx" PULLUP;
