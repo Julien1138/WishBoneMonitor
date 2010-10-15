@@ -1,23 +1,25 @@
 #ifndef PANELDOC_H
 #define PANELDOC_H
 
-#include "wishboneregister.h"
+#include <QString>
 #include <QList>
+#include "WishBoneWidgetDoc.h"
 
 class PanelDoc
 {
 public:
-    PanelDoc();
+    PanelDoc(const QString &Title, bool* pConnectedMode);
     ~PanelDoc();
 
-    QList<WishBoneRegister*>*   GetWishBoneRegisterList(){return & m_listWishBoneRegister;}
+    QString                     Title(){return m_Title;}
+    QList<WishBoneWidgetDoc*>*  GetWidgetList(){return &m_listWidget;}
 
-    void    AddRegister(WishBoneRegister* Reg);
-    void    ClearList();
-    int     FindRegisters(unsigned long Address, int* IdxTab);
+    WishBoneWidgetDoc*  AddWidget();
 
 private:
-    QList<WishBoneRegister*>    m_listWishBoneRegister;
+    QString                     m_Title;
+    QList<WishBoneWidgetDoc*>   m_listWidget;
+    bool*                       m_pConnectedMode;
 };
 
 #endif // PANELDOC_H

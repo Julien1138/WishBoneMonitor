@@ -28,6 +28,8 @@ AddRegisterDialog::AddRegisterDialog(bool Writable, QWidget *parent) :
     m_pFormLayout->addRow("Valeur max du registre", m_pEditValueMax);
     m_pEditUnit = new QLineEdit;
     m_pFormLayout->addRow("Unité du registre", m_pEditUnit);
+    m_pEditPeriode = new QLineEdit;
+    m_pFormLayout->addRow("Periode de rafraichissement", m_pEditPeriode);
     m_pMainLayout->addLayout(m_pFormLayout);
 
     m_pRadioLayout = new QHBoxLayout;
@@ -69,6 +71,7 @@ void AddRegisterDialog::ReadWriteChange()
     {
         m_pEditValueMin->setEnabled(true);
         m_pEditValueMax->setEnabled(true);
+        m_pEditPeriode->setText("0");
     }
     else
     {

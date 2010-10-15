@@ -24,6 +24,7 @@ public:
     long            ValueMax(){return m_pEditValueMax->text().toLong(0,0);}
     QString         Unit(){return m_pEditUnit->text();}
     bool            Write_nRead(){return m_pRadioWrite->isChecked();}
+    unsigned long   Periode(){return m_pEditPeriode->text().toULong(0,0);}
 
 signals:
 
@@ -40,6 +41,7 @@ private:
     QLineEdit*      m_pEditValueMin;
     QLineEdit*      m_pEditValueMax;
     QLineEdit*      m_pEditUnit;
+    QLineEdit*      m_pEditPeriode;
     QHBoxLayout*    m_pRadioLayout;
     QLabel*         m_pRadioLabel;
     QRadioButton*   m_pRadioWrite;

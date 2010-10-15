@@ -16,27 +16,25 @@ CONFIG      += qt thread warn_on
 SOURCES += main.cpp\
         mainwindow.cpp \
     wishbonemonitor.cpp \
-    controltab.cpp \
     wishboneregister.cpp \
-    registerdisplay.cpp \
     addregisterdialog.cpp \
     mailboxdriver.cpp \
     paneldoc.cpp \
-    virtualtab.cpp \
-    graphtab.cpp \
-    graphdisplay.cpp
+    registerlistview.cpp \
+    panelview.cpp \
+    wishbonewidgetview.cpp \
+    wishbonewidgetdoc.cpp
 
 HEADERS  += mainwindow.h \
     wishbonemonitor.h \
-    controltab.h \
     wishboneregister.h \
-    registerdisplay.h \
     addregisterdialog.h \
     mailboxdriver.h \
     paneldoc.h \
-    virtualtab.h \
-    graphtab.h \
-    graphdisplay.h
+    registerlistview.h \
+    panelview.h \
+    wishbonewidgetview.h \
+    wishbonewidgetdoc.h
 
 CONFIG(debug, debug|release):LIBS  += -lqextserialportd
 else:LIBS  += -lqextserialport

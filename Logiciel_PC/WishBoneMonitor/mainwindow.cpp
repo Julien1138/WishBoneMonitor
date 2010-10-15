@@ -1,5 +1,4 @@
 #include "mainwindow.h"
-#include "virtualtab.h"
 
 #include <QMessageBox>
 #include <QFileDialog>
@@ -10,15 +9,16 @@ MainWindow::MainWindow(WishBoneMonitor *pDoc, QWidget *parent)
     : QMainWindow(parent)
     , m_pDoc(pDoc)
 {
-    setGeometry(100, 100, 800, 500);
+    setGeometry(100, 100, 850, 500);
 
-    // Barre d'outils principale
+// Barre d'outils principale
+    // Gestion du document
     m_pToolBar = addToolBar("Barre d'outils");
     m_pActionNewConfig          = m_pToolBar->addAction(QIcon("New.png"), "Sauvegarder le configuration", this, SLOT(NewConfig()));
     m_pActionOpenConfig         = m_pToolBar->addAction(QIcon("Open.png"), "Sauvegarder le configuration", this, SLOT(OpenConfig()));
     m_pActionSaveConfig         = m_pToolBar->addAction(QIcon("Save.png"), "Sauvegarder le configuration", this, SLOT(SaveConfig()));
     m_pToolBar->addSeparator();
-
+    // Gestion de la connexion série
     m_pComboSerialPort          = new QComboBox();
     QList<QextPortInfo> ports = QextSerialEnumerator::getPorts();
     for (int i(0) ; i < ports.size() ; i++)
@@ -30,17 +30,20 @@ MainWindow::MainWindow(WishBoneMonitor *pDoc, QWidget *parent)
     m_pActionConnectSerial      = m_pToolBar->addAction(QIcon("Connect.png"), "Connecter au port série", this, SLOT(ConnectSerial()));
     m_pActionDisconnectSerial   = m_pToolBar->addAction(QIcon("Disconnect.png"), "Deconnecter", this, SLOT(DisconnectSerial()));
     m_pToolBar->addSeparator();
-
+    // Gestion des onglets
     m_pActionAddTab             = m_pToolBar->addAction(QIcon("AddTab.png"), "Ajouter un onglet", this, SLOT(AddTab()));
 
-    // Onglets
+// Onglets
+    // Parametrage des onglets
     m_pOnglets = new QTabWidget;
     m_pOnglets->setTabsClosable(true);
     m_pOnglets->setMovable(true);
     connect(m_pOnglets, SIGNAL(tabCloseRequested(int)), this, SLOT(CloseTab(int)));
     connect(m_pOnglets, SIGNAL(currentChanged(int)), this, SLOT(ChangeTab(int)));
-
     setCentralWidget(m_pOnglets);
+    // Onglet "Table des registres"
+    m_pRegisterListView = new RegisterListView(m_pDoc);
+    m_pOnglets->addTab(m_pRegisterListView, "Table des Registres");
 }
 
 MainWindow::~MainWindow()
@@ -49,19 +52,19 @@ MainWindow::~MainWindow()
 
 void MainWindow::resizeEvent(QResizeEvent * event)
 {
-    if (m_pOnglets->count() > 0)
-    {
+//    if (m_pOnglets->count() > 0)
+//    {
         // S'il s'agit d'un onglet de contrôle
-        if (((VirtualTab*)(m_pOnglets->currentWidget()))->GetType() == eControlTab)
-        {
-           ((ControlTab*)(m_pOnglets->currentWidget()))->UpdateLayout();
-        }
+//        if (((VirtualTab*)(m_pOnglets->currentWidget()))->GetType() == eControlTab)
+//        {
+//           ((ControlTab*)(m_pOnglets->currentWidget()))->UpdateLayout();
+//        }
         // S'il s'agit d'un onglet de graphe
-        else if (((VirtualTab*)(m_pOnglets->currentWidget()))->GetType() == eGraphTab)
-        {
-           ((GraphTab*)(m_pOnglets->currentWidget()))->UpdateLayout();
-        }
-    }
+//        else if (((VirtualTab*)(m_pOnglets->currentWidget()))->GetType() == eGraphTab)
+//        {
+//           ((GraphTab*)(m_pOnglets->currentWidget()))->UpdateLayout();
+//        }
+//    }
 
     QWidget::resizeEvent(event);
 }
@@ -69,12 +72,13 @@ void MainWindow::resizeEvent(QResizeEvent * event)
 void MainWindow::NewConfig()
 {
     m_pOnglets->clear();
-    m_pDoc->ClearList();
+    m_pDoc->ClearRegisterList();
+    m_pDoc->ClearPanelList();
 }
 
 void MainWindow::OpenConfig()
 {
-    QString FileName = QFileDialog::getOpenFileName(this, "Ouvrir un fichier", QString(), "WishBoneMonitor File (*.wbm)");
+    /*QString FileName = QFileDialog::getOpenFileName(this, "Ouvrir un fichier", QString(), "WishBoneMonitor File (*.wbm)");
 
     if (!FileName.isEmpty())
     {
@@ -147,12 +151,12 @@ void MainWindow::OpenConfig()
         }
 
         ChangeTab(0);
-    }
+    }*/
 }
 
 void MainWindow::SaveConfig()
 {
-    QString FileName = QFileDialog::getSaveFileName(this, "Enregistrer un fichier", QString(), "WishBoneMonitor File (*.wbm)");
+    /*QString FileName = QFileDialog::getSaveFileName(this, "Enregistrer un fichier", QString(), "WishBoneMonitor File (*.wbm)");
 
     if (!FileName.isEmpty())
     {
@@ -231,7 +235,7 @@ void MainWindow::SaveConfig()
                 }
             }
         }
-    }
+    }*/
 }
 
 void MainWindow::ConnectSerial()
@@ -240,10 +244,13 @@ void MainWindow::ConnectSerial()
     {
         QMessageBox::critical(this, "Erreur de connection", "Le port " + m_pComboSerialPort->currentText() + " n'est pas disponnible");
     }
+    else
+    {
+        connect(m_pDoc->GetMailBox()->GetPort(), SIGNAL(readyRead()), this , SLOT(ReceiveSerial()));
+        m_pRegisterListView->UpdateDisplay();
+    }
 
-    connect(m_pDoc->GetMailBox()->GetPort(), SIGNAL(readyRead()), this , SLOT(ReceiveSerial()));
-
-    if (m_pOnglets->count() > 0)
+    /*if (m_pOnglets->count() > 0)
     {
         // S'il s'agit d'un onglet de contrôle
         if (((VirtualTab*)(m_pOnglets->currentWidget()))->GetType() == eControlTab)
@@ -255,14 +262,16 @@ void MainWindow::ConnectSerial()
         {
            ((GraphTab*)(m_pOnglets->currentWidget()))->UpdateButtons();
         }
-    }
+    }*/
 }
 
 void MainWindow::DisconnectSerial()
 {
     m_pDoc->GetMailBox()->Disconnect();
 
-    if (m_pOnglets->count() > 0)
+    m_pRegisterListView->UpdateDisplay();
+
+    /*if (m_pOnglets->count() > 0)
     {
         // S'il s'agit d'un onglet de contrôle
         if (((VirtualTab*)(m_pOnglets->currentWidget()))->GetType() == eControlTab)
@@ -274,30 +283,21 @@ void MainWindow::DisconnectSerial()
         {
            ((GraphTab*)(m_pOnglets->currentWidget()))->UpdateButtons();
         }
-    }
+    }*/
 }
 
 void MainWindow::ReceiveSerial()
 {
     WishBoneRegister* TempReg = new WishBoneRegister;
-    int IdxTab[16];
-    int NbrOfIdx;
+//    int IdxTab[16];
+//    int NbrOfIdx;
 
     while (m_pDoc->GetMailBox()->DecodeRegister(TempReg))
     {
-        for (int j(0) ; j < m_pDoc->GetPanelList()->size(); j++)
-        {
-            NbrOfIdx = m_pDoc->GetPanelList()->value(j)->FindRegisters(TempReg->Address(), IdxTab);
-
-            for (int i(0) ; i < NbrOfIdx ; i++)
-            {
-                m_pDoc->GetPanelList()->value(j)->GetWishBoneRegisterList()->value(IdxTab[i])->SetValue(TempReg->Value());
-                m_pDoc->GetPanelList()->value(j)->GetWishBoneRegisterList()->value(IdxTab[i])->SetDate(TempReg->Date());
-            }
-        }
+        m_pDoc->GetRegisterList()->value(m_pDoc->GetRegisterList()->indexOf(TempReg))->UpdateValue(TempReg->Value(), TempReg->Date());
     }
 
-    if (m_pOnglets->count() > 0)
+    /*if (m_pOnglets->count() > 0)
     {
         for (int i(0) ; i < m_pOnglets->count() ; i++)
         {
@@ -312,7 +312,7 @@ void MainWindow::ReceiveSerial()
                ((GraphTab*)(m_pOnglets->widget(i)))->UpdateData();
             }
         }
-    }
+    }*/
 
     delete TempReg;
 }
@@ -321,53 +321,27 @@ void MainWindow::AddTab()
 {
     bool ok(false);
 
-    QStringList PanelTypeList;
-    PanelTypeList << "Contrôle" << "Graphe";
-    QString PanelType = QInputDialog::getItem(this, "Type de panel", "Quel type de panel\nsouhaitez vous ajouter ?", PanelTypeList, 0, false, &ok);
+    QString PanelName = QInputDialog::getText(this, "Nom du Panel", "Quel nom souhaites vous\ndonner à votre panel ?", QLineEdit::Normal, "Nouveau Panel", &ok);
 
     if (ok)
     {
-        QString PanelName = QInputDialog::getText(this, "Nom du Panel", "Quel nom souhaites vous\ndonner à votre panel ?", QLineEdit::Normal, PanelType, &ok);
-
-        if (ok)
-        {
-            if (PanelType == "Contrôle")
-            {
-                PanelDoc* pPanel = new PanelDoc();
-                m_pDoc->AddPanel(pPanel);
-                ControlTab* pControlTab = new ControlTab(m_pDoc->GetMailBox(), m_pDoc->GetPanelList()->last());
-                m_pOnglets->addTab(pControlTab, PanelName);
-            }
-            else if (PanelType == "Graphe")
-            {
-                PanelDoc* pPanel = new PanelDoc();
-                m_pDoc->AddPanel(pPanel);
-                GraphTab* pGraphTab = new GraphTab(m_pDoc->GetMailBox(), m_pDoc->GetPanelList()->last());
-                m_pOnglets->addTab(pGraphTab, "Graph");
-            }
-        }
+        PanelView*  Panel = new PanelView(m_pDoc->AddPanel(PanelName));
+        m_pOnglets->addTab(Panel, Panel->pDoc()->Title());
     }
 }
 
 void MainWindow::CloseTab(int i)
 {
-    // S'il s'agit d'un onglet de contrôle
-    if (((VirtualTab*)(m_pOnglets->widget(i)))->GetType() == eControlTab)
+    if (i != m_pOnglets->indexOf(m_pRegisterListView))
     {
-        m_pDoc->GetPanelList()->removeOne(((ControlTab*)(m_pOnglets->widget(i)))->GetPanel());
-        m_pOnglets->removeTab(i);
-    }
-    // S'il s'agit d'un onglet de graphe
-    else if (((VirtualTab*)(m_pOnglets->widget(i)))->GetType() == eGraphTab)
-    {
-        m_pDoc->GetPanelList()->removeOne(((GraphTab*)(m_pOnglets->widget(i)))->GetPanel());
+        m_pDoc->DelPanel((PanelDoc*)(m_pOnglets->widget(i)));
         m_pOnglets->removeTab(i);
     }
 }
 
 void MainWindow::ChangeTab(int i)
 {
-    if (m_pOnglets->count() > 0)
+    /*if (m_pOnglets->count() > 0)
     {
         // S'il s'agit d'un onglet de contrôle
         if (((VirtualTab*)(m_pOnglets->widget(i)))->GetType() == eControlTab)
@@ -385,5 +359,5 @@ void MainWindow::ChangeTab(int i)
             ((GraphTab*)(m_pOnglets->widget(i)))->UpdateData();
             ((GraphTab*)(m_pOnglets->widget(i)))->UpdateButtons();
         }
-    }
+    }*/
 }

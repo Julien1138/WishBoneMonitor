@@ -10,8 +10,8 @@
 
 #include "wishbonemonitor.h"
 #include "paneldoc.h"
-#include "controltab.h"
-#include "graphtab.h"
+#include "panelview.h"
+#include "registerlistview.h"
 #include "QextSerialBase/qextserialenumerator.h"
 #include "QextSerialBase/qextserialport.h"
 
@@ -50,6 +50,7 @@ private:
 
 private:
     WishBoneMonitor*    m_pDoc;
+    RegisterListView*   m_pRegisterListView;
 };
 
 #endif // MAINWINDOW_H
