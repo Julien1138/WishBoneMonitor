@@ -12,8 +12,6 @@ WishBoneRegister::WishBoneRegister()
     , m_Period(0)
     , m_Date(0)
 {
-    m_ValueTab.clear();
-    m_DateTab.clear();
 }
 
 WishBoneRegister::WishBoneRegister(const WishBoneRegister & Reg)
@@ -28,8 +26,6 @@ WishBoneRegister::WishBoneRegister(const WishBoneRegister & Reg)
     , m_Period(Reg.m_Period)
     , m_Date(Reg.m_Date)
 {
-    m_ValueTab.clear();
-    m_DateTab.clear();
 }
 
 WishBoneRegister::WishBoneRegister(QString          Name
@@ -51,35 +47,20 @@ WishBoneRegister::WishBoneRegister(QString          Name
     , m_Period(Period)
     , m_Date(0)
 {
-    m_ValueTab.clear();
-    m_DateTab.clear();
 }
 
 WishBoneRegister::~WishBoneRegister()
 {
 }
 
-void WishBoneRegister::SetValue(unsigned long Value)
+bool WishBoneRegister::operator ==(WishBoneRegister Reg)
+{
+    return (m_Address == Reg.Address() &&
+            m_Write_nRead == Reg.Write_nRead());
+}
+
+void WishBoneRegister::UpdateValue(unsigned long Value, unsigned long Date)
 {
     m_Value = Value;
-    if (m_Signed)
-    {
-        m_ValueTab.push_back(double((signed)Value));
-    }
-    else
-    {
-        m_ValueTab.push_back(double((unsigned)Value));
-    }
-}
-
-void WishBoneRegister::SetDate(unsigned long Date)
-{
     m_Date = Date;
-    m_DateTab.push_back(Date*0.001);
-}
-
-void WishBoneRegister::ResetTab()
-{
-    m_ValueTab.clear();
-    m_DateTab.clear();
 }
