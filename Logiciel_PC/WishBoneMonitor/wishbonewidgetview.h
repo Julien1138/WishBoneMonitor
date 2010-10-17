@@ -5,9 +5,8 @@
 #include <QPoint>
 #include <QGroupBox>
 #include <QLayout>
-#include "wishbonewidgetdoc.h"
 
-#include <QLabel>
+#include "WishBoneWidgetDoc.h"
 
 class WishBoneWidgetView : public QWidget
 {
@@ -22,14 +21,20 @@ public slots:
 private:
     WishBoneWidgetDoc*  m_pDoc;
 
-    QGroupBox*  m_pGroupBox;
-    QLabel*     m_pLabel;
-
-    QPoint  m_MousePreviousPosition;
+    QPoint  m_MouseRelativePosition;
     bool    m_IsBeingMoved;
+    bool    m_IsBeingResized;
     void    mousePressEvent(QMouseEvent *event);
     void    mouseMoveEvent(QMouseEvent *event);
     void    mouseReleaseEvent(QMouseEvent *event);
+
+protected:
+    QGroupBox   m_GroupBox;
+    QLayout*    m_pLayout;
+
+    bool    eventFilter(QObject *obj, QEvent *event);
+
+    void    UpdateDisplay();
 };
 
 #endif // WISHBONEWIDGETVIEW_H

@@ -5,7 +5,12 @@
 #include <QList>
 #include <QPoint>
 #include "PanelDoc.h"
+#include "WishBoneWidgetDoc.h"
 #include "WishBoneWidgetView.h"
+#include "WishBoneWidgetDlg.h"
+#include "WBWriteRegisterDoc.h"
+#include "WBWriteRegisterView.h"
+#include "WBWriteRegisterDlg.h"
 
 class PanelView : public QWidget
 {

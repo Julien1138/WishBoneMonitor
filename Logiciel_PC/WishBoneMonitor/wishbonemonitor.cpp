@@ -15,7 +15,7 @@ WishBoneMonitor::~WishBoneMonitor()
 
 PanelDoc* WishBoneMonitor::AddPanel(const QString &PanelTitle)
 {
-    PanelDoc* Panel = new PanelDoc(PanelTitle, &m_ConnectedMode);
+    PanelDoc* Panel = new PanelDoc(PanelTitle, &m_ConnectedMode, &m_listRegisters);
     m_listPanel.append(Panel);
 
     return Panel;
