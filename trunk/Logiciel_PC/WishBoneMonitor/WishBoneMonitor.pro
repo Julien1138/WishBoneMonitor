@@ -23,7 +23,11 @@ SOURCES += main.cpp\
     registerlistview.cpp \
     panelview.cpp \
     wishbonewidgetview.cpp \
-    wishbonewidgetdoc.cpp
+    wishbonewidgetdoc.cpp \
+    wbwriteregisterdoc.cpp \
+    wbwriteregisterview.cpp \
+    wishbonewidgetdlg.cpp \
+    wbwriteregisterdlg.cpp
 
 HEADERS  += mainwindow.h \
     wishbonemonitor.h \
@@ -34,7 +38,11 @@ HEADERS  += mainwindow.h \
     registerlistview.h \
     panelview.h \
     wishbonewidgetview.h \
-    wishbonewidgetdoc.h
+    wishbonewidgetdoc.h \
+    wbwriteregisterdoc.h \
+    wbwriteregisterview.h \
+    wishbonewidgetdlg.h \
+    wbwriteregisterdlg.h
 
 CONFIG(debug, debug|release):LIBS  += -lqextserialportd
 else:LIBS  += -lqextserialport

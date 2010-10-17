@@ -326,7 +326,8 @@ void MainWindow::AddTab()
     if (ok)
     {
         PanelView*  Panel = new PanelView(m_pDoc->AddPanel(PanelName));
-        m_pOnglets->addTab(Panel, Panel->pDoc()->Title());
+        int Idx = m_pOnglets->addTab(Panel, Panel->pDoc()->Title());
+        m_pOnglets->setCurrentIndex(Idx);
     }
 }
 

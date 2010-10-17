@@ -1,8 +1,9 @@
 #include "paneldoc.h"
 
-PanelDoc::PanelDoc(const QString &Title, bool* pConnectedMode)
+PanelDoc::PanelDoc(const QString &Title, bool* pConnectedMode, QList<WishBoneRegister*>* plistRegisters)
     : m_Title(Title)
     , m_pConnectedMode(pConnectedMode)
+    , m_plistRegisters(plistRegisters)
 {
 }
 
@@ -10,10 +11,7 @@ PanelDoc::~PanelDoc()
 {
 }
 
-WishBoneWidgetDoc* PanelDoc::AddWidget()
+void PanelDoc::AddWidget(WishBoneWidgetDoc* Widget)
 {
-    WishBoneWidgetDoc* Widget = new WishBoneWidgetDoc(m_pConnectedMode);
     m_listWidget.push_back(Widget);
-
-    return Widget;
 }
