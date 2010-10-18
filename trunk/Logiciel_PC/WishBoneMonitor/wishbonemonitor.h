@@ -24,6 +24,8 @@ public:
     bool        DelRegister(unsigned long Address);
     bool        RegisterExists(const unsigned long &Address, const bool &Write_nRead) const;
     void        ClearRegisterList();
+    void        SetConnectMode(){m_ConnectedMode = true;}
+    void        SetConfigMode(){m_ConnectedMode = false;}
 
 private:
     QList<WishBoneRegister*>    m_listRegisters;
