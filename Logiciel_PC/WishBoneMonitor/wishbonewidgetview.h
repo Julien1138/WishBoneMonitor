@@ -17,10 +17,12 @@ public:
 signals:
 
 public slots:
+    virtual void    ModeChanged() = 0;
 
-private:
+protected:
     WishBoneWidgetDoc*  m_pDoc;
 
+private:
     QPoint  m_MouseRelativePosition;
     bool    m_IsBeingMoved;
     bool    m_IsBeingResized;

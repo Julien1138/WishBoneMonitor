@@ -247,43 +247,22 @@ void MainWindow::ConnectSerial()
     else
     {
         connect(m_pDoc->GetMailBox()->GetPort(), SIGNAL(readyRead()), this , SLOT(ReceiveSerial()));
-        m_pRegisterListView->UpdateDisplay();
+        m_pDoc->SetConnectMode();
+        emit ChangeMode();
     }
-
-    /*if (m_pOnglets->count() > 0)
-    {
-        // S'il s'agit d'un onglet de contrôle
-        if (((VirtualTab*)(m_pOnglets->currentWidget()))->GetType() == eControlTab)
-        {
-           ((ControlTab*)(m_pOnglets->currentWidget()))->UpdateButtons();
-        }
-        // S'il s'agit d'un onglet de graphe
-        else if (((VirtualTab*)(m_pOnglets->currentWidget()))->GetType() == eGraphTab)
-        {
-           ((GraphTab*)(m_pOnglets->currentWidget()))->UpdateButtons();
-        }
-    }*/
+    m_pRegisterListView->UpdateDisplay();
 }
 
 void MainWindow::DisconnectSerial()
 {
     m_pDoc->GetMailBox()->Disconnect();
 
-    m_pRegisterListView->UpdateDisplay();
-
-    /*if (m_pOnglets->count() > 0)
+    if (!(m_pDoc->GetMailBox()->IsConnected()))
     {
-        // S'il s'agit d'un onglet de contrôle
-        if (((VirtualTab*)(m_pOnglets->currentWidget()))->GetType() == eControlTab)
-        {
-           ((ControlTab*)(m_pOnglets->currentWidget()))->UpdateButtons();
-        }
-        // S'il s'agit d'un onglet de graphe
-        else if (((VirtualTab*)(m_pOnglets->currentWidget()))->GetType() == eGraphTab)
-        {
-           ((GraphTab*)(m_pOnglets->currentWidget()))->UpdateButtons();
-        }
-    }*/
+        m_pDoc->SetConfigMode();
+        emit ChangeMode();
+    }
+    m_pRegisterListView->UpdateDisplay();
 }
 
 void MainWindow::ReceiveSerial()
@@ -326,6 +305,7 @@ void MainWindow::AddTab()
     if (ok)
     {
         PanelView*  Panel = new PanelView(m_pDoc->AddPanel(PanelName));
+        connect(this, SIGNAL(ChangeMode()), Panel, SLOT(ModeChanged()));
         int Idx = m_pOnglets->addTab(Panel, Panel->pDoc()->Title());
         m_pOnglets->setCurrentIndex(Idx);
     }

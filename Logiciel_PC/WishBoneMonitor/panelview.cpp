@@ -10,6 +10,11 @@ PanelView::PanelView(PanelDoc* pDoc, QWidget *parent) :
 {
 }
 
+void PanelView::ModeChanged()
+{
+    emit ChangeMode();
+}
+
 void PanelView::AddWidget()
 {
     bool ok;
@@ -36,6 +41,7 @@ void PanelView::AddWidget()
             if (WidgetDlg->exec() == QDialog::Accepted)
             {
                 WidgetView = new WBWriteRegisterView((WBWriteRegisterDoc*) WidgetDoc, this);
+                connect(this, SIGNAL(ChangeMode()), WidgetView, SLOT(ModeChanged()));
             }
             else
             {

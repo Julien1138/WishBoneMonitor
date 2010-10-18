@@ -25,7 +25,10 @@ public:
 
     void resizeEvent(QResizeEvent* event);
 
-public slots :
+signals:
+    void    ChangeMode();
+
+public slots:
     void    NewConfig();
     void    OpenConfig();
     void    SaveConfig();

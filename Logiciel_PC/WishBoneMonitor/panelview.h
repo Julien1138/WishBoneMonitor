@@ -22,8 +22,10 @@ public:
     QList<WishBoneWidgetView*>* GetWidgetList(){return &m_listWidget;}
 
 signals:
+    void    ChangeMode();
 
 public slots:
+    void    ModeChanged();
     void    AddWidget();
 
 private:
