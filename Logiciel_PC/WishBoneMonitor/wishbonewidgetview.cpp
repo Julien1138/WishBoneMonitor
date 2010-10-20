@@ -121,5 +121,5 @@ bool WishBoneWidgetView::eventFilter(QObject *obj, QEvent *event)
     {
         return QWidget::eventFilter(obj, event);
     }
-    return true;
+    return false;
 }
