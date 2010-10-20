@@ -247,7 +247,6 @@ void MainWindow::ConnectSerial()
     else
     {
         connect(m_pDoc->GetMailBox()->GetPort(), SIGNAL(readyRead()), this , SLOT(ReceiveSerial()));
-        m_pDoc->SetConnectMode();
         emit ChangeMode();
     }
     m_pRegisterListView->UpdateDisplay();
@@ -259,7 +258,6 @@ void MainWindow::DisconnectSerial()
 
     if (!(m_pDoc->GetMailBox()->IsConnected()))
     {
-        m_pDoc->SetConfigMode();
         emit ChangeMode();
     }
     m_pRegisterListView->UpdateDisplay();

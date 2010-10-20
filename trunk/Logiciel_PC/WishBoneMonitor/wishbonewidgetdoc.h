@@ -2,19 +2,20 @@
 #define WISHBONEWIDGETDOC_H
 
 #include <QString>
+#include "MailBoxDriver.h"
 
 enum WidgetType{eWriteRegister, eReadRegister};
 
 class WishBoneWidgetDoc
 {
 public:
-    WishBoneWidgetDoc(const QString &Title, bool* pConnectedMode, int X, int Y, int Width, int Height);
+    WishBoneWidgetDoc(const QString &Title, MailBoxDriver* pMailBox, int X, int Y, int Width, int Height);
     ~WishBoneWidgetDoc();
 
     virtual WidgetType GetType() = 0;
 
     QString Title(){return m_Title;}
-    bool    ConfigMode(){return !(*m_pConnectedMode);}
+    bool    ConfigMode(){return !(m_pMailBox->IsConnected());}
     int     X(){return m_X;}
     int     Y(){return m_Y;}
     int     Width(){return m_Width;}
@@ -27,8 +28,8 @@ public:
     void    SetHeight(int Height){m_Height = Height;}
 
 protected:
-    QString m_Title;
-    bool*   m_pConnectedMode;
+    QString         m_Title;
+    MailBoxDriver*  m_pMailBox;
 
 private:
     int     m_X;
