@@ -5,24 +5,25 @@
 #include <QList>
 #include "WishBoneWidgetDoc.h"
 #include "WishBoneRegister.h"
+#include "MailBoxDriver.h"
 
 class PanelDoc
 {
 public:
-    PanelDoc(const QString &Title, bool* pConnectedMode, QList<WishBoneRegister*>* plistRegisters);
+    PanelDoc(const QString &Title, MailBoxDriver* pMailBox, QList<WishBoneRegister*>* plistRegisters);
     ~PanelDoc();
 
     QString                     Title(){return m_Title;}
     QList<WishBoneWidgetDoc*>*  GetWidgetList(){return &m_listWidget;}
-    bool*                       GetpConnectedMode(){return m_pConnectedMode;}
-    QList<WishBoneRegister*>*   GetplistRegisters(){return m_plistRegisters;}
+    MailBoxDriver*              GetMailBox(){return m_pMailBox;}
+    QList<WishBoneRegister*>*   GetRegistersList(){return m_plistRegisters;}
 
     void    AddWidget(WishBoneWidgetDoc* Widget);
 
 private:
     QString                     m_Title;
     QList<WishBoneWidgetDoc*>   m_listWidget;
-    bool*                       m_pConnectedMode;
+    MailBoxDriver*              m_pMailBox;
     QList<WishBoneRegister*>*   m_plistRegisters;
 };
 

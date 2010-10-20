@@ -1,7 +1,6 @@
 #include "wishbonemonitor.h"
 
 WishBoneMonitor::WishBoneMonitor()
-    : m_ConnectedMode(false)
 {
     m_pMailBox = new MailBoxDriver();
 }
@@ -15,7 +14,7 @@ WishBoneMonitor::~WishBoneMonitor()
 
 PanelDoc* WishBoneMonitor::AddPanel(const QString &PanelTitle)
 {
-    PanelDoc* Panel = new PanelDoc(PanelTitle, &m_ConnectedMode, &m_listRegisters);
+    PanelDoc* Panel = new PanelDoc(PanelTitle, m_pMailBox, &m_listRegisters);
     m_listPanel.append(Panel);
 
     return Panel;

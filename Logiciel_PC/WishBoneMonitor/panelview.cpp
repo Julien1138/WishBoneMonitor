@@ -29,12 +29,12 @@ void PanelView::AddWidget()
         WishBoneWidgetView* WidgetView;
         if (WidgetType == "WriteRegister")
         {
-            WidgetDoc = new WBWriteRegisterDoc(m_pDoc->GetplistRegisters()->front()->Name()
-                                             , m_pDoc->GetpConnectedMode()
+            WidgetDoc = new WBWriteRegisterDoc(m_pDoc->GetRegistersList()->front()->Name()
+                                             , m_pDoc->GetMailBox()
                                              , m_ContextMenuPosition.x()
                                              , m_ContextMenuPosition.y());
             m_pDoc->AddWidget(WidgetDoc);
-            WidgetDlg = new WBWriteRegisterDlg(pDoc()->GetplistRegisters()
+            WidgetDlg = new WBWriteRegisterDlg(pDoc()->GetRegistersList()
                                              , (WBWriteRegisterDoc*) WidgetDoc
                                              , this);
             WidgetDlg->setModal(true);
@@ -63,7 +63,7 @@ void PanelView::AddWidget()
 
 void PanelView::contextMenuEvent(QContextMenuEvent *event)
 {
-    if (!m_pDoc->GetplistRegisters()->empty())
+    if (!m_pDoc->GetRegistersList()->empty())
     {
         m_ContextMenuPosition = mapFromGlobal(event->globalPos());
 
