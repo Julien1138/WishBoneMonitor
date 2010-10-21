@@ -292,7 +292,7 @@ begin
             end if;
         end if;
     end process;
-    UART_Tx_Frame_CheckSum <= X"55" xor
+    UART_Tx_Frame_CheckSum <= "0000000" & MailBox_Direction_read xor
                               UART_Tx_Frame_Address(15 downto  8) xor
                               UART_Tx_Frame_Address( 7 downto  0) xor
                               MailBox_Data_read(31 downto 24) xor
@@ -332,7 +332,7 @@ begin
             UART_Tx_Frame <= (others => '0');
         elsif rising_edge(wb_clk_i) then
             if MailBox_write_UART_Frame = '1' then
-                UART_Tx_Frame <= X"55" &
+                UART_Tx_Frame <= "0000000" & MailBox_Direction_read &
                                  UART_Tx_Frame_Address &
                                  MailBox_Data_read &
                                  MailBox_Date_read &

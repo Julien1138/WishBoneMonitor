@@ -34,5 +34,13 @@ void WBWriteRegisterView::ModeChanged()
 
 void WBWriteRegisterView::WriteRegister()
 {
-    ((WBWriteRegisterDoc*) m_pDoc)->WriteRegister(m_EditValue.text().toULong(0, 0));
+    if (((WBWriteRegisterDoc*) m_pDoc)->Register()->Signed())
+    {
+        ((WBWriteRegisterDoc*) m_pDoc)->WriteRegister((unsigned long)(m_EditValue.text().toLong(0, 0)));
+    }
+    else
+    {
+        ((WBWriteRegisterDoc*) m_pDoc)->WriteRegister(m_EditValue.text().toULong(0, 0));
+    }
+
 }
