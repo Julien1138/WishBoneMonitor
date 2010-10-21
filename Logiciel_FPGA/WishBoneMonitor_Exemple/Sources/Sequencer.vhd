@@ -65,6 +65,7 @@ architecture Sequencer_behavior of Sequencer is
     signal UART_Rx_Frame_Period     : std_logic_vector(15 downto 0);
     signal UART_Rx_Frame_CheckSum   : std_logic_vector(7 downto 0);
     signal UART_Rx_Frame_Valid      : std_logic;
+    signal UART_Rx_Byte_Counter     : std_logic_vector(3 downto 0);
     
     signal MailBox_write                : std_logic;
     signal MailBox_written              : std_logic;
@@ -242,19 +243,34 @@ begin
     UART_Rx_Frame_Address   <= UART_Rx_Frame(71 downto 56);
     UART_Rx_Frame_Data      <= UART_Rx_Frame(55 downto 24);
     UART_Rx_Frame_Period    <= UART_Rx_Frame(23 downto 8);
-    UART_Rx_Frame_CheckSum <= UART_Rx_Frame( 7 downto  0) xor
-                              UART_Rx_Frame(15 downto  8) xor
-                              UART_Rx_Frame(23 downto 16) xor
-                              UART_Rx_Frame(31 downto 24) xor
-                              UART_Rx_Frame(39 downto 32) xor
-                              UART_Rx_Frame(47 downto 40) xor
-                              UART_Rx_Frame(55 downto 48) xor
-                              UART_Rx_Frame(63 downto 56) xor
-                              UART_Rx_Frame(71 downto 64) xor
-                              UART_Rx_Frame(79 downto 72);
-    UART_Rx_Frame_Valid <= '1' when UART_Rx_Frame_Header(7 downto 1) = "0000000" and UART_Rx_Frame_CheckSum = 0 else
+    UART_Rx_Frame_CheckSum  <= UART_Rx_Frame( 7 downto  0) xor
+                               UART_Rx_Frame(15 downto  8) xor
+                               UART_Rx_Frame(23 downto 16) xor
+                               UART_Rx_Frame(31 downto 24) xor
+                               UART_Rx_Frame(39 downto 32) xor
+                               UART_Rx_Frame(47 downto 40) xor
+                               UART_Rx_Frame(55 downto 48) xor
+                               UART_Rx_Frame(63 downto 56) xor
+                               UART_Rx_Frame(71 downto 64) xor
+                               UART_Rx_Frame(79 downto 72);
+    UART_Rx_Frame_Valid <= '1' when UART_Rx_Frame_Header(7 downto 1) = "0000000" and UART_Rx_Frame_CheckSum = 0 and UART_Rx_Byte_Counter = 0 else
                            '0';
-                           
+    
+    UART_Rx_Byte_Counter_process : process(wb_rst_i, wb_clk_i)
+    begin
+        if wb_rst_i = '1' then
+            UART_Rx_Byte_Counter <= (others => '0');
+        elsif rising_edge(wb_clk_i) then
+            if UART_read = '1' and wb_ack_i_UART = '1' then
+                if UART_Rx_Byte_Counter = 0 then
+                    UART_Rx_Byte_Counter <= X"9";
+                else
+                    UART_Rx_Byte_Counter <= UART_Rx_Byte_Counter - 1;
+                end if;
+            end if;
+        end if;
+    end process;
+    
     MailBox_write_Latch_process : process(wb_rst_i, wb_clk_i)
     begin
         if wb_rst_i = '1' then
