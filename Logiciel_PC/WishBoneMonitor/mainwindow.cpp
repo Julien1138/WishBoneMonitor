@@ -271,7 +271,11 @@ void MainWindow::ReceiveSerial()
 
     while (m_pDoc->GetMailBox()->DecodeRegister(TempReg))
     {
-        m_pDoc->GetRegisterList()->value(m_pDoc->GetRegisterList()->indexOf(TempReg))->UpdateValue(TempReg->Value(), TempReg->Date());
+        int Idx(m_pDoc->RegisterIdx(TempReg->Address(), TempReg->Write_nRead()));
+        if (Idx != -1)
+        {
+            m_pDoc->GetRegisterList()->value(Idx)->UpdateValue(TempReg->Value(), TempReg->Date());
+        }
     }
 
     /*if (m_pOnglets->count() > 0)

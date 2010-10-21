@@ -48,9 +48,9 @@ bool WishBoneMonitor::AddRegister(const WishBoneRegister &Register)
     return true;
 }
 
-bool WishBoneMonitor::DelRegister(unsigned long Address)
+bool WishBoneMonitor::DelRegister(const unsigned long &Address, const bool &Write_nRead)
 {
-    int Idx = RegisterIdx(Address);
+    int Idx = RegisterIdx(Address, Write_nRead);
 
     if (Idx == -1)
         return false;
@@ -96,11 +96,12 @@ bool WishBoneMonitor::RegisterExists(const unsigned long &Address, const bool &W
     return false;
 }
 
-int WishBoneMonitor::RegisterIdx(unsigned long Addr) const
+int WishBoneMonitor::RegisterIdx(const unsigned long &Address, const bool &Write_nRead) const
 {
     for (int i(0) ; i < m_listRegisters.count() ; i++)
     {
-        if (m_listRegisters.value(i)->Address() == Addr)
+        if (m_listRegisters.value(i)->Address() == Address &&
+            m_listRegisters.value(i)->Write_nRead() == Write_nRead)
         {
             return i;
         }

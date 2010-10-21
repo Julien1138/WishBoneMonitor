@@ -21,6 +21,7 @@ public:
     WidgetType GetType(){return eWriteRegister;}
 
     void    SetpRegister(WishBoneRegister* pReg){m_pRegister = pReg;}
+    WishBoneRegister*   Register(){return m_pRegister;}
 
     void    WriteRegister(unsigned long Value);
 

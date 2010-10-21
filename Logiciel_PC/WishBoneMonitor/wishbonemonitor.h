@@ -20,8 +20,9 @@ public:
     void        DelPanel(PanelDoc* Panel);
     void        ClearPanelList();
     bool        AddRegister(const WishBoneRegister &Register);
-    bool        DelRegister(unsigned long Address);
+    bool        DelRegister(const unsigned long &Address, const bool &Write_nRead);
     bool        RegisterExists(const unsigned long &Address, const bool &Write_nRead) const;
+    int         RegisterIdx(const unsigned long &Address, const bool &Write_nRead) const;
     void        ClearRegisterList();
     bool        ConfigMode(){return !(m_pMailBox->IsConnected());}
 
@@ -30,8 +31,7 @@ private:
     QList<PanelDoc*>            m_listPanel;
     MailBoxDriver*              m_pMailBox;
 
-    bool    RegisterExists(const WishBoneRegister & Register) const;
-    int     RegisterIdx(unsigned long Addr) const;
+    bool        RegisterExists(const WishBoneRegister & Register) const;
 };
 
 #endif // WISHBONEMONITOR_H

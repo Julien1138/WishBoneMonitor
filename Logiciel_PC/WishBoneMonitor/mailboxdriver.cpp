@@ -2,7 +2,6 @@
 
 #define HEADER_WRITE    0x01
 #define HEADER_READ     0x00
-#define HEADER_RECEIVE  0x55
 
 MailBoxDriver::MailBoxDriver()
     : m_pPort(NULL)
@@ -99,7 +98,8 @@ bool MailBoxDriver::DecodeRegister(WishBoneRegister* Reg)
             return false;
 
         m_pPort->peek(Data, 1);
-        if(Data[0] == HEADER_RECEIVE)
+        if(Data[0] == HEADER_WRITE ||
+           Data[0] == HEADER_READ)
         {
             break;
         }
@@ -112,7 +112,7 @@ bool MailBoxDriver::DecodeRegister(WishBoneRegister* Reg)
 
     m_pPort->read(Data, 10);
 
-    if ((Data[0] == HEADER_RECEIVE) && Checksum(Data, 10) == 0)
+    if ((Data[0] == HEADER_WRITE || Data[0] == HEADER_READ) && Checksum(Data, 10) == 0)
     {
         Reg->SetAddress(((unsigned char)Data[1] << 8) +
                          (unsigned char)Data[2]);
@@ -124,6 +124,8 @@ bool MailBoxDriver::DecodeRegister(WishBoneRegister* Reg)
 
         Reg->SetDate(((unsigned char)Data[7] << 8) +
                       (unsigned char)Data[8]);
+
+        Reg->SetWrite_nRead(Data[0] == HEADER_WRITE);
 
         return true;
     }
