@@ -63,6 +63,7 @@ void WishBoneRegister::UpdateValue(unsigned long Value, unsigned long Date)
 {
     m_Value = Value;
     m_Date = Date;
+    emit UpdateWidget();
 }
 
 void WishBoneRegister::SetValue(unsigned long Value)

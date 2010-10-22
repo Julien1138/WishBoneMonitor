@@ -1,11 +1,13 @@
 #ifndef WISHBONEREGISTER_H
 #define WISHBONEREGISTER_H
 
+#include <QObject>
 #include <QString>
 #include <QVector>
 
-class WishBoneRegister
+class WishBoneRegister : public QObject
 {
+    Q_OBJECT
 public:
     WishBoneRegister();
     WishBoneRegister(const WishBoneRegister & Reg);
@@ -45,6 +47,9 @@ public:
     void            SetDate(unsigned long Date){m_Date = Date;}
 
     void            UpdateValue(unsigned long Value, unsigned long Date);
+
+signals:
+    void    UpdateWidget();
 
 private:
     QString         m_Name;
