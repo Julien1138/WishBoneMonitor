@@ -11,7 +11,10 @@ WBWriteRegisterDlg::WBWriteRegisterDlg(QList<WishBoneRegister*>* plistRegisters,
 
     for (int i(0) ; i < plistRegisters->count() ; i++)
     {
-        m_ComboRegisterChoice.addItem(plistRegisters->value(i)->Name());
+        if (plistRegisters->value(i)->Write_nRead())
+        {
+            m_ComboRegisterChoice.addItem(plistRegisters->value(i)->Name());
+        }
     }
     connect(&m_ComboRegisterChoice, SIGNAL(currentIndexChanged(int)), this, SLOT(SetpDoc(int)));
     SetpDoc(0);
