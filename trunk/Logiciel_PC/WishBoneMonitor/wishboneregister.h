@@ -34,7 +34,8 @@ public:
 
     void            SetName(QString Name){m_Name = Name;}
     void            SetAddress(unsigned long Address){m_Address = Address;}
-    void            SetValue(unsigned long Value){m_Value = Value;}
+    void            SetValue(unsigned long Value);
+    void            SetValueNoCheck(unsigned long Value){m_Value = Value;}
     void            SetValueMin(unsigned long ValueMin){m_ValueMin = ValueMin;}
     void            SetValueMax(unsigned long ValueMax){m_ValueMax = ValueMax;}
     void            SetSigned(unsigned long Signed){m_Signed = Signed;}

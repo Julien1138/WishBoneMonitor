@@ -117,10 +117,10 @@ bool MailBoxDriver::DecodeRegister(WishBoneRegister* Reg)
         Reg->SetAddress(((unsigned char)Data[1] << 8) +
                          (unsigned char)Data[2]);
 
-        Reg->SetValue(((unsigned char)Data[3] << 24) +
-                      ((unsigned char)Data[4] << 16) +
-                      ((unsigned char)Data[5] << 8) +
-                       (unsigned char)Data[6]);
+        Reg->SetValueNoCheck(((unsigned char)Data[3] << 24) +
+                             ((unsigned char)Data[4] << 16) +
+                             ((unsigned char)Data[5] << 8) +
+                              (unsigned char)Data[6]);
 
         Reg->SetDate(((unsigned char)Data[7] << 8) +
                       (unsigned char)Data[8]);

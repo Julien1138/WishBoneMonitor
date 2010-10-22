@@ -64,3 +64,37 @@ void WishBoneRegister::UpdateValue(unsigned long Value, unsigned long Date)
     m_Value = Value;
     m_Date = Date;
 }
+
+void WishBoneRegister::SetValue(unsigned long Value)
+{
+    if (m_Signed)
+    {
+        if (((signed long) Value) > ((signed long) (m_ValueMax)))
+        {
+           m_Value = m_ValueMax;
+        }
+        else if (((signed long) Value) < ((signed long) (m_ValueMin)))
+        {
+            m_Value = m_ValueMin;
+        }
+        else
+        {
+            m_Value = Value;
+        }
+    }
+    else
+    {
+        if (((unsigned long) Value) > ((unsigned long) (m_ValueMax)))
+        {
+            m_Value = m_ValueMax;
+        }
+        else if (((unsigned long) Value) < ((unsigned long) (m_ValueMin)))
+        {
+            m_Value = m_ValueMin;
+        }
+        else
+        {
+            m_Value = Value;
+        }
+    }
+}
