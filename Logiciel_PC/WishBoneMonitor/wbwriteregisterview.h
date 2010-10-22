@@ -18,6 +18,7 @@ signals:
 public slots:
     void    ModeChanged();
     void    WriteRegister();
+    void    UpdateData();
 
 private:
     QLineEdit           m_EditValue;
