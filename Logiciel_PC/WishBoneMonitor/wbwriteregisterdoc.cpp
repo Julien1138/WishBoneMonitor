@@ -17,7 +17,6 @@ WBWriteRegisterDoc::~WBWriteRegisterDoc()
 
 void WBWriteRegisterDoc::WriteRegister(unsigned long Value)
 {
-
     m_pRegister->SetValue(Value);
     m_pMailBox->SendRegister(m_pRegister);
 }

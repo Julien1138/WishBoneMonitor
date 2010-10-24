@@ -5,7 +5,7 @@
 #include "WishBoneRegister.h"
 
 #define WIDTH_MIN   100
-#define HEIGHT_MIN  80
+#define HEIGHT_MIN  40
 
 class WBWriteRegisterDoc : public WishBoneWidgetDoc
 {
@@ -14,14 +14,17 @@ public:
                      , MailBoxDriver* pMailBox
                      , int X = 0
                      , int Y = 0
-                     , int Width = WIDTH_MIN
-                     , int Height = HEIGHT_MIN);
+                     , int Width = 100
+                     , int Height = 80);
     ~WBWriteRegisterDoc();
 
     WidgetType GetType(){return eWriteRegister;}
 
     void    SetpRegister(WishBoneRegister* pReg){m_pRegister = pReg;}
     WishBoneRegister*   Register(){return m_pRegister;}
+
+    void    SetHasSetButton(bool HasSetButton){m_HasSetButton = HasSetButton;}
+    bool    HasSetButton(){return m_HasSetButton;}
 
     void    WriteRegister(unsigned long Value);
 

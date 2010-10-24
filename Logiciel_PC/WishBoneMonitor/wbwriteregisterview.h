@@ -5,6 +5,7 @@
 #include "WBWriteRegisterDoc.h"
 
 #include <QLineEdit>
+#include <QLabel>
 #include <QPushButton>
 
 class WBWriteRegisterView : public WishBoneWidgetView
@@ -18,11 +19,15 @@ signals:
 public slots:
     void    ModeChanged();
     void    WriteRegister();
-    void    UpdateData();
+    void    Refresh();
 
 private:
     QLineEdit           m_EditValue;
-    QPushButton         m_SetButton;
+    QLabel              m_LabelUnit;
+    QPushButton*        m_pSetButton;
+
+//    void    contextMenuEvent(QContextMenuEvent * event);
+
 };
 
 #endif // WBWRITEREGISTERVIEW_H

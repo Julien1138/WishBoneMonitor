@@ -9,6 +9,7 @@
 #include <QHBoxLayout>
 #include <QComboBox>
 #include <QString>
+#include <QCheckBox>
 
 class WBWriteRegisterDlg : public WishBoneWidgetDlg
 {
@@ -22,9 +23,11 @@ signals:
 
 public slots:
     void    SetpDoc(int Idx);
+    void    OnAccept();
 
 private:
     QComboBox   m_ComboRegisterChoice;
+    QCheckBox   m_HasSetButtonCheckBox;
 
     QVBoxLayout m_MainLayout;
     QHBoxLayout m_ButtonsLayout;

@@ -5,6 +5,7 @@
 #include <QPoint>
 #include <QGroupBox>
 #include <QLayout>
+#include <QAction>
 
 #include "WishBoneWidgetDoc.h"
 
@@ -18,6 +19,9 @@ signals:
 
 public slots:
     virtual void    ModeChanged() = 0;
+    virtual void    Refresh() = 0;
+    void    Configure();
+    void    Delete();
 
 protected:
     WishBoneWidgetDoc*  m_pDoc;
@@ -37,6 +41,10 @@ protected:
     bool    eventFilter(QObject *obj, QEvent *event);
 
     void    UpdateDisplay();
+
+    void    contextMenuEvent(QContextMenuEvent * event);
+    QAction*    m_pConfigAction;
+    QAction*    m_pDeleteAction;
 };
 
 #endif // WISHBONEWIDGETVIEW_H

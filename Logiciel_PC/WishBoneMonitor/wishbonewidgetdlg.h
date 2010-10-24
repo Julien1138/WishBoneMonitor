@@ -21,6 +21,7 @@ signals:
 
 public slots:
     void    SetTitle(QString Title);
+    void    OnAccept();
 
 protected:
     QList<WishBoneRegister*>*   m_plistRegisters;
