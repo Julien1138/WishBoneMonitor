@@ -1,5 +1,6 @@
 #include "wishbonewidgetview.h"
 #include <QMouseEvent>
+#include <QMenu>
 
 WishBoneWidgetView::WishBoneWidgetView(WishBoneWidgetDoc*  pDoc, QWidget *parent) :
     QWidget(parent) ,
@@ -121,5 +122,24 @@ bool WishBoneWidgetView::eventFilter(QObject *obj, QEvent *event)
     {
         return QWidget::eventFilter(obj, event);
     }
-    return false;
+    return (m_pDoc->ConfigMode());
+}
+
+void WishBoneWidgetView::contextMenuEvent(QContextMenuEvent *event)
+{
+    QMenu * menu = new QMenu(this);
+    m_pConfigAction = menu->addAction("Configurer", this, SLOT(Configure()));
+    m_pDeleteAction = menu->addAction("Supprimer", this, SLOT(Delete()));
+
+    menu->exec(event->globalPos());
+}
+
+void WishBoneWidgetView::Configure()
+{
+
+}
+
+void WishBoneWidgetView::Delete()
+{
+
 }

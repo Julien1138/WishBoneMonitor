@@ -34,15 +34,15 @@ public:
     unsigned long   Period() const {return m_Period;}
     unsigned long   Date() const {return m_Date;}
 
-    void            SetName(QString Name){m_Name = Name;}
-    void            SetAddress(unsigned long Address){m_Address = Address;}
+    void            SetName(QString Name){m_Name = Name; emit UpdateWidget();}
+    void            SetAddress(unsigned long Address){m_Address = Address; emit UpdateWidget();}
     void            SetValue(unsigned long Value);
     void            SetValueNoCheck(unsigned long Value){m_Value = Value;}
-    void            SetValueMin(unsigned long ValueMin){m_ValueMin = ValueMin;}
-    void            SetValueMax(unsigned long ValueMax){m_ValueMax = ValueMax;}
-    void            SetSigned(unsigned long Signed){m_Signed = Signed;}
-    void            SetUnit(QString Unit){m_Unit = Unit;}
-    void            SetWrite_nRead(bool Write_nRead){m_Write_nRead = Write_nRead;}
+    void            SetValueMin(unsigned long ValueMin){m_ValueMin = ValueMin; emit UpdateWidget();}
+    void            SetValueMax(unsigned long ValueMax){m_ValueMax = ValueMax; emit UpdateWidget();}
+    void            SetSigned(unsigned long Signed){m_Signed = Signed; emit UpdateWidget();}
+    void            SetUnit(QString Unit){m_Unit = Unit; emit UpdateWidget();}
+    void            SetWrite_nRead(bool Write_nRead){m_Write_nRead = Write_nRead; emit UpdateWidget();}
     void            SetPeriod(unsigned long Period){m_Period = Period;}
     void            SetDate(unsigned long Date){m_Date = Date;}
 

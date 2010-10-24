@@ -16,3 +16,8 @@ void WishBoneWidgetDlg::SetTitle(QString Title)
 {
     m_pDoc->SetTitle(Title);
 }
+
+void WishBoneWidgetDlg::OnAccept()
+{
+
+}
