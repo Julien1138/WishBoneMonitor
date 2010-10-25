@@ -3,6 +3,7 @@
 
 #include "WishBoneWidgetView.h"
 #include "WBWriteRegisterDoc.h"
+#include "WBWriteRegisterDlg.h"
 
 #include <QLineEdit>
 #include <QLabel>
@@ -12,7 +13,7 @@ class WBWriteRegisterView : public WishBoneWidgetView
 {
     Q_OBJECT
 public:
-    WBWriteRegisterView(WBWriteRegisterDoc*  pDoc, QWidget *parent = 0);
+    WBWriteRegisterView(WBWriteRegisterDoc*  pDoc, WBWriteRegisterDlg*  pDlg, QWidget *parent = 0);
 
 signals:
 
@@ -26,7 +27,7 @@ private:
     QLabel              m_LabelUnit;
     QPushButton*        m_pSetButton;
 
-//    void    contextMenuEvent(QContextMenuEvent * event);
+    void    UpdateWidget();
 
 };
 

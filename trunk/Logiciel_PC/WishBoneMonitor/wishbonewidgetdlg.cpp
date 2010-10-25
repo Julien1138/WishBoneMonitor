@@ -21,3 +21,8 @@ void WishBoneWidgetDlg::OnAccept()
 {
 
 }
+
+void WishBoneWidgetDlg::UpdateData()
+{
+
+}

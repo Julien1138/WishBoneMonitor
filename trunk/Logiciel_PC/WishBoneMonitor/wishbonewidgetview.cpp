@@ -2,9 +2,10 @@
 #include <QMouseEvent>
 #include <QMenu>
 
-WishBoneWidgetView::WishBoneWidgetView(WishBoneWidgetDoc*  pDoc, QWidget *parent) :
+WishBoneWidgetView::WishBoneWidgetView(WishBoneWidgetDoc*  pDoc, WishBoneWidgetDlg*  pDlg, QWidget *parent) :
     QWidget(parent) ,
     m_pDoc(pDoc),
+    m_pDlg(pDlg),
     m_IsBeingMoved(false),
     m_IsBeingResized(false),
     m_GroupBox(this)
@@ -118,6 +119,10 @@ bool WishBoneWidgetView::eventFilter(QObject *obj, QEvent *event)
     {
         mouseReleaseEvent(static_cast<QMouseEvent *>(event));
     }
+    else if (event->type() == QEvent::ContextMenu)
+    {
+        contextMenuEvent(static_cast<QContextMenuEvent*>(event));
+    }
     else
     {
         return QWidget::eventFilter(obj, event);
@@ -136,10 +141,20 @@ void WishBoneWidgetView::contextMenuEvent(QContextMenuEvent *event)
 
 void WishBoneWidgetView::Configure()
 {
-
+    m_pDlg->UpdateData();
+    m_pDlg->setModal(true);
+    if (m_pDlg->exec() == QDialog::Accepted)
+    {
+        this->UpdateWidget();
+    }
 }
 
 void WishBoneWidgetView::Delete()
 {
 
+}
+
+void WishBoneWidgetView::UpdateWidget()
+{
+    m_GroupBox.setTitle(m_pDoc->Title());
 }

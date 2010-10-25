@@ -8,12 +8,13 @@
 #include <QAction>
 
 #include "WishBoneWidgetDoc.h"
+#include "WishBoneWidgetDlg.h"
 
 class WishBoneWidgetView : public QWidget
 {
     Q_OBJECT
 public:
-    explicit WishBoneWidgetView(WishBoneWidgetDoc*  pDoc, QWidget *parent = 0);
+    explicit WishBoneWidgetView(WishBoneWidgetDoc*  pDoc, WishBoneWidgetDlg*  pDlg, QWidget *parent = 0);
 
 signals:
 
@@ -25,6 +26,7 @@ public slots:
 
 protected:
     WishBoneWidgetDoc*  m_pDoc;
+    WishBoneWidgetDlg*  m_pDlg;
 
 private:
     QPoint  m_MouseRelativePosition;
@@ -41,6 +43,7 @@ protected:
     bool    eventFilter(QObject *obj, QEvent *event);
 
     void    UpdateDisplay();
+    virtual void    UpdateWidget();
 
     void    contextMenuEvent(QContextMenuEvent * event);
     QAction*    m_pConfigAction;

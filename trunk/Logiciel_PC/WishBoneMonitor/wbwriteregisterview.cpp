@@ -1,8 +1,8 @@
 #include "wbwriteregisterview.h"
 #include <QGridLayout>
 
-WBWriteRegisterView::WBWriteRegisterView(WBWriteRegisterDoc*  pDoc, QWidget *parent)
-    : WishBoneWidgetView(pDoc, parent)
+WBWriteRegisterView::WBWriteRegisterView(WBWriteRegisterDoc*  pDoc, WBWriteRegisterDlg*  pDlg, QWidget *parent)
+    : WishBoneWidgetView(pDoc, pDlg, parent)
     , m_EditValue(this)
     , m_pSetButton(NULL)
 {
@@ -74,7 +74,28 @@ void WBWriteRegisterView::Refresh()
     m_LabelUnit.setText(((WBWriteRegisterDoc*) m_pDoc)->Register()->Unit());
 }
 
-//void WBWriteRegisterView::contextMenuEvent(QContextMenuEvent *event)
-//{
+void WBWriteRegisterView::UpdateWidget()
+{
+    WishBoneWidgetView::UpdateWidget();
 
-//}
+    if (((WBWriteRegisterDoc*) m_pDoc)->HasSetButton())
+    {
+        if (!m_pSetButton)
+        {
+            m_pSetButton = new QPushButton("Set", this);
+            m_pSetButton->installEventFilter(this);
+            m_pSetButton->setMouseTracking(true);
+            m_pSetButton->setEnabled(false);
+            connect(m_pSetButton, SIGNAL(clicked()), this, SLOT(WriteRegister()));
+            ((QGridLayout*) m_pLayout)->addWidget(m_pSetButton, 1, 0, 1, 2);
+        }
+    }
+    else
+    {
+        if (m_pSetButton)
+        {
+            delete m_pSetButton;
+            m_pSetButton = NULL;
+        }
+    }
+}

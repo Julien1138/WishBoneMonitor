@@ -40,15 +40,17 @@ void PanelView::AddWidget()
             WidgetDlg->setModal(true);
             if (WidgetDlg->exec() == QDialog::Accepted)
             {
-                WidgetView = new WBWriteRegisterView((WBWriteRegisterDoc*) WidgetDoc, this);
+                WidgetView = new WBWriteRegisterView((WBWriteRegisterDoc*) WidgetDoc
+                                                    ,(WBWriteRegisterDlg*) WidgetDlg
+                                                    , this);
                 connect(this, SIGNAL(ChangeMode()), WidgetView, SLOT(ModeChanged()));
             }
             else
             {
                 delete WidgetDoc;
+                delete WidgetDlg;
                 return;
             }
-            delete WidgetDlg;
         }
         else
         {

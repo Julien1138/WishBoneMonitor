@@ -34,7 +34,7 @@ AddRegisterDialog::AddRegisterDialog(bool Writable, QWidget *parent) :
 
     m_pRadioLayout = new QHBoxLayout;
     m_pRadioLabel = new QLabel("Direction");
-    m_pRadioLabel->setFixedWidth(110);
+    m_pRadioLabel->setFixedWidth(135);
     m_pRadioLayout->addWidget(m_pRadioLabel);
     m_pRadioWrite = new QRadioButton("Ecriture");
     m_pRadioLayout->addWidget(m_pRadioWrite);

@@ -19,10 +19,11 @@ public:
                      , WBWriteRegisterDoc* pDoc
                      , QWidget *parent = 0);
 
+    void UpdateData();
+
 signals:
 
 public slots:
-    void    SetpDoc(int Idx);
     void    OnAccept();
 
 private:
