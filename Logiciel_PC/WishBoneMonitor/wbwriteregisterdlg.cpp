@@ -9,20 +9,19 @@ WBWriteRegisterDlg::WBWriteRegisterDlg(QList<WishBoneRegister*>* plistRegisters,
 {
     m_pLayout = new QFormLayout();
 
-    for (int i(0) ; i < plistRegisters->count() ; i++)
+    for (int i(0) ; i < m_plistRegisters->count() ; i++)
     {
-        m_ComboRegisterChoice.addItem(plistRegisters->value(i)->Name());
+        m_ComboRegisterChoice.addItem(m_plistRegisters->value(i)->Name());
     }
-    connect(&m_ComboRegisterChoice, SIGNAL(currentIndexChanged(int)), this, SLOT(SetpDoc(int)));
-    SetpDoc(0);
+    ((WBWriteRegisterDoc*) m_pDoc)->SetpRegister(m_plistRegisters->front());
     connect(&m_ComboRegisterChoice, SIGNAL(currentIndexChanged(QString)), &m_EditTitle, SLOT(setText(QString)));
     ((QFormLayout*) m_pLayout)->addRow("Nom du registre", &m_ComboRegisterChoice);
 
-    connect(&m_EditTitle, SIGNAL(textChanged(QString)), this, SLOT(SetTitle(QString)));
     ((QFormLayout*) m_pLayout)->addRow("Titre du Widget", &m_EditTitle);
 
     m_HasSetButtonCheckBox.setText("Bouton 'Set'");
-    ((QFormLayout*) m_pLayout)->addRow("", &m_HasSetButtonCheckBox);
+    m_HasSetButtonCheckBox.setChecked(true);
+    ((QFormLayout*) m_pLayout)->addRow("Bouton", &m_HasSetButtonCheckBox);
 
     m_MainLayout.addLayout(m_pLayout);
 
@@ -34,12 +33,21 @@ WBWriteRegisterDlg::WBWriteRegisterDlg(QList<WishBoneRegister*>* plistRegisters,
     setLayout(&m_MainLayout);
 }
 
-void WBWriteRegisterDlg::SetpDoc(int Idx)
-{
-    ((WBWriteRegisterDoc*) m_pDoc)->SetpRegister(m_plistRegisters->value(Idx));
-}
-
 void WBWriteRegisterDlg::OnAccept()
 {
+    ((WBWriteRegisterDoc*) m_pDoc)->SetTitle(m_EditTitle.text());
+    ((WBWriteRegisterDoc*) m_pDoc)->SetpRegister(m_plistRegisters->value(m_ComboRegisterChoice.currentIndex()));
     ((WBWriteRegisterDoc*) m_pDoc)->SetHasSetButton(m_HasSetButtonCheckBox.isChecked());
+}
+
+void WBWriteRegisterDlg::UpdateData()
+{
+    WishBoneWidgetDlg::UpdateData();
+
+    m_ComboRegisterChoice.clear();
+    for (int i(0) ; i < m_plistRegisters->count() ; i++)
+    {
+        m_ComboRegisterChoice.addItem(m_plistRegisters->value(i)->Name());
+    }
+    m_ComboRegisterChoice.setCurrentIndex(m_plistRegisters->indexOf(((WBWriteRegisterDoc*) m_pDoc)->Register()));
 }

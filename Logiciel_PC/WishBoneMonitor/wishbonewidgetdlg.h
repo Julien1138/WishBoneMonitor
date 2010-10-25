@@ -17,6 +17,8 @@ public:
                              , WishBoneWidgetDoc* pDoc
                              , QWidget *parent);
 
+    virtual void UpdateData();
+
 signals:
 
 public slots:
