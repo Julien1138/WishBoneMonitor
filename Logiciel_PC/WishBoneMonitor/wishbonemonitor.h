@@ -5,12 +5,15 @@
 #include "PanelDoc.h"
 #include "MailboxDriver.h"
 #include <QList>
+#include <QSettings>
 
 class WishBoneMonitor
 {
 public:
     WishBoneMonitor();
     ~WishBoneMonitor();
+
+    void    Save(QSettings* pSettings);
 
     QList<WishBoneRegister*>*   GetRegisterList(){return & m_listRegisters;}
     QList<PanelDoc*>*           GetPanelList(){return & m_listPanel;}

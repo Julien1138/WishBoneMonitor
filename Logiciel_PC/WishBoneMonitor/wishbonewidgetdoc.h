@@ -2,6 +2,7 @@
 #define WISHBONEWIDGETDOC_H
 
 #include <QString>
+#include <QSettings>
 #include "MailBoxDriver.h"
 
 enum WidgetType{eWriteRegister, eReadRegister};
@@ -13,6 +14,7 @@ public:
     ~WishBoneWidgetDoc();
 
     virtual WidgetType GetType() = 0;
+    virtual void Save(QSettings* pSettings);
 
     QString Title(){return m_Title;}
     bool    ConfigMode(){return !(m_pMailBox->IsConnected());}

@@ -18,7 +18,8 @@ public:
                      , int Height = 80);
     ~WBWriteRegisterDoc();
 
-    WidgetType GetType(){return eWriteRegister;}
+    WidgetType  GetType(){return eWriteRegister;}
+    void        Save(QSettings* pSettings);
 
     void    SetpRegister(WishBoneRegister* pReg){m_pRegister = pReg;}
     WishBoneRegister*   Register(){return m_pRegister;}

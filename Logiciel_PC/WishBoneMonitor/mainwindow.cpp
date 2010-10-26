@@ -156,7 +156,7 @@ void MainWindow::OpenConfig()
 
 void MainWindow::SaveConfig()
 {
-    /*QString FileName = QFileDialog::getSaveFileName(this, "Enregistrer un fichier", QString(), "WishBoneMonitor File (*.wbm)");
+    QString FileName = QFileDialog::getSaveFileName(this, "Enregistrer un fichier", QString(), "WishBoneMonitor File (*.wbm)");
 
     if (!FileName.isEmpty())
     {
@@ -166,76 +166,8 @@ void MainWindow::SaveConfig()
     // On crée un nouveau fichier de sauvegarde
         QSettings settings(FileName, QSettings::IniFormat);
 
-    // Création du groupe [Configuration]
-        settings.beginGroup("Configuration");
-        settings.setValue("NombreDePanels", QString::number(m_pDoc->GetPanelList()->size()));
-        settings.endGroup();
-
-        for (int j(0) ; j < m_pOnglets->count() ; j++)
-        {
-            // S'il s'agit d'un onglet de contrôle
-            if (((VirtualTab*)(m_pOnglets->widget(j)))->GetType() == eControlTab)
-            {
-            // Création des groupes [Panel]
-                settings.beginGroup("Panel_" + QString::number(j));
-                settings.setValue("TypeDePanel", "Controle");
-                settings.setValue("NomDuPanel", m_pOnglets->tabText(j));
-                settings.setValue("NombreDeRegistres", QString::number(((ControlTab*)(m_pOnglets->widget(j)))->GetPanel()->GetWishBoneRegisterList()->size()));
-                settings.endGroup();
-
-            // Création des groupes [Registre]
-                for(int i(0) ; i < ((ControlTab*)(m_pOnglets->widget(j)))->GetPanel()->GetWishBoneRegisterList()->size() ; i++)
-                {
-                    settings.beginGroup("Registre_" + QString::number(j) + "_" + QString::number(i));
-
-                    // Création des différentes clefs et valeurs correspondantes
-                    settings.setValue("Nom", ((ControlTab*)(m_pOnglets->widget(j)))->GetPanel()->GetWishBoneRegisterList()->value(i)->Name());
-                    settings.setValue("Adresse", QString::number(((ControlTab*)(m_pOnglets->widget(j)))->GetPanel()->GetWishBoneRegisterList()->value(i)->Address()));
-                    settings.setValue("ValeurMin", QString::number(((ControlTab*)(m_pOnglets->widget(j)))->GetPanel()->GetWishBoneRegisterList()->value(i)->ValueMin()));
-                    settings.setValue("ValeurMax", QString::number(((ControlTab*)(m_pOnglets->widget(j)))->GetPanel()->GetWishBoneRegisterList()->value(i)->ValueMax()));
-                    settings.setValue("Signed", ((ControlTab*)(m_pOnglets->widget(j)))->GetPanel()->GetWishBoneRegisterList()->value(i)->Signed() ? "Signed" : "Unsigned");
-                    settings.setValue("Unite", ((ControlTab*)(m_pOnglets->widget(j)))->GetPanel()->GetWishBoneRegisterList()->value(i)->Unit());
-                    settings.setValue("Direction", ((ControlTab*)(m_pOnglets->widget(j)))->GetPanel()->GetWishBoneRegisterList()->value(i)->Write_nRead() ? "Write" : "Read");
-                    settings.setValue("Periode", QString::number(((ControlTab*)(m_pOnglets->widget(j)))->GetPanel()->GetWishBoneRegisterList()->value(i)->Period()));
-
-                    settings.endGroup();
-                }
-            }
-            // S'il s'agit d'un onglet de graphe
-            else if (((VirtualTab*)(m_pOnglets->widget(j)))->GetType() == eGraphTab)
-            {
-            // Création des groupes [Panel]
-                settings.beginGroup("Panel_" + QString::number(j));
-                settings.setValue("TypeDePanel", "Graphe");
-                settings.setValue("NomDuPanel", m_pOnglets->tabText(j));
-                settings.setValue("NombreDeRegistres", QString::number(((GraphTab*)(m_pOnglets->widget(j)))->GetPanel()->GetWishBoneRegisterList()->size()));
-                settings.setValue("NombreDeGraphs", ((GraphTab*)(m_pOnglets->widget(j)))->GetpListNbrOfCurves()->size());
-                for (int i(0) ; i < ((GraphTab*)(m_pOnglets->widget(j)))->GetpListNbrOfCurves()->size() ; i++)
-                {
-                    settings.setValue("NombreDeCourbes_Graphe_" + QString::number(i), ((GraphTab*)(m_pOnglets->widget(j)))->GetpListNbrOfCurves()->value(i));
-                }
-                settings.endGroup();
-
-            // Création des groupes [Registre]
-                for(int i(0) ; i < ((GraphTab*)(m_pOnglets->widget(j)))->GetPanel()->GetWishBoneRegisterList()->size() ; i++)
-                {
-                    settings.beginGroup("Registre_" + QString::number(j) + "_" + QString::number(i));
-
-                    // Création des différentes clefs et valeurs correspondantes
-                    settings.setValue("Nom", ((GraphTab*)(m_pOnglets->widget(j)))->GetPanel()->GetWishBoneRegisterList()->value(i)->Name());
-                    settings.setValue("Adresse", QString::number(((GraphTab*)(m_pOnglets->widget(j)))->GetPanel()->GetWishBoneRegisterList()->value(i)->Address()));
-                    settings.setValue("ValeurMin", QString::number(((GraphTab*)(m_pOnglets->widget(j)))->GetPanel()->GetWishBoneRegisterList()->value(i)->ValueMin()));
-                    settings.setValue("ValeurMax", QString::number(((GraphTab*)(m_pOnglets->widget(j)))->GetPanel()->GetWishBoneRegisterList()->value(i)->ValueMax()));
-                    settings.setValue("Signed", ((GraphTab*)(m_pOnglets->widget(j)))->GetPanel()->GetWishBoneRegisterList()->value(i)->Signed() ? "Signed" : "Unsigned");
-                    settings.setValue("Unite", ((GraphTab*)(m_pOnglets->widget(j)))->GetPanel()->GetWishBoneRegisterList()->value(i)->Unit());
-                    settings.setValue("Direction", ((GraphTab*)(m_pOnglets->widget(j)))->GetPanel()->GetWishBoneRegisterList()->value(i)->Write_nRead() ? "Write" : "Read");
-                    settings.setValue("Periode", QString::number(((GraphTab*)(m_pOnglets->widget(j)))->GetPanel()->GetWishBoneRegisterList()->value(i)->Period()));
-
-                    settings.endGroup();
-                }
-            }
-        }
-    }*/
+        m_pDoc->Save(&settings);
+    }
 }
 
 void MainWindow::ConnectSerial()
