@@ -12,6 +12,16 @@ WishBoneMonitor::~WishBoneMonitor()
     delete m_pMailBox;
 }
 
+void WishBoneMonitor::Save(QSettings *pSettings)
+{
+    for (int i(0) ; i < m_listPanel.count() ; i++)
+    {
+        pSettings->beginGroup("Panel_" + QString::number(i));
+        m_listPanel.value(i)->Save(pSettings);
+        pSettings->endGroup();
+    }
+}
+
 PanelDoc* WishBoneMonitor::AddPanel(const QString &PanelTitle)
 {
     PanelDoc* Panel = new PanelDoc(PanelTitle, m_pMailBox, &m_listRegisters);

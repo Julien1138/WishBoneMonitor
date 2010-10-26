@@ -13,3 +13,12 @@ WishBoneWidgetDoc::WishBoneWidgetDoc(const QString &Title, MailBoxDriver* pMailB
 WishBoneWidgetDoc::~WishBoneWidgetDoc()
 {
 }
+
+void WishBoneWidgetDoc::Save(QSettings *pSettings)
+{
+    pSettings->setValue("Title", m_Title);
+    pSettings->setValue("PosX", m_X);
+    pSettings->setValue("PosY", m_Y);
+    pSettings->setValue("Width", m_Width);
+    pSettings->setValue("Height", m_Height);
+}

@@ -15,6 +15,16 @@ WBWriteRegisterDoc::~WBWriteRegisterDoc()
 {
 }
 
+void WBWriteRegisterDoc::Save(QSettings *pSettings)
+{
+    WishBoneWidgetDoc::Save(pSettings);
+
+    pSettings->setValue("Widget", "WBWriteRegister");
+    pSettings->setValue("HasSetButton", m_HasSetButton);
+    pSettings->setValue("RegisterAddress", QString::number(m_pRegister->Address()));
+    pSettings->setValue("RegisterWrite_nRead", QString::number(m_pRegister->Write_nRead()));
+}
+
 void WBWriteRegisterDoc::WriteRegister(unsigned long Value)
 {
     m_pRegister->SetValue(Value);
