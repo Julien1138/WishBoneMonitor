@@ -24,14 +24,12 @@ public:
     void    SetpRegister(WishBoneRegister* pReg){m_pRegister = pReg;}
     WishBoneRegister*   Register(){return m_pRegister;}
 
-    void    SetHasSetButton(bool HasSetButton){m_HasSetButton = HasSetButton;}
-    bool    HasSetButton(){return m_HasSetButton;}
+    bool    HasSetButton(){return !(m_pRegister->Period());}
 
     void    WriteRegister(unsigned long Value);
 
 private:
     WishBoneRegister*   m_pRegister;
-    bool                m_HasSetButton;
 
 };
 

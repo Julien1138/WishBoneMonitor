@@ -28,7 +28,6 @@ public slots:
 
 private:
     QComboBox   m_ComboRegisterChoice;
-    QCheckBox   m_HasSetButtonCheckBox;
 
     QVBoxLayout m_MainLayout;
     QHBoxLayout m_ButtonsLayout;
