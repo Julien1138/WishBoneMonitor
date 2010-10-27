@@ -19,10 +19,6 @@ WBWriteRegisterDlg::WBWriteRegisterDlg(QList<WishBoneRegister*>* plistRegisters,
 
     ((QFormLayout*) m_pLayout)->addRow("Titre du Widget", &m_EditTitle);
 
-    m_HasSetButtonCheckBox.setText("Bouton 'Set'");
-    m_HasSetButtonCheckBox.setChecked(true);
-    ((QFormLayout*) m_pLayout)->addRow("Bouton", &m_HasSetButtonCheckBox);
-
     m_MainLayout.addLayout(m_pLayout);
 
     connect(&m_OKButton, SIGNAL(clicked()), this, SLOT(OnAccept()));
@@ -37,7 +33,6 @@ void WBWriteRegisterDlg::OnAccept()
 {
     ((WBWriteRegisterDoc*) m_pDoc)->SetTitle(m_EditTitle.text());
     ((WBWriteRegisterDoc*) m_pDoc)->SetpRegister(m_plistRegisters->value(m_ComboRegisterChoice.currentIndex()));
-    ((WBWriteRegisterDoc*) m_pDoc)->SetHasSetButton(m_HasSetButtonCheckBox.isChecked());
 }
 
 void WBWriteRegisterDlg::UpdateData()
