@@ -53,6 +53,18 @@ WishBoneRegister::~WishBoneRegister()
 {
 }
 
+void WishBoneRegister::Save(QSettings *pSettings)
+{
+    pSettings->setValue("Name", m_Name);
+    pSettings->setValue("Address", QString::number(m_Address));
+    pSettings->setValue("ValueMin", QString::number(m_ValueMin));
+    pSettings->setValue("ValueMax", QString::number(m_ValueMax));
+    pSettings->setValue("Signed", m_Signed ? "true" : "false");
+    pSettings->setValue("Unit", m_Unit);
+    pSettings->setValue("Write_nRead", m_Write_nRead ? "true" : "false");
+    pSettings->setValue("Period", QString::number(m_Period));
+}
+
 bool WishBoneRegister::operator ==(WishBoneRegister Reg)
 {
     return (m_Address == Reg.Address() &&

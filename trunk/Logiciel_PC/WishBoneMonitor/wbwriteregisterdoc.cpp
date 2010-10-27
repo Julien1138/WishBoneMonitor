@@ -20,7 +20,7 @@ void WBWriteRegisterDoc::Save(QSettings *pSettings)
 
     pSettings->setValue("Widget", "WBWriteRegister");
     pSettings->setValue("RegisterAddress", QString::number(m_pRegister->Address()));
-    pSettings->setValue("RegisterWrite_nRead", QString::number(m_pRegister->Write_nRead()));
+    pSettings->setValue("RegisterWrite_nRead", m_pRegister->Write_nRead() ? "true" : "false");
 }
 
 void WBWriteRegisterDoc::WriteRegister(unsigned long Value)
