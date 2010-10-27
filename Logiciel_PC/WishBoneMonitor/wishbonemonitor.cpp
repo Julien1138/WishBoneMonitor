@@ -14,6 +14,15 @@ WishBoneMonitor::~WishBoneMonitor()
 
 void WishBoneMonitor::Save(QSettings *pSettings)
 {
+    pSettings->beginGroup("RegisterList");
+    for (int i(0) ; i < m_listRegisters.count() ; i++)
+    {
+        pSettings->beginGroup("Register_" + QString::number(i));
+        m_listRegisters.value(i)->Save(pSettings);
+        pSettings->endGroup();
+    }
+    pSettings->endGroup();
+
     for (int i(0) ; i < m_listPanel.count() ; i++)
     {
         pSettings->beginGroup("Panel_" + QString::number(i));

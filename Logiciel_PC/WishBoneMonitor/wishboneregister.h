@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QString>
 #include <QVector>
+#include <QSettings>
 
 class WishBoneRegister : public QObject
 {
@@ -20,6 +21,8 @@ public:
                    , bool           Write_nRead
                    , long           Period=0);
     ~WishBoneRegister();
+
+    void    Save(QSettings* pSettings);
 
     bool operator==(WishBoneRegister Reg);
 
