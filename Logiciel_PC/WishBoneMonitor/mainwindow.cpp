@@ -74,6 +74,9 @@ void MainWindow::NewConfig()
     m_pOnglets->clear();
     m_pDoc->ClearRegisterList();
     m_pDoc->ClearPanelList();
+
+    m_pOnglets->addTab(m_pRegisterListView, "Table des Registres");
+    m_pRegisterListView->UpdateDisplay();
 }
 
 void MainWindow::OpenConfig()
