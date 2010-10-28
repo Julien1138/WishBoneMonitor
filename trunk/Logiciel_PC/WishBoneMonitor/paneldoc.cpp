@@ -27,3 +27,9 @@ void PanelDoc::AddWidget(WishBoneWidgetDoc* Widget)
 {
     m_listWidget.push_back(Widget);
 }
+
+void PanelDoc::DeleteWidget(WishBoneWidgetDoc *Widget)
+{
+    m_listWidget.removeOne(Widget);
+    delete Widget;
+}

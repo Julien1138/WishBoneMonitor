@@ -15,6 +15,7 @@ WishBoneMonitor::~WishBoneMonitor()
 void WishBoneMonitor::Save(QSettings *pSettings)
 {
     pSettings->beginGroup("RegisterList");
+    pSettings->setValue("NbrOfRegisters", m_listRegisters.count());
     for (int i(0) ; i < m_listRegisters.count() ; i++)
     {
         pSettings->beginGroup("Register_" + QString::number(i));
@@ -23,12 +24,15 @@ void WishBoneMonitor::Save(QSettings *pSettings)
     }
     pSettings->endGroup();
 
+    pSettings->beginGroup("PanelList");
+    pSettings->setValue("NbrOfPanels", m_listPanel.count());
     for (int i(0) ; i < m_listPanel.count() ; i++)
     {
         pSettings->beginGroup("Panel_" + QString::number(i));
         m_listPanel.value(i)->Save(pSettings);
         pSettings->endGroup();
     }
+    pSettings->endGroup();
 }
 
 PanelDoc* WishBoneMonitor::AddPanel(const QString &PanelTitle)

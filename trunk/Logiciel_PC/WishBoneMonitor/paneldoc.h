@@ -22,6 +22,7 @@ public:
     QList<WishBoneRegister*>*   GetRegistersList(){return m_plistRegisters;}
 
     void    AddWidget(WishBoneWidgetDoc* Widget);
+    void    DeleteWidget(WishBoneWidgetDoc* Widget);
 
 private:
     QString                     m_Title;

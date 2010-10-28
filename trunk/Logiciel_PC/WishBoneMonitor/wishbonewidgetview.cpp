@@ -1,6 +1,7 @@
 #include "wishbonewidgetview.h"
 #include <QMouseEvent>
 #include <QMenu>
+#include <PanelView.h>
 
 WishBoneWidgetView::WishBoneWidgetView(WishBoneWidgetDoc*  pDoc, WishBoneWidgetDlg*  pDlg, QWidget *parent) :
     QWidget(parent) ,
@@ -151,7 +152,7 @@ void WishBoneWidgetView::Configure()
 
 void WishBoneWidgetView::Delete()
 {
-
+    ((PanelView*) parent())->DeleteWidget(this);
 }
 
 void WishBoneWidgetView::UpdateWidget()

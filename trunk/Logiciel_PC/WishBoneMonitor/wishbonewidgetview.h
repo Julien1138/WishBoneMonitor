@@ -16,6 +16,9 @@ class WishBoneWidgetView : public QWidget
 public:
     explicit WishBoneWidgetView(WishBoneWidgetDoc*  pDoc, WishBoneWidgetDlg*  pDlg, QWidget *parent = 0);
 
+    WishBoneWidgetDoc*  WidgetDoc(){return m_pDoc;}
+    WishBoneWidgetDlg*  WidgetDlg(){return m_pDlg;}
+
 signals:
 
 public slots:
