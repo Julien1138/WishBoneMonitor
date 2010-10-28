@@ -19,7 +19,7 @@ void PanelView::AddWidget()
 {
     bool ok;
     QStringList WidgetTypeList;
-    WidgetTypeList << "WriteRegister" << "ReadRegister";
+    WidgetTypeList << "WriteRegister";/* << "ReadRegister";*/
     QString WidgetType(QInputDialog::getItem(this, "Ajouter un Widget", "Quel type de Widget\nvoulez vous ajouter ?", WidgetTypeList, 0, false, &ok));
 
     if(ok)
@@ -61,6 +61,13 @@ void PanelView::AddWidget()
 
         WidgetView->show();
     }
+}
+
+void PanelView::DeleteWidget(WishBoneWidgetView *Widget)
+{
+    m_pDoc->DeleteWidget(Widget->WidgetDoc());
+    delete Widget->WidgetDlg();
+    delete Widget;
 }
 
 void PanelView::contextMenuEvent(QContextMenuEvent *event)
