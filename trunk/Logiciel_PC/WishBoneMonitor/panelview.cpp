@@ -8,6 +8,8 @@ PanelView::PanelView(PanelDoc* pDoc, QWidget *parent) :
     QWidget(parent),
     m_pDoc(pDoc)
 {
+    m_listWidget.clear();
+    m_listWidgetDlg.clear();
 }
 
 void PanelView::ModeChanged()
@@ -25,41 +27,26 @@ void PanelView::AddWidget()
     if(ok)
     {
         WishBoneWidgetDoc* WidgetDoc;
-        WishBoneWidgetDlg* WidgetDlg;
-        WishBoneWidgetView* WidgetView;
         if (WidgetType == "WriteRegister")
         {
             WidgetDoc = new WBWriteRegisterDoc(m_pDoc->GetRegistersList()->front()->Name()
                                              , m_pDoc->GetMailBox()
                                              , m_ContextMenuPosition.x()
                                              , m_ContextMenuPosition.y());
-            m_pDoc->AddWidget(WidgetDoc);
-            WidgetDlg = new WBWriteRegisterDlg(pDoc()->GetRegistersList()
-                                             , (WBWriteRegisterDoc*) WidgetDoc
-                                             , this);
-            WidgetDlg->setModal(true);
-            if (WidgetDlg->exec() == QDialog::Accepted)
-            {
-                WidgetView = new WBWriteRegisterView((WBWriteRegisterDoc*) WidgetDoc
-                                                    ,(WBWriteRegisterDlg*) WidgetDlg
-                                                    , this);
-                connect(this, SIGNAL(ChangeMode()), WidgetView, SLOT(ModeChanged()));
-            }
-            else
-            {
-                delete WidgetDoc;
-                delete WidgetDlg;
-                return;
-            }
         }
         else
         {
             return;
         }
+        m_pDoc->AddWidget(WidgetDoc);
+        RedrawAllWidgets();
 
-        m_listWidget.push_back(WidgetView);
-
-        WidgetView->show();
+        m_listWidgetDlg.back()->setModal(true);
+        if (m_listWidgetDlg.back()->exec() != QDialog::Accepted)
+        {
+            m_pDoc->DeleteWidget(WidgetDoc);
+        }
+        RedrawAllWidgets();
     }
 }
 
@@ -80,5 +67,42 @@ void PanelView::contextMenuEvent(QContextMenuEvent *event)
         menu->addAction("Ajouter un Widget", this, SLOT(AddWidget()));
 
         menu->exec(event->globalPos());
+    }
+}
+
+void PanelView::RedrawAllWidgets()
+{
+    while (!(m_listWidget.isEmpty()))
+    {
+        delete (m_listWidget.front());
+        m_listWidget.pop_front();
+    }
+    while (!(m_listWidgetDlg.isEmpty()))
+    {
+        delete (m_listWidgetDlg.front());
+        m_listWidgetDlg.pop_front();
+    }
+
+    for (int i(0) ; i < m_pDoc->GetWidgetList()->count() ; i++)
+    {
+        WishBoneWidgetView* WidgetView;
+        WishBoneWidgetDlg* WidgetDlg;
+        if (m_pDoc->GetWidgetList()->value(i)->GetType() == eWriteRegister)
+        {
+            WidgetDlg = new WBWriteRegisterDlg(pDoc()->GetRegistersList()
+                                             , (WBWriteRegisterDoc*) m_pDoc->GetWidgetList()->value(i)
+                                             , this);
+            WidgetView = new WBWriteRegisterView((WBWriteRegisterDoc*) m_pDoc->GetWidgetList()->value(i)
+                                               , (WBWriteRegisterDlg*) WidgetDlg
+                                               , this);
+        }
+        else
+        {
+            continue;
+        }
+        connect(this, SIGNAL(ChangeMode()), WidgetView, SLOT(ModeChanged()));
+        m_listWidget.append(WidgetView);
+        m_listWidgetDlg.append(WidgetDlg);
+        WidgetView->show();
     }
 }

@@ -12,26 +12,55 @@ WishBoneMonitor::~WishBoneMonitor()
     delete m_pMailBox;
 }
 
-void WishBoneMonitor::Save(QSettings *pSettings)
+void WishBoneMonitor::Load(QSettings *pSettings)
 {
+    int size;
+
     pSettings->beginGroup("RegisterList");
-    pSettings->setValue("NbrOfRegisters", m_listRegisters.count());
-    for (int i(0) ; i < m_listRegisters.count() ; i++)
+    size = pSettings->beginReadArray("Registers");
+    for (int i(0) ; i < size ; i++)
     {
-        pSettings->beginGroup("Register_" + QString::number(i));
-        m_listRegisters.value(i)->Save(pSettings);
-        pSettings->endGroup();
+        pSettings->setArrayIndex(i);
+        WishBoneRegister* Reg = new WishBoneRegister();
+        Reg->Load(pSettings);
+        m_listRegisters.append(Reg);
     }
+    pSettings->endArray();
     pSettings->endGroup();
 
     pSettings->beginGroup("PanelList");
-    pSettings->setValue("NbrOfPanels", m_listPanel.count());
+    size = pSettings->beginReadArray("Panels");
+    for (int i(0) ; i < size ; i++)
+    {
+        pSettings->setArrayIndex(i);
+        PanelDoc* Panel = new PanelDoc(m_pMailBox, &m_listRegisters);
+        Panel->Load(pSettings);
+        m_listPanel.append(Panel);
+    }
+    pSettings->endArray();
+    pSettings->endGroup();
+}
+
+void WishBoneMonitor::Save(QSettings *pSettings)
+{
+    pSettings->beginGroup("RegisterList");
+    pSettings->beginWriteArray("Registers");
+    for (int i(0) ; i < m_listRegisters.count() ; i++)
+    {
+        pSettings->setArrayIndex(i);
+        m_listRegisters.value(i)->Save(pSettings);
+    }
+    pSettings->endArray();
+    pSettings->endGroup();
+
+    pSettings->beginGroup("PanelList");
+    pSettings->beginWriteArray("Panels");
     for (int i(0) ; i < m_listPanel.count() ; i++)
     {
-        pSettings->beginGroup("Panel_" + QString::number(i));
+        pSettings->setArrayIndex(i);
         m_listPanel.value(i)->Save(pSettings);
-        pSettings->endGroup();
     }
+    pSettings->endArray();
     pSettings->endGroup();
 }
 

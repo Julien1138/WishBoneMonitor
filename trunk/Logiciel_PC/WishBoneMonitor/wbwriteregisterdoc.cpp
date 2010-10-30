@@ -1,5 +1,15 @@
 #include "wbwriteregisterdoc.h"
 
+WBWriteRegisterDoc::WBWriteRegisterDoc(MailBoxDriver* pMailBox)
+    : WishBoneWidgetDoc(""
+                      , pMailBox
+                      , 0
+                      , 0
+                      , WIDTH_MIN
+                      , HEIGHT_MIN)
+{
+}
+
 WBWriteRegisterDoc::WBWriteRegisterDoc(const QString &Title, MailBoxDriver* pMailBox, int X, int Y, int Width, int Height)
     : WishBoneWidgetDoc(Title
                       , pMailBox
@@ -12,6 +22,15 @@ WBWriteRegisterDoc::WBWriteRegisterDoc(const QString &Title, MailBoxDriver* pMai
 
 WBWriteRegisterDoc::~WBWriteRegisterDoc()
 {
+}
+
+void WBWriteRegisterDoc::Load(QSettings *pSettings, QList<WishBoneRegister*>* plistRegisters)
+{
+    m_pRegister = plistRegisters->value(RegisterIdx(plistRegisters
+                                                  , pSettings->value("RegisterAddress").toUInt()
+                                                  , pSettings->value("RegisterWrite_nRead").toString() == "true" ? true : false));
+
+    WishBoneWidgetDoc::Load(pSettings, plistRegisters);
 }
 
 void WBWriteRegisterDoc::Save(QSettings *pSettings)

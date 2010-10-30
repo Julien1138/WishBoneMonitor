@@ -14,6 +14,7 @@ public:
     ~WishBoneWidgetDoc();
 
     virtual WidgetType GetType() = 0;
+    virtual void Load(QSettings* pSettings, QList<WishBoneRegister*>* plistRegisters);
     virtual void Save(QSettings* pSettings);
 
     QString Title(){return m_Title;}
@@ -39,5 +40,7 @@ private:
     int     m_Width;
     int     m_Height;
 };
+
+int RegisterIdx(QList<WishBoneRegister*>* plistRegisters, const unsigned long &Address, const bool &Write_nRead);
 
 #endif // WISHBONEWIDGETDOC_H

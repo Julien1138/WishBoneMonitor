@@ -5,20 +5,22 @@
 #include "WishBoneRegister.h"
 
 #define WIDTH_MIN   100
-#define HEIGHT_MIN  40
+#define HEIGHT_MIN  80
 
 class WBWriteRegisterDoc : public WishBoneWidgetDoc
 {
 public:
+    WBWriteRegisterDoc(MailBoxDriver* pMailBox);
     WBWriteRegisterDoc(const QString &Title
                      , MailBoxDriver* pMailBox
                      , int X = 0
                      , int Y = 0
-                     , int Width = 100
-                     , int Height = 80);
+                     , int Width = WIDTH_MIN
+                     , int Height = HEIGHT_MIN);
     ~WBWriteRegisterDoc();
 
     WidgetType  GetType(){return eWriteRegister;}
+    void        Load(QSettings* pSettings, QList<WishBoneRegister*>* plistRegisters);
     void        Save(QSettings* pSettings);
 
     void    SetpRegister(WishBoneRegister* pReg){m_pRegister = pReg;}

@@ -25,6 +25,8 @@ public:
 
     void resizeEvent(QResizeEvent* event);
 
+    void RedrawAllTabs();
+
 signals:
     void    ChangeMode();
 
