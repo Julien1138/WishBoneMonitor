@@ -13,6 +13,7 @@ public:
     WishBoneMonitor();
     ~WishBoneMonitor();
 
+    void    Load(QSettings* pSettings);
     void    Save(QSettings* pSettings);
 
     QList<WishBoneRegister*>*   GetRegisterList(){return & m_listRegisters;}

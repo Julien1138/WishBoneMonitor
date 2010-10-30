@@ -14,6 +14,15 @@ WishBoneWidgetDoc::~WishBoneWidgetDoc()
 {
 }
 
+void WishBoneWidgetDoc::Load(QSettings *pSettings, QList<WishBoneRegister*>* plistRegisters)
+{
+    m_Title =   pSettings->value("Title").toString();
+    m_X =       pSettings->value("PosX").toInt();
+    m_Y =       pSettings->value("PosY").toInt();
+    m_Width =   pSettings->value("Width").toInt();
+    m_Height =  pSettings->value("Height").toInt();
+}
+
 void WishBoneWidgetDoc::Save(QSettings *pSettings)
 {
     pSettings->setValue("Title", m_Title);
@@ -21,4 +30,18 @@ void WishBoneWidgetDoc::Save(QSettings *pSettings)
     pSettings->setValue("PosY", m_Y);
     pSettings->setValue("Width", m_Width);
     pSettings->setValue("Height", m_Height);
+}
+
+int RegisterIdx(QList<WishBoneRegister*>* plistRegisters, const unsigned long &Address, const bool &Write_nRead)
+{
+    for (int i(0) ; i < plistRegisters->count() ; i++)
+    {
+        if (plistRegisters->value(i)->Address() == Address &&
+            plistRegisters->value(i)->Write_nRead() == Write_nRead)
+        {
+            return i;
+        }
+    }
+
+    return -1;
 }

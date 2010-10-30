@@ -18,6 +18,8 @@ class PanelView : public QWidget
 public:
     explicit PanelView(PanelDoc* pDoc, QWidget *parent = 0);
 
+    void RedrawAllWidgets();
+
     PanelDoc*                   pDoc(){return m_pDoc;}
     QList<WishBoneWidgetView*>* GetWidgetList(){return &m_listWidget;}
 
@@ -32,7 +34,7 @@ public slots:
 private:
     PanelDoc*                   m_pDoc;
     QList<WishBoneWidgetView*>  m_listWidget;
-
+    QList<WishBoneWidgetDlg*>   m_listWidgetDlg;
 
     void contextMenuEvent(QContextMenuEvent * event);
     QPoint  m_ContextMenuPosition;

@@ -4,6 +4,7 @@
 #include <QFileDialog>
 #include <QSettings>
 #include <QInputDialog>
+#include <QApplication>
 
 MainWindow::MainWindow(WishBoneMonitor *pDoc, QWidget *parent)
     : QMainWindow(parent)
@@ -52,20 +53,6 @@ MainWindow::~MainWindow()
 
 void MainWindow::resizeEvent(QResizeEvent * event)
 {
-//    if (m_pOnglets->count() > 0)
-//    {
-        // S'il s'agit d'un onglet de contrôle
-//        if (((VirtualTab*)(m_pOnglets->currentWidget()))->GetType() == eControlTab)
-//        {
-//           ((ControlTab*)(m_pOnglets->currentWidget()))->UpdateLayout();
-//        }
-        // S'il s'agit d'un onglet de graphe
-//        else if (((VirtualTab*)(m_pOnglets->currentWidget()))->GetType() == eGraphTab)
-//        {
-//           ((GraphTab*)(m_pOnglets->currentWidget()))->UpdateLayout();
-//        }
-//    }
-
     QWidget::resizeEvent(event);
 }
 
@@ -81,80 +68,22 @@ void MainWindow::NewConfig()
 
 void MainWindow::OpenConfig()
 {
-    /*QString FileName = QFileDialog::getOpenFileName(this, "Ouvrir un fichier", QString(), "WishBoneMonitor File (*.wbm)");
+    QApplication::setOverrideCursor( Qt::WaitCursor ); // changer de curseur
+
+    NewConfig();
+
+    QString FileName = QFileDialog::getOpenFileName(this, "Ouvrir un fichier", QString(), "WishBoneMonitor File (*.wbm)");
 
     if (!FileName.isEmpty())
     {
-        m_pOnglets->clear();
-        m_pDoc->ClearList();
-
+    // On ouvre le fichier de sauvegarde
         QSettings settings(FileName, QSettings::IniFormat);
 
-    // Lecture du groupe [Configuration]
-        int NombreDePanels = settings.value("Configuration/NombreDePanels").toInt();
+        m_pDoc->Load(&settings);
+    }
+    RedrawAllTabs();
 
-        for (int j(0) ; j < NombreDePanels ; j++)
-        {
-        // Lecture des groupes [Panel]
-            if (settings.value("Panel_" + QString::number(j) + "/TypeDePanel").toString() == "Controle")
-            {
-                PanelDoc* pPanel = new PanelDoc();
-                int NombreDeRegistres = settings.value("Panel_" + QString::number(j) + "/NombreDeRegistres").toInt();
-
-            // Lecture des groupes [Registre]
-                for(int i(0) ; i < NombreDeRegistres ; i++)
-                {
-                    WishBoneRegister* Reg = new WishBoneRegister(settings.value("Registre_" + QString::number(j) + "_" + QString::number(i) + "/Nom").toString(),
-                                                                 settings.value("Registre_" + QString::number(j) + "_" + QString::number(i) + "/Adresse").toUInt(),
-                                                                 settings.value("Registre_" + QString::number(j) + "_" + QString::number(i) + "/ValeurMin").toInt(),
-                                                                 settings.value("Registre_" + QString::number(j) + "_" + QString::number(i) + "/ValeurMax").toInt(),
-                                                                 settings.value("Registre_" + QString::number(j) + "_" + QString::number(i) + "/Signed").toString() == "Signed" ? true : false,
-                                                                 settings.value("Registre_" + QString::number(j) + "_" + QString::number(i) + "/Unite").toString(),
-                                                                 settings.value("Registre_" + QString::number(j) + "_" + QString::number(i) + "/Direction").toString() == "Write" ? true : false,
-                                                                 settings.value("Registre_" + QString::number(j) + "_" + QString::number(i) + "/Periode").toInt());
-                    pPanel->AddRegister(Reg);
-                }
-
-                m_pDoc->AddPanel(pPanel);
-                ControlTab* pControlTab = new ControlTab(m_pDoc->GetMailBox(), m_pDoc->GetPanelList()->last());
-                m_pOnglets->addTab(pControlTab,
-                                   settings.value("Panel_" + QString::number(j) + "/NomDuPanel").toString());
-
-            }
-            else if (settings.value("Panel_" + QString::number(j) + "/TypeDePanel").toString() == "Graphe")
-            {
-                PanelDoc* pPanel = new PanelDoc();
-                int NombreDeRegistres = settings.value("Panel_" + QString::number(j) + "/NombreDeRegistres").toInt();
-
-            // Lecture des groupes [Registre]
-                for(int i(0) ; i < NombreDeRegistres ; i++)
-                {
-                    WishBoneRegister* Reg = new WishBoneRegister(settings.value("Registre_" + QString::number(j) + "_" + QString::number(i) + "/Nom").toString(),
-                                                                 settings.value("Registre_" + QString::number(j) + "_" + QString::number(i) + "/Adresse").toUInt(),
-                                                                 settings.value("Registre_" + QString::number(j) + "_" + QString::number(i) + "/ValeurMin").toInt(),
-                                                                 settings.value("Registre_" + QString::number(j) + "_" + QString::number(i) + "/ValeurMax").toInt(),
-                                                                 settings.value("Registre_" + QString::number(j) + "_" + QString::number(i) + "/Signed").toString() == "Signed" ? true : false,
-                                                                 settings.value("Registre_" + QString::number(j) + "_" + QString::number(i) + "/Unite").toString(),
-                                                                 settings.value("Registre_" + QString::number(j) + "_" + QString::number(i) + "/Direction").toString() == "Write" ? true : false,
-                                                                 settings.value("Registre_" + QString::number(j) + "_" + QString::number(i) + "/Periode").toInt());
-                    pPanel->AddRegister(Reg);
-                }
-
-                m_pDoc->AddPanel(pPanel);
-                GraphTab* pControlTab = new GraphTab(m_pDoc->GetMailBox(), m_pDoc->GetPanelList()->last());
-                int Nombre_de_Graphs = settings.value("Panel_" + QString::number(j) + "/NombreDeGraphs").toInt();
-                for (int i(0) ; i < Nombre_de_Graphs ; i++)
-                {
-                    pControlTab->GetpListNbrOfCurves()->push_back(settings.value("Panel_" + QString::number(j) + "/NombreDeCourbes_Graphe_" + QString::number(i)).toInt());
-                }
-                m_pOnglets->addTab(pControlTab,
-                                   settings.value("Panel_" + QString::number(j) + "/NomDuPanel").toString());
-
-            }
-        }
-
-        ChangeTab(0);
-    }*/
+    QApplication::restoreOverrideCursor(); // restaurer le curseur
 }
 
 void MainWindow::SaveConfig()
@@ -201,8 +130,6 @@ void MainWindow::DisconnectSerial()
 void MainWindow::ReceiveSerial()
 {
     WishBoneRegister* TempReg = new WishBoneRegister;
-//    int IdxTab[16];
-//    int NbrOfIdx;
 
     while (m_pDoc->GetMailBox()->DecodeRegister(TempReg))
     {
@@ -212,23 +139,6 @@ void MainWindow::ReceiveSerial()
             m_pDoc->GetRegisterList()->value(Idx)->UpdateValue(TempReg->Value(), TempReg->Date());
         }
     }
-
-    /*if (m_pOnglets->count() > 0)
-    {
-        for (int i(0) ; i < m_pOnglets->count() ; i++)
-        {
-            // S'il s'agit d'un onglet de contrôle
-            if (((VirtualTab*)(m_pOnglets->widget(i)))->GetType() == eControlTab)
-            {
-               ((ControlTab*)(m_pOnglets->widget(i)))->UpdateData();
-            }
-            // S'il s'agit d'un onglet de graphe
-            else if (((VirtualTab*)(m_pOnglets->widget(i)))->GetType() == eGraphTab)
-            {
-               ((GraphTab*)(m_pOnglets->widget(i)))->UpdateData();
-            }
-        }
-    }*/
 
     delete TempReg;
 }
@@ -241,10 +151,9 @@ void MainWindow::AddTab()
 
     if (ok)
     {
-        PanelView*  Panel = new PanelView(m_pDoc->AddPanel(PanelName));
-        connect(this, SIGNAL(ChangeMode()), Panel, SLOT(ModeChanged()));
-        int Idx = m_pOnglets->addTab(Panel, Panel->pDoc()->Title());
-        m_pOnglets->setCurrentIndex(Idx);
+        m_pDoc->AddPanel(PanelName);
+        RedrawAllTabs();
+        m_pOnglets->setCurrentIndex(m_pDoc->GetPanelList()->count());
     }
 }
 
@@ -259,23 +168,20 @@ void MainWindow::CloseTab(int i)
 
 void MainWindow::ChangeTab(int i)
 {
-    /*if (m_pOnglets->count() > 0)
+}
+
+void MainWindow::RedrawAllTabs()
+{
+    m_pOnglets->clear();
+
+    m_pOnglets->addTab(m_pRegisterListView, "Table des Registres");
+    m_pRegisterListView->UpdateDisplay();
+
+    for (int i(0) ; i < m_pDoc->GetPanelList()->count() ; i++)
     {
-        // S'il s'agit d'un onglet de contrôle
-        if (((VirtualTab*)(m_pOnglets->widget(i)))->GetType() == eControlTab)
-        {
-            ((ControlTab*)(m_pOnglets->widget(i)))->UpdateRegisters();
-            ((ControlTab*)(m_pOnglets->widget(i)))->UpdateLayout();
-            ((ControlTab*)(m_pOnglets->widget(i)))->UpdateData();
-            ((ControlTab*)(m_pOnglets->widget(i)))->UpdateButtons();
-        }
-        // S'il s'agit d'un onglet de contrôle
-        if (((VirtualTab*)(m_pOnglets->widget(i)))->GetType() == eGraphTab)
-        {
-            ((GraphTab*)(m_pOnglets->widget(i)))->UpdateRegisters();
-            ((GraphTab*)(m_pOnglets->widget(i)))->UpdateLayout();
-            ((GraphTab*)(m_pOnglets->widget(i)))->UpdateData();
-            ((GraphTab*)(m_pOnglets->widget(i)))->UpdateButtons();
-        }
-    }*/
+        PanelView* Panel = new PanelView(m_pDoc->GetPanelList()->value(i));
+        connect(this, SIGNAL(ChangeMode()), Panel, SLOT(ModeChanged()));
+        m_pOnglets->addTab(Panel, Panel->pDoc()->Title());
+        Panel->RedrawAllWidgets();
+    }
 }

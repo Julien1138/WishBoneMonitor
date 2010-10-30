@@ -11,9 +11,11 @@
 class PanelDoc
 {
 public:
+    PanelDoc(MailBoxDriver* pMailBox, QList<WishBoneRegister*>* plistRegisters);
     PanelDoc(const QString &Title, MailBoxDriver* pMailBox, QList<WishBoneRegister*>* plistRegisters);
     ~PanelDoc();
 
+    void    Load(QSettings* pSettings);
     void    Save(QSettings* pSettings);
 
     QString                     Title(){return m_Title;}

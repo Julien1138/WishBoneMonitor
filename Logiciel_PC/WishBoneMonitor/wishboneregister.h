@@ -22,6 +22,7 @@ public:
                    , long           Period=0);
     ~WishBoneRegister();
 
+    void    Load(QSettings* pSettings);
     void    Save(QSettings* pSettings);
 
     bool operator==(WishBoneRegister Reg);

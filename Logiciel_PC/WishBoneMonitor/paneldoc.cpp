@@ -1,4 +1,13 @@
 #include "paneldoc.h"
+#include <QString>
+#include "WBWriteRegisterDoc.h"
+
+PanelDoc::PanelDoc(MailBoxDriver* pMailBox, QList<WishBoneRegister*>* plistRegisters)
+    : m_Title("")
+    , m_pMailBox(pMailBox)
+    , m_plistRegisters(plistRegisters)
+{
+}
 
 PanelDoc::PanelDoc(const QString &Title, MailBoxDriver* pMailBox, QList<WishBoneRegister*>* plistRegisters)
     : m_Title(Title)
@@ -9,18 +18,42 @@ PanelDoc::PanelDoc(const QString &Title, MailBoxDriver* pMailBox, QList<WishBone
 
 PanelDoc::~PanelDoc()
 {
+
+}
+
+void PanelDoc::Load(QSettings *pSettings)
+{
+    m_Title = pSettings->value("Title").toString();
+    int size = pSettings->beginReadArray("Widgets");
+    for (int i(0) ; i < size ; i++)
+    {
+        pSettings->setArrayIndex(i);
+        WishBoneWidgetDoc* Widget;
+        QString WidgetType(pSettings->value("Widget").toString());
+        if (WidgetType == "WBWriteRegister")
+        {
+            Widget = new WBWriteRegisterDoc(m_pMailBox);
+        }
+        else
+        {
+            continue;
+        }
+        Widget->Load(pSettings, m_plistRegisters);
+        m_listWidget.append(Widget);
+    }
+    pSettings->endArray();
 }
 
 void PanelDoc::Save(QSettings *pSettings)
 {
     pSettings->setValue("Title", m_Title);
-    pSettings->setValue("NbrOfWidgets", QString::number(m_listWidget.count()));
+    pSettings->beginWriteArray("Widgets");
     for (int i(0) ; i < m_listWidget.count() ; i++)
     {
-        pSettings->beginGroup("Widget_" + QString::number(i));
+        pSettings->setArrayIndex(i);
         m_listWidget.value(i)->Save(pSettings);
-        pSettings->endGroup();
     }
+    pSettings->endArray();
 }
 
 void PanelDoc::AddWidget(WishBoneWidgetDoc* Widget)
