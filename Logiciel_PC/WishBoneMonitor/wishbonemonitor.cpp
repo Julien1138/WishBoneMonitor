@@ -78,9 +78,16 @@ bool WishBoneMonitor::DelRegister(const unsigned long &Address, const bool &Writ
     if (Idx == -1)
         return false;
 
+    delete m_listRegisters.value(Idx);
     m_listRegisters.removeAt(Idx);
 
     return true;
+}
+
+void WishBoneMonitor::DelRegister(const int Idx)
+{
+    delete m_listRegisters.value(Idx);
+    m_listRegisters.removeAt(Idx);
 }
 
 void WishBoneMonitor::ClearRegisterList()

@@ -24,6 +24,7 @@ public:
     void        ClearPanelList();
     bool        AddRegister(const WishBoneRegister &Register);
     bool        DelRegister(const unsigned long &Address, const bool &Write_nRead);
+    void        DelRegister(const int Idx);
     bool        RegisterExists(const unsigned long &Address, const bool &Write_nRead) const;
     int         RegisterIdx(const unsigned long &Address, const bool &Write_nRead) const;
     void        ClearRegisterList();

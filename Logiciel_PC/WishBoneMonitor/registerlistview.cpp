@@ -13,9 +13,9 @@ RegisterListView::RegisterListView(WishBoneMonitor* pDoc, QWidget *parent) :
     QWidget(parent),
     m_pDoc(pDoc)
 {
-    m_Table.setColumnCount(8);
+    m_Table.setColumnCount(9);
     QStringList HLabels;
-    HLabels << "Adresse" << "Nom" << "Unité" << "Signe" << "Valeur Min" << "Valeur Max" << "Direction" << "Periode (ms)";
+    HLabels << "Adresse" << "Nom" << "Unité" << "Signe" << "Valeur Min" << "Valeur Max" << "Direction" << "Periode (ms)" << "";
     m_Table.setHorizontalHeaderLabels(HLabels);
 
     m_Layout.addWidget(&m_Table, 0, 0);
@@ -23,13 +23,15 @@ RegisterListView::RegisterListView(WishBoneMonitor* pDoc, QWidget *parent) :
 
     connect(&m_Table, SIGNAL(cellChanged(int,int)),
             this    , SLOT(ModifyRegister(int, int)));
+
+    UpdateDisplay();
 }
 
 void RegisterListView::UpdateDisplay()
 {
     m_UpdateInProgress = true;
 
-    m_Table.setRowCount(m_pDoc->GetRegisterList()->count());
+    m_Table.setRowCount(m_pDoc->GetRegisterList()->count()/* + 1*/);
 
     for (int i(0) ; i < m_pDoc->GetRegisterList()->count() ; i++)
     {
@@ -118,7 +120,16 @@ void RegisterListView::UpdateDisplay()
         {
             m_Table.item(i, 7)->setFlags(m_Table.item(i, 7)->flags() & ~Qt::ItemIsEnabled);
         }
+
+        // Bouton supprimer
+        QPushButton* pDelButton = new QPushButton("Supprimer");
+        m_Table.setCellWidget(i, 8, pDelButton);
+        connect(pDelButton, SIGNAL(pressed()), this, SLOT(DelReg()));
     }
+
+    /*QPushButton* pAddButton = new QPushButton("Ajouter un register");
+    m_Table.setCellWidget(m_pDoc->GetRegisterList()->count(), 0, pAddButton);
+    connect(pAddButton, SIGNAL(pressed()), this, SLOT(AddReg()));*/
 
     m_UpdateInProgress = false;
 }
@@ -146,14 +157,24 @@ void RegisterListView::AddReg()
     }
 }
 
+void RegisterListView::DelReg()
+{
+    m_pDoc->DelRegister(m_Table.currentRow());
+    UpdateDisplay();
+}
+
 void RegisterListView::contextMenuEvent(QContextMenuEvent * event)
 {
     if (m_pDoc->ConfigMode())
     {
-        QMenu * menu = new QMenu(this);
-        menu->addAction("Ajouter un registre", this, SLOT(AddReg()));
+        if (event->x() > m_Table.x() && event->x() < (m_Table.x() + m_Table.width()) &&
+            event->y() > m_Table.y() && event->y() < (m_Table.y() + m_Table.height()))
+        {
+            QMenu * menu = new QMenu(this);
+            menu->addAction("Ajouter un registre", this, SLOT(AddReg()));
 
-        menu->exec(event->globalPos());
+            menu->exec(event->globalPos());
+        }
     }
 }
 
@@ -217,4 +238,3 @@ void RegisterListView::ModifyDirectionBox(int Idx)
     }
     UpdateDisplay();
 }
-
