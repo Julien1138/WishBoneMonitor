@@ -18,6 +18,7 @@ signals:
 
 public slots:
     void AddReg();
+    void DelReg();
     void ModifyRegister(int currentRow, int currentColumn);
     void ModifySignBox(int Idx);
     void ModifyDirectionBox(int Idx);

@@ -9,7 +9,7 @@ MainWindow::MainWindow(WishBoneMonitor *pDoc, QWidget *parent)
     : QMainWindow(parent)
     , m_pDoc(pDoc)
 {
-    setGeometry(100, 100, 850, 500);
+    setGeometry(80, 100, 900, 500);
 
 // Barre d'outils principale
     // Gestion du document
