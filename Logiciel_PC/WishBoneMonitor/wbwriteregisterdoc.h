@@ -4,8 +4,8 @@
 #include "WishBoneWidgetDoc.h"
 #include "WishBoneRegister.h"
 
-#define WIDTH_MIN   100
-#define HEIGHT_MIN  80
+#define WBWRITE_WIDTH_MIN   100
+#define WBWRITE_HEIGHT_MIN  80
 
 class WBWriteRegisterDoc : public WishBoneWidgetDoc
 {
@@ -15,8 +15,8 @@ public:
                      , MailBoxDriver* pMailBox
                      , int X = 0
                      , int Y = 0
-                     , int Width = WIDTH_MIN
-                     , int Height = HEIGHT_MIN);
+                     , int Width = WBWRITE_WIDTH_MIN
+                     , int Height = WBWRITE_HEIGHT_MIN);
     ~WBWriteRegisterDoc();
 
     WidgetType  GetType(){return eWriteRegister;}

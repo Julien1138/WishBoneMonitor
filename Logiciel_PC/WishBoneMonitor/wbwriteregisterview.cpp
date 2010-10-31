@@ -28,7 +28,7 @@ WBWriteRegisterView::WBWriteRegisterView(WBWriteRegisterDoc*  pDoc, WBWriteRegis
 
     m_GroupBox.setLayout(m_pLayout);
 
-    setMinimumSize(WIDTH_MIN, HEIGHT_MIN);
+    setMinimumSize(WBWRITE_WIDTH_MIN, WBWRITE_HEIGHT_MIN);
 
     UpdateDisplay();
 
