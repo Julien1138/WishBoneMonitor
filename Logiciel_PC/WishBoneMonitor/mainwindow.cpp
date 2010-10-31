@@ -58,52 +58,63 @@ void MainWindow::resizeEvent(QResizeEvent * event)
 
 void MainWindow::NewConfig()
 {
-    m_pOnglets->clear();
-    m_pDoc->ClearRegisterList();
-    m_pDoc->ClearPanelList();
+    if (!m_pDoc->GetMailBox()->IsConnected())
+    {
+        m_pOnglets->clear();
+        m_pDoc->ClearRegisterList();
+        m_pDoc->ClearPanelList();
 
-    m_pOnglets->addTab(m_pRegisterListView, "Table des Registres");
-    m_pRegisterListView->UpdateDisplay();
+        m_pOnglets->addTab(m_pRegisterListView, "Table des Registres");
+        m_pRegisterListView->UpdateDisplay();
+    }
 }
 
 void MainWindow::OpenConfig()
 {
-    QApplication::setOverrideCursor( Qt::WaitCursor ); // changer de curseur
-
-    NewConfig();
-
-    QString FileName = QFileDialog::getOpenFileName(this, "Ouvrir un fichier", QString(), "WishBoneMonitor File (*.wbm)");
-
-    if (!FileName.isEmpty())
+    if (!m_pDoc->GetMailBox()->IsConnected())
     {
-    // On ouvre le fichier de sauvegarde
-        QSettings settings(FileName, QSettings::IniFormat);
+        QApplication::setOverrideCursor( Qt::WaitCursor ); // changer de curseur
 
-        m_pDoc->Load(&settings);
+        NewConfig();
+
+        QString FileName = QFileDialog::getOpenFileName(this, "Ouvrir un fichier", QString(), "WishBoneMonitor File (*.wbm)");
+
+        if (!FileName.isEmpty())
+        {
+        // On ouvre le fichier de sauvegarde
+            QSettings settings(FileName, QSettings::IniFormat);
+
+            m_pDoc->Load(&settings);
+        }
+        RedrawAllTabs();
+
+        QApplication::restoreOverrideCursor(); // restaurer le curseur
     }
-    RedrawAllTabs();
-
-    QApplication::restoreOverrideCursor(); // restaurer le curseur
 }
 
 void MainWindow::SaveConfig()
 {
-    QString FileName = QFileDialog::getSaveFileName(this, "Enregistrer un fichier", QString(), "WishBoneMonitor File (*.wbm)");
-
-    if (!FileName.isEmpty())
+    if (!m_pDoc->GetMailBox()->IsConnected())
     {
-    // On supprime le fichier de sauvegarde s'il existe déja
-        remove(FileName.toAscii());
+        QString FileName = QFileDialog::getSaveFileName(this, "Enregistrer un fichier", QString(), "WishBoneMonitor File (*.wbm)");
 
-    // On crée un nouveau fichier de sauvegarde
-        QSettings settings(FileName, QSettings::IniFormat);
+        if (!FileName.isEmpty())
+        {
+        // On supprime le fichier de sauvegarde s'il existe déja
+            remove(FileName.toAscii());
 
-        m_pDoc->Save(&settings);
+        // On crée un nouveau fichier de sauvegarde
+            QSettings settings(FileName, QSettings::IniFormat);
+
+            m_pDoc->Save(&settings);
+        }
     }
 }
 
 void MainWindow::ConnectSerial()
 {
+    QApplication::setOverrideCursor( Qt::WaitCursor ); // changer de curseur
+
     if (!m_pDoc->GetMailBox()->Connect(m_pComboSerialPort->currentText()))
     {
         QMessageBox::critical(this, "Erreur de connection", "Le port " + m_pComboSerialPort->currentText() + " n'est pas disponnible");
@@ -112,12 +123,17 @@ void MainWindow::ConnectSerial()
     {
         connect(m_pDoc->GetMailBox()->GetPort(), SIGNAL(readyRead()), this , SLOT(ReceiveSerial()));
         emit ChangeMode();
+        m_pRegisterListView->UpdateDisplay();
+        m_pDoc->SetupMailBox();
     }
-    m_pRegisterListView->UpdateDisplay();
+
+    QApplication::restoreOverrideCursor(); // restaurer le curseur
 }
 
 void MainWindow::DisconnectSerial()
 {
+    QApplication::setOverrideCursor( Qt::WaitCursor ); // changer de curseur
+
     m_pDoc->GetMailBox()->Disconnect();
 
     if (!(m_pDoc->GetMailBox()->IsConnected()))
@@ -125,6 +141,8 @@ void MainWindow::DisconnectSerial()
         emit ChangeMode();
     }
     m_pRegisterListView->UpdateDisplay();
+
+    QApplication::restoreOverrideCursor(); // restaurer le curseur
 }
 
 void MainWindow::ReceiveSerial()
@@ -145,24 +163,30 @@ void MainWindow::ReceiveSerial()
 
 void MainWindow::AddTab()
 {
-    bool ok(false);
-
-    QString PanelName = QInputDialog::getText(this, "Nom du Panel", "Quel nom souhaites vous\ndonner à votre panel ?", QLineEdit::Normal, "Nouveau Panel", &ok);
-
-    if (ok)
+    if (!m_pDoc->GetMailBox()->IsConnected())
     {
-        m_pDoc->AddPanel(PanelName);
-        RedrawAllTabs();
-        m_pOnglets->setCurrentIndex(m_pDoc->GetPanelList()->count());
+        bool ok(false);
+
+        QString PanelName = QInputDialog::getText(this, "Nom du Panel", "Quel nom souhaites vous\ndonner à votre panel ?", QLineEdit::Normal, "Nouveau Panel", &ok);
+
+        if (ok)
+        {
+            m_pDoc->AddPanel(PanelName);
+            RedrawAllTabs();
+            m_pOnglets->setCurrentIndex(m_pDoc->GetPanelList()->count());
+        }
     }
 }
 
 void MainWindow::CloseTab(int i)
 {
-    if (i != m_pOnglets->indexOf(m_pRegisterListView))
+    if (!m_pDoc->GetMailBox()->IsConnected())
     {
-        m_pDoc->DelPanel((PanelDoc*)(m_pOnglets->widget(i)));
-        m_pOnglets->removeTab(i);
+        if (i != m_pOnglets->indexOf(m_pRegisterListView))
+        {
+            m_pDoc->DelPanel((PanelDoc*)(m_pOnglets->widget(i)));
+            m_pOnglets->removeTab(i);
+        }
     }
 }
 

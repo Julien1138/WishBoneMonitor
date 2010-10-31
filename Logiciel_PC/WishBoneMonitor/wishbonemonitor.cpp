@@ -168,3 +168,19 @@ int WishBoneMonitor::RegisterIdx(const unsigned long &Address, const bool &Write
 
     return -1;
 }
+
+void WishBoneMonitor::SetupMailBox()
+{
+    for (int i(0) ; i < m_listRegisters.count() ; i++)
+    {
+        if (m_listRegisters.value(i)->Period())
+        {
+            m_pMailBox->SendRegister(m_listRegisters.value(i));
+        }
+    }
+}
+
+void WishBoneMonitor::UnsetupMailBox()
+{
+
+}

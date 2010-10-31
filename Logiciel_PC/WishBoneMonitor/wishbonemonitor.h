@@ -31,6 +31,9 @@ public:
     void        ClearRegisterList();
     bool        ConfigMode(){return !(m_pMailBox->IsConnected());}
 
+    void        SetupMailBox();
+    void        UnsetupMailBox();
+
 private:
     QList<WishBoneRegister*>    m_listRegisters;
     QList<PanelDoc*>            m_listPanel;
