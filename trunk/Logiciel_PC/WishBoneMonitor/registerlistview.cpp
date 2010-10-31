@@ -114,7 +114,9 @@ void RegisterListView::UpdateDisplay()
         m_Table.setItem(i, 7, new QTableWidgetItem(QString::number(m_pDoc->GetRegisterList()->value(i)->Period())));
         if (m_pDoc->GetRegisterList()->value(i)->Write_nRead())
         {
+            m_pDoc->GetRegisterList()->value(i)->SetPeriod(0);
             m_Table.item(i, 7)->setFlags(m_Table.item(i, 7)->flags() & ~Qt::ItemIsEnabled);
+            m_Table.item(i, 7)->setText(QString::number(m_pDoc->GetRegisterList()->value(i)->Period()));
         }
         if (!(m_pDoc->ConfigMode()))
         {
