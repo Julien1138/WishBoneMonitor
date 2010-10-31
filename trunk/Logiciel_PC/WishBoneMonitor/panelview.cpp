@@ -21,7 +21,7 @@ void PanelView::AddWidget()
 {
     bool ok;
     QStringList WidgetTypeList;
-    WidgetTypeList << "WriteRegister";/* << "ReadRegister";*/
+    WidgetTypeList << "WriteRegister" << "ReadRegister";
     QString WidgetType(QInputDialog::getItem(this, "Ajouter un Widget", "Quel type de Widget\nvoulez vous ajouter ?", WidgetTypeList, 0, false, &ok));
 
     if(ok)
@@ -29,7 +29,14 @@ void PanelView::AddWidget()
         WishBoneWidgetDoc* WidgetDoc;
         if (WidgetType == "WriteRegister")
         {
-            WidgetDoc = new WBWriteRegisterDoc(m_pDoc->GetRegistersList()->front()->Name()
+            WidgetDoc = new WBWriteRegisterDoc(""
+                                             , m_pDoc->GetMailBox()
+                                             , m_ContextMenuPosition.x()
+                                             , m_ContextMenuPosition.y());
+        }
+        else if (WidgetType == "ReadRegister")
+        {
+            WidgetDoc = new WBReadRegisterDoc(""
                                              , m_pDoc->GetMailBox()
                                              , m_ContextMenuPosition.x()
                                              , m_ContextMenuPosition.y());
@@ -95,6 +102,15 @@ void PanelView::RedrawAllWidgets()
             WidgetView = new WBWriteRegisterView((WBWriteRegisterDoc*) m_pDoc->GetWidgetList()->value(i)
                                                , (WBWriteRegisterDlg*) WidgetDlg
                                                , this);
+        }
+        if (m_pDoc->GetWidgetList()->value(i)->GetType() == eReadRegister)
+        {
+            WidgetDlg = new WBReadRegisterDlg(pDoc()->GetRegistersList()
+                                            , (WBReadRegisterDoc*) m_pDoc->GetWidgetList()->value(i)
+                                            , this);
+            WidgetView = new WBReadRegisterView((WBReadRegisterDoc*) m_pDoc->GetWidgetList()->value(i)
+                                              , (WBReadRegisterDlg*) WidgetDlg
+                                              , this);
         }
         else
         {

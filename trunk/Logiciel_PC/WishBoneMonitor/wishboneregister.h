@@ -47,7 +47,7 @@ public:
     void            SetSigned(unsigned long Signed){m_Signed = Signed; emit UpdateWidget();}
     void            SetUnit(QString Unit){m_Unit = Unit; emit UpdateWidget();}
     void            SetWrite_nRead(bool Write_nRead){m_Write_nRead = Write_nRead; emit UpdateWidget();}
-    void            SetPeriod(unsigned long Period){m_Period = Period;}
+    void            SetPeriod(unsigned long Period){m_Period = Period; emit UpdateWidget();}
     void            SetDate(unsigned long Date){m_Date = Date;}
 
     void            UpdateValue(unsigned long Value, unsigned long Date);

@@ -1,16 +1,16 @@
-#include "wbwriteregisterdoc.h"
+#include "wbreadregisterdoc.h"
 
-WBWriteRegisterDoc::WBWriteRegisterDoc(MailBoxDriver* pMailBox)
+WBReadRegisterDoc::WBReadRegisterDoc(MailBoxDriver* pMailBox)
     : WishBoneWidgetDoc(""
                       , pMailBox
                       , 0
                       , 0
-                      , WBWRITE_WIDTH_MIN
-                      , WBWRITE_HEIGHT_MIN)
+                      , WBREAD_WIDTH_MIN
+                      , 80)
 {
 }
 
-WBWriteRegisterDoc::WBWriteRegisterDoc(const QString &Title, MailBoxDriver* pMailBox, int X, int Y, int Width, int Height)
+WBReadRegisterDoc::WBReadRegisterDoc(const QString &Title, MailBoxDriver* pMailBox, int X, int Y, int Width, int Height)
     : WishBoneWidgetDoc(Title
                       , pMailBox
                       , X
@@ -20,11 +20,11 @@ WBWriteRegisterDoc::WBWriteRegisterDoc(const QString &Title, MailBoxDriver* pMai
 {
 }
 
-WBWriteRegisterDoc::~WBWriteRegisterDoc()
+WBReadRegisterDoc::~WBReadRegisterDoc()
 {
 }
 
-void WBWriteRegisterDoc::Load(QSettings *pSettings, QList<WishBoneRegister*>* plistRegisters)
+void WBReadRegisterDoc::Load(QSettings *pSettings, QList<WishBoneRegister*>* plistRegisters)
 {
     m_pRegister = plistRegisters->value(RegisterIdx(plistRegisters
                                                   , pSettings->value("RegisterAddress").toUInt()
@@ -33,17 +33,16 @@ void WBWriteRegisterDoc::Load(QSettings *pSettings, QList<WishBoneRegister*>* pl
     WishBoneWidgetDoc::Load(pSettings, plistRegisters);
 }
 
-void WBWriteRegisterDoc::Save(QSettings *pSettings)
+void WBReadRegisterDoc::Save(QSettings *pSettings)
 {
     WishBoneWidgetDoc::Save(pSettings);
 
-    pSettings->setValue("Widget", "WBWriteRegister");
+    pSettings->setValue("Widget", "WBReadRegister");
     pSettings->setValue("RegisterAddress", QString::number(m_pRegister->Address()));
     pSettings->setValue("RegisterWrite_nRead", m_pRegister->Write_nRead() ? "true" : "false");
 }
 
-void WBWriteRegisterDoc::WriteRegister(unsigned long Value)
+void WBReadRegisterDoc::ReadRegister()
 {
-    m_pRegister->SetValue(Value);
     m_pMailBox->SendRegister(m_pRegister);
 }
