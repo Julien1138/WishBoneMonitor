@@ -44,7 +44,7 @@ public:
     void            SetValueNoCheck(unsigned long Value){m_Value = Value;}
     void            SetValueMin(unsigned long ValueMin){m_ValueMin = ValueMin; emit UpdateWidget();}
     void            SetValueMax(unsigned long ValueMax){m_ValueMax = ValueMax; emit UpdateWidget();}
-    void            SetSigned(unsigned long Signed){m_Signed = Signed; emit UpdateWidget();}
+    void            SetSigned(bool Signed){m_Signed = Signed; emit UpdateWidget();}
     void            SetUnit(QString Unit){m_Unit = Unit; emit UpdateWidget();}
     void            SetWrite_nRead(bool Write_nRead){m_Write_nRead = Write_nRead; emit UpdateWidget();}
     void            SetPeriod(unsigned long Period){m_Period = Period; emit UpdateWidget();}

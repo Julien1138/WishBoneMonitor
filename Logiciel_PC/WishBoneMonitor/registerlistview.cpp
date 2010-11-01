@@ -8,6 +8,7 @@
 #include <QMessageBox>
 #include <QLineEdit>
 #include <QComboBox>
+#include <QSignalMapper>
 
 RegisterListView::RegisterListView(WishBoneMonitor* pDoc, QWidget *parent) :
     QWidget(parent),
@@ -31,7 +32,9 @@ void RegisterListView::UpdateDisplay()
 {
     m_UpdateInProgress = true;
 
-    m_Table.setRowCount(m_pDoc->GetRegisterList()->count()/* + 1*/);
+    m_Table.setRowCount(m_pDoc->GetRegisterList()->count());
+
+    QSignalMapper *mapper = new QSignalMapper();
 
     for (int i(0) ; i < m_pDoc->GetRegisterList()->count() ; i++)
     {
@@ -63,6 +66,8 @@ void RegisterListView::UpdateDisplay()
         m_Table.setCellWidget(i, 3, pComboSigne);
         pComboSigne->setCurrentIndex(m_pDoc->GetRegisterList()->value(i)->Signed() ? 0 : 1);
         pComboSigne->setEnabled(m_pDoc->ConfigMode());
+        connect(pComboSigne, SIGNAL(currentIndexChanged(int)), mapper, SLOT(map()));
+        mapper->setMapping(pComboSigne, i);
         connect(pComboSigne, SIGNAL(currentIndexChanged(int)), this, SLOT(ModifySignBox(int)));
 
         // Valeur Min
@@ -108,6 +113,8 @@ void RegisterListView::UpdateDisplay()
         m_Table.setCellWidget(i, 6, pComboDir);
         pComboDir->setCurrentIndex(m_pDoc->GetRegisterList()->value(i)->Write_nRead() ? 1 : 0);
         pComboDir->setEnabled(m_pDoc->ConfigMode());
+        connect(pComboDir, SIGNAL(currentIndexChanged(int)), mapper, SLOT(map()));
+        mapper->setMapping(pComboDir, i);
         connect(pComboDir, SIGNAL(currentIndexChanged(int)), this, SLOT(ModifyDirectionBox(int)));
 
         // Periode
@@ -126,12 +133,12 @@ void RegisterListView::UpdateDisplay()
         // Bouton supprimer
         QPushButton* pDelButton = new QPushButton("Supprimer");
         m_Table.setCellWidget(i, 8, pDelButton);
-        connect(pDelButton, SIGNAL(pressed()), this, SLOT(DelReg()));
+        connect(pDelButton, SIGNAL(pressed()), mapper, SLOT(map()));
+        mapper->setMapping(pDelButton, i);
+        connect(pDelButton, SIGNAL(clicked()), this, SLOT(DelReg()));
     }
 
-    /*QPushButton* pAddButton = new QPushButton("Ajouter un register");
-    m_Table.setCellWidget(m_pDoc->GetRegisterList()->count(), 0, pAddButton);
-    connect(pAddButton, SIGNAL(pressed()), this, SLOT(AddReg()));*/
+    connect(mapper, SIGNAL(mapped(int)), &m_Table, SLOT(selectRow(int)));
 
     m_UpdateInProgress = false;
 }

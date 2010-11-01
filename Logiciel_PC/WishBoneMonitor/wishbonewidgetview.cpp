@@ -16,6 +16,8 @@ WishBoneWidgetView::WishBoneWidgetView(WishBoneWidgetDoc*  pDoc, WishBoneWidgetD
     m_GroupBox.setMouseTracking(true);
 
     setMouseTracking(true);
+
+    connect(this, SIGNAL(DeleteWidget(WishBoneWidgetDoc*)), ((PanelView*) parent), SLOT(DeleteWidget(WishBoneWidgetDoc*)));
 }
 
 void WishBoneWidgetView::UpdateDisplay()
@@ -123,6 +125,7 @@ bool WishBoneWidgetView::eventFilter(QObject *obj, QEvent *event)
     else if (event->type() == QEvent::ContextMenu)
     {
         contextMenuEvent(static_cast<QContextMenuEvent*>(event));
+        return true;
     }
     else
     {
@@ -133,11 +136,14 @@ bool WishBoneWidgetView::eventFilter(QObject *obj, QEvent *event)
 
 void WishBoneWidgetView::contextMenuEvent(QContextMenuEvent *event)
 {
-    QMenu * menu = new QMenu(this);
-    m_pConfigAction = menu->addAction("Configurer", this, SLOT(Configure()));
-    m_pDeleteAction = menu->addAction("Supprimer", this, SLOT(Delete()));
+    if (m_pDoc->ConfigMode())
+    {
+        QMenu * menu = new QMenu(this);
+        m_pConfigAction = menu->addAction("Configurer", this, SLOT(Configure()));
+        m_pDeleteAction = menu->addAction("Supprimer", this, SLOT(Delete()));
 
-    menu->exec(event->globalPos());
+        menu->exec(event->globalPos());
+    }
 }
 
 void WishBoneWidgetView::Configure()
@@ -152,7 +158,7 @@ void WishBoneWidgetView::Configure()
 
 void WishBoneWidgetView::Delete()
 {
-    ((PanelView*) parent())->DeleteWidget(this);
+    emit DeleteWidget(m_pDoc);
 }
 
 void WishBoneWidgetView::UpdateWidget()

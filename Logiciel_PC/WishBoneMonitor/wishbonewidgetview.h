@@ -20,6 +20,7 @@ public:
     WishBoneWidgetDlg*  WidgetDlg(){return m_pDlg;}
 
 signals:
+    void    DeleteWidget(WishBoneWidgetDoc*);
 
 public slots:
     virtual void    ModeChanged() = 0;
