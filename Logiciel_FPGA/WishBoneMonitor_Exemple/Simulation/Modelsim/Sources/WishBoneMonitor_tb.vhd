@@ -55,6 +55,7 @@ begin
     
     process
     begin
+    -- Header Write
         wait for 100 ns;
         wb_we_i <= '1';
         wb_dat_i <= X"01";
@@ -64,7 +65,7 @@ begin
         wb_we_i <= '0';
         wb_cyc_i <= '0';
         wb_stb_i <= '0';
-        
+    -- Address 1
         wait for clk_period;
         wb_we_i <= '1';
         wb_dat_i <= X"00";
@@ -74,7 +75,7 @@ begin
         wb_we_i <= '0';
         wb_cyc_i <= '0';
         wb_stb_i <= '0';
-        
+    -- Address 0
         wait for clk_period;
         wb_we_i <= '1';
         wb_dat_i <= X"00";
@@ -84,7 +85,7 @@ begin
         wb_we_i <= '0';
         wb_cyc_i <= '0';
         wb_stb_i <= '0';
-        
+    -- Data 3
         wait for clk_period;
         wb_we_i <= '1';
         wb_dat_i <= X"00";
@@ -94,7 +95,7 @@ begin
         wb_we_i <= '0';
         wb_cyc_i <= '0';
         wb_stb_i <= '0';
-        
+    -- Data 2
         wait for clk_period;
         wb_we_i <= '1';
         wb_dat_i <= X"00";
@@ -104,7 +105,7 @@ begin
         wb_we_i <= '0';
         wb_cyc_i <= '0';
         wb_stb_i <= '0';
-        
+    -- Data 1
         wait for clk_period;
         wb_we_i <= '1';
         wb_dat_i <= X"00";
@@ -114,7 +115,7 @@ begin
         wb_we_i <= '0';
         wb_cyc_i <= '0';
         wb_stb_i <= '0';
-        
+    -- Data 0
         wait for clk_period;
         wb_we_i <= '1';
         wb_dat_i <= X"05";
@@ -124,7 +125,7 @@ begin
         wb_we_i <= '0';
         wb_cyc_i <= '0';
         wb_stb_i <= '0';
-        
+    -- Periode 1
         wait for clk_period;
         wb_we_i <= '1';
         wb_dat_i <= X"00";
@@ -134,7 +135,7 @@ begin
         wb_we_i <= '0';
         wb_cyc_i <= '0';
         wb_stb_i <= '0';
-        
+    -- Periode 0
         wait for clk_period;
         wb_we_i <= '1';
         wb_dat_i <= X"00";
@@ -144,7 +145,7 @@ begin
         wb_we_i <= '0';
         wb_cyc_i <= '0';
         wb_stb_i <= '0';
-        
+    -- CheckSum
         wait for clk_period;
         wb_we_i <= '1';
         wb_dat_i <= X"04";
@@ -155,6 +156,20 @@ begin
         wb_cyc_i <= '0';
         wb_stb_i <= '0';
         
+    -- Error Byte
+        wait for clk_period;
+        wb_we_i <= '1';
+        wb_dat_i <= X"00";
+        wb_cyc_i <= '1';
+        wb_stb_i <= '1';
+        wait for 2*clk_period;
+        wb_we_i <= '0';
+        wb_cyc_i <= '0';
+        wb_stb_i <= '0';
+        
+        wait for 3 ms;
+        
+    -- Header Read
         wait for 100 ns;
         wb_we_i <= '1';
         wb_dat_i <= X"00";
@@ -164,7 +179,87 @@ begin
         wb_we_i <= '0';
         wb_cyc_i <= '0';
         wb_stb_i <= '0';
-        
+    -- Address 1
+        wait for clk_period;
+        wb_we_i <= '1';
+        wb_dat_i <= X"00";
+        wb_cyc_i <= '1';
+        wb_stb_i <= '1';
+        wait for 2*clk_period;
+        wb_we_i <= '0';
+        wb_cyc_i <= '0';
+        wb_stb_i <= '0';
+    -- Address 0
+        wait for clk_period;
+        wb_we_i <= '1';
+        wb_dat_i <= X"00";
+        wb_cyc_i <= '1';
+        wb_stb_i <= '1';
+        wait for 2*clk_period;
+        wb_we_i <= '0';
+        wb_cyc_i <= '0';
+        wb_stb_i <= '0';
+    -- Data 3
+        wait for clk_period;
+        wb_we_i <= '1';
+        wb_dat_i <= X"00";
+        wb_cyc_i <= '1';
+        wb_stb_i <= '1';
+        wait for 2*clk_period;
+        wb_we_i <= '0';
+        wb_cyc_i <= '0';
+        wb_stb_i <= '0';
+    -- Data 2
+        wait for clk_period;
+        wb_we_i <= '1';
+        wb_dat_i <= X"00";
+        wb_cyc_i <= '1';
+        wb_stb_i <= '1';
+        wait for 2*clk_period;
+        wb_we_i <= '0';
+        wb_cyc_i <= '0';
+        wb_stb_i <= '0';
+    -- Data 1
+        wait for clk_period;
+        wb_we_i <= '1';
+        wb_dat_i <= X"00";
+        wb_cyc_i <= '1';
+        wb_stb_i <= '1';
+        wait for 2*clk_period;
+        wb_we_i <= '0';
+        wb_cyc_i <= '0';
+        wb_stb_i <= '0';
+    -- Data 0
+        wait for clk_period;
+        wb_we_i <= '1';
+        wb_dat_i <= X"00";
+        wb_cyc_i <= '1';
+        wb_stb_i <= '1';
+        wait for 2*clk_period;
+        wb_we_i <= '0';
+        wb_cyc_i <= '0';
+        wb_stb_i <= '0';
+    -- Periode 1
+        wait for clk_period;
+        wb_we_i <= '1';
+        wb_dat_i <= X"00";
+        wb_cyc_i <= '1';
+        wb_stb_i <= '1';
+        wait for 2*clk_period;
+        wb_we_i <= '0';
+        wb_cyc_i <= '0';
+        wb_stb_i <= '0';
+    -- Periode 0
+        wait for clk_period;
+        wb_we_i <= '1';
+        wb_dat_i <= X"00";
+        wb_cyc_i <= '1';
+        wb_stb_i <= '1';
+        wait for 2*clk_period;
+        wb_we_i <= '0';
+        wb_cyc_i <= '0';
+        wb_stb_i <= '0';
+    -- CheckSum
         wait for clk_period;
         wb_we_i <= '1';
         wb_dat_i <= X"00";
@@ -175,6 +270,17 @@ begin
         wb_cyc_i <= '0';
         wb_stb_i <= '0';
         
+    -- Header Reset
+        wait for 100 ns;
+        wb_we_i <= '1';
+        wb_dat_i <= X"55";
+        wb_cyc_i <= '1';
+        wb_stb_i <= '1';
+        wait for 2*clk_period;
+        wb_we_i <= '0';
+        wb_cyc_i <= '0';
+        wb_stb_i <= '0';
+    -- Address 1
         wait for clk_period;
         wb_we_i <= '1';
         wb_dat_i <= X"00";
@@ -184,7 +290,7 @@ begin
         wb_we_i <= '0';
         wb_cyc_i <= '0';
         wb_stb_i <= '0';
-        
+    -- Address 0
         wait for clk_period;
         wb_we_i <= '1';
         wb_dat_i <= X"00";
@@ -194,7 +300,7 @@ begin
         wb_we_i <= '0';
         wb_cyc_i <= '0';
         wb_stb_i <= '0';
-        
+    -- Data 3
         wait for clk_period;
         wb_we_i <= '1';
         wb_dat_i <= X"00";
@@ -204,7 +310,7 @@ begin
         wb_we_i <= '0';
         wb_cyc_i <= '0';
         wb_stb_i <= '0';
-        
+    -- Data 2
         wait for clk_period;
         wb_we_i <= '1';
         wb_dat_i <= X"00";
@@ -214,7 +320,7 @@ begin
         wb_we_i <= '0';
         wb_cyc_i <= '0';
         wb_stb_i <= '0';
-        
+    -- Data 1
         wait for clk_period;
         wb_we_i <= '1';
         wb_dat_i <= X"00";
@@ -224,7 +330,7 @@ begin
         wb_we_i <= '0';
         wb_cyc_i <= '0';
         wb_stb_i <= '0';
-        
+    -- Data 0
         wait for clk_period;
         wb_we_i <= '1';
         wb_dat_i <= X"00";
@@ -234,7 +340,7 @@ begin
         wb_we_i <= '0';
         wb_cyc_i <= '0';
         wb_stb_i <= '0';
-        
+    -- Periode 1
         wait for clk_period;
         wb_we_i <= '1';
         wb_dat_i <= X"00";
@@ -244,7 +350,118 @@ begin
         wb_we_i <= '0';
         wb_cyc_i <= '0';
         wb_stb_i <= '0';
+    -- Periode 0
+        wait for clk_period;
+        wb_we_i <= '1';
+        wb_dat_i <= X"00";
+        wb_cyc_i <= '1';
+        wb_stb_i <= '1';
+        wait for 2*clk_period;
+        wb_we_i <= '0';
+        wb_cyc_i <= '0';
+        wb_stb_i <= '0';
+    -- CheckSum
+        wait for clk_period;
+        wb_we_i <= '1';
+        wb_dat_i <= X"55";
+        wb_cyc_i <= '1';
+        wb_stb_i <= '1';
+        wait for 2*clk_period;
+        wb_we_i <= '0';
+        wb_cyc_i <= '0';
+        wb_stb_i <= '0';
         
+    -- Header Read
+        wait for 100 ns;
+        wb_we_i <= '1';
+        wb_dat_i <= X"00";
+        wb_cyc_i <= '1';
+        wb_stb_i <= '1';
+        wait for 2*clk_period;
+        wb_we_i <= '0';
+        wb_cyc_i <= '0';
+        wb_stb_i <= '0';
+    -- Address 1
+        wait for clk_period;
+        wb_we_i <= '1';
+        wb_dat_i <= X"00";
+        wb_cyc_i <= '1';
+        wb_stb_i <= '1';
+        wait for 2*clk_period;
+        wb_we_i <= '0';
+        wb_cyc_i <= '0';
+        wb_stb_i <= '0';
+    -- Address 0
+        wait for clk_period;
+        wb_we_i <= '1';
+        wb_dat_i <= X"00";
+        wb_cyc_i <= '1';
+        wb_stb_i <= '1';
+        wait for 2*clk_period;
+        wb_we_i <= '0';
+        wb_cyc_i <= '0';
+        wb_stb_i <= '0';
+    -- Data 3
+        wait for clk_period;
+        wb_we_i <= '1';
+        wb_dat_i <= X"00";
+        wb_cyc_i <= '1';
+        wb_stb_i <= '1';
+        wait for 2*clk_period;
+        wb_we_i <= '0';
+        wb_cyc_i <= '0';
+        wb_stb_i <= '0';
+    -- Data 2
+        wait for clk_period;
+        wb_we_i <= '1';
+        wb_dat_i <= X"00";
+        wb_cyc_i <= '1';
+        wb_stb_i <= '1';
+        wait for 2*clk_period;
+        wb_we_i <= '0';
+        wb_cyc_i <= '0';
+        wb_stb_i <= '0';
+    -- Data 1
+        wait for clk_period;
+        wb_we_i <= '1';
+        wb_dat_i <= X"00";
+        wb_cyc_i <= '1';
+        wb_stb_i <= '1';
+        wait for 2*clk_period;
+        wb_we_i <= '0';
+        wb_cyc_i <= '0';
+        wb_stb_i <= '0';
+    -- Data 0
+        wait for clk_period;
+        wb_we_i <= '1';
+        wb_dat_i <= X"00";
+        wb_cyc_i <= '1';
+        wb_stb_i <= '1';
+        wait for 2*clk_period;
+        wb_we_i <= '0';
+        wb_cyc_i <= '0';
+        wb_stb_i <= '0';
+    -- Periode 1
+        wait for clk_period;
+        wb_we_i <= '1';
+        wb_dat_i <= X"00";
+        wb_cyc_i <= '1';
+        wb_stb_i <= '1';
+        wait for 2*clk_period;
+        wb_we_i <= '0';
+        wb_cyc_i <= '0';
+        wb_stb_i <= '0';
+    -- Periode 0
+        wait for clk_period;
+        wb_we_i <= '1';
+        wb_dat_i <= X"00";
+        wb_cyc_i <= '1';
+        wb_stb_i <= '1';
+        wait for 2*clk_period;
+        wb_we_i <= '0';
+        wb_cyc_i <= '0';
+        wb_stb_i <= '0';
+    -- CheckSum
         wait for clk_period;
         wb_we_i <= '1';
         wb_dat_i <= X"00";

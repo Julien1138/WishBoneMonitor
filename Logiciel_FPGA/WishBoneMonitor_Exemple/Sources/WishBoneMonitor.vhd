@@ -96,7 +96,8 @@ architecture WishBoneMonitor_behavior of WishBoneMonitor is
             wb_dtr_i_MailBox    : in std_logic;
             wb_atr_i_MailBox    : in std_logic_vector(WB_Addr_Width downto 0);
             
-            RTC_time            : in std_logic_vector(15 downto 0)
+            RTC_time            : in std_logic_vector(15 downto 0);
+            Reset_MailBox       : out std_logic
         );
     end component;
 
@@ -121,6 +122,7 @@ architecture WishBoneMonitor_behavior of WishBoneMonitor is
     signal wb_dtr_MailBoxToSequencer    : std_logic;
     signal wb_atr_MailBoxToSequencer    : std_logic_vector(WB_Addr_Width downto 0);
     signal RTC_time                     : std_logic_vector(15 downto 0);
+    signal Reset_MailBox                : std_logic;
     
     -- Internal WishBone signals between MailBox and Slave
     signal wb_we_MailBoxToUUT   : std_logic;
@@ -208,7 +210,8 @@ begin
         wb_dtr_i_MailBox => wb_dtr_MailBoxToSequencer,
         wb_atr_i_MailBox => wb_atr_MailBoxToSequencer,
         
-        RTC_time => RTC_time
+        RTC_time => RTC_time,
+        Reset_MailBox => Reset_MailBox
     );
     
     MailBox_inst : MailBox
@@ -223,7 +226,8 @@ begin
     port map
     (
         wb_clk_i => clk,
-        wb_rst_i => rst,
+        wb_rst_i => Reset_MailBox,
+        
         wb_we_i_Slave => wb_we_SequencerToMailBox,
         wb_adr_i_Slave => wb_adr_SequencerToMailBox,
         wb_dat_i_Slave => wb_dat_SequencerToMailBox,
