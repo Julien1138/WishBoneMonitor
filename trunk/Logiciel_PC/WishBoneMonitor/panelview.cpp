@@ -29,14 +29,14 @@ void PanelView::AddWidget()
         WishBoneWidgetDoc* WidgetDoc;
         if (WidgetType == "WriteRegister")
         {
-            WidgetDoc = new WBWriteRegisterDoc(""
+            WidgetDoc = new WBWriteRegisterDoc(WidgetType
                                              , m_pDoc->GetMailBox()
                                              , m_ContextMenuPosition.x()
                                              , m_ContextMenuPosition.y());
         }
         else if (WidgetType == "ReadRegister")
         {
-            WidgetDoc = new WBReadRegisterDoc(""
+            WidgetDoc = new WBReadRegisterDoc(WidgetType
                                              , m_pDoc->GetMailBox()
                                              , m_ContextMenuPosition.x()
                                              , m_ContextMenuPosition.y());
@@ -57,11 +57,10 @@ void PanelView::AddWidget()
     }
 }
 
-void PanelView::DeleteWidget(WishBoneWidgetView *Widget)
+void PanelView::DeleteWidget(WishBoneWidgetDoc *Widget)
 {
-    m_pDoc->DeleteWidget(Widget->WidgetDoc());
-    delete Widget->WidgetDlg();
-    delete Widget;
+    m_pDoc->DeleteWidget(Widget);
+    RedrawAllWidgets();
 }
 
 void PanelView::contextMenuEvent(QContextMenuEvent *event)
@@ -81,7 +80,8 @@ void PanelView::RedrawAllWidgets()
 {
     while (!(m_listWidget.isEmpty()))
     {
-        delete (m_listWidget.front());
+       /* delete (m_listWidget.front());*/
+        m_listWidget.front()->deleteLater();
         m_listWidget.pop_front();
     }
     while (!(m_listWidgetDlg.isEmpty()))
@@ -103,7 +103,7 @@ void PanelView::RedrawAllWidgets()
                                                , (WBWriteRegisterDlg*) WidgetDlg
                                                , this);
         }
-        if (m_pDoc->GetWidgetList()->value(i)->GetType() == eReadRegister)
+        else if (m_pDoc->GetWidgetList()->value(i)->GetType() == eReadRegister)
         {
             WidgetDlg = new WBReadRegisterDlg(pDoc()->GetRegistersList()
                                             , (WBReadRegisterDoc*) m_pDoc->GetWidgetList()->value(i)

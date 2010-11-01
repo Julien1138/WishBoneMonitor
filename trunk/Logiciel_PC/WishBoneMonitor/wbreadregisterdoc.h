@@ -5,7 +5,7 @@
 #include "WishBoneRegister.h"
 
 #define WBREAD_WIDTH_MIN   100
-#define WBREAD_HEIGHT_MIN  40
+#define WBREAD_HEIGHT_MIN  60
 
 class WBReadRegisterDoc : public WishBoneWidgetDoc
 {

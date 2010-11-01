@@ -32,7 +32,7 @@ signals:
 public slots:
     void    ModeChanged();
     void    AddWidget();
-    void    DeleteWidget(WishBoneWidgetView* Widget);
+    void    DeleteWidget(WishBoneWidgetDoc* Widget);
 
 private:
     PanelDoc*                   m_pDoc;

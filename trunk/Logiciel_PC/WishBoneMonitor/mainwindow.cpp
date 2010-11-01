@@ -75,12 +75,13 @@ void MainWindow::OpenConfig()
     {
         QApplication::setOverrideCursor( Qt::WaitCursor ); // changer de curseur
 
-        NewConfig();
-
         QString FileName = QFileDialog::getOpenFileName(this, "Ouvrir un fichier", QString(), "WishBoneMonitor File (*.wbm)");
 
         if (!FileName.isEmpty())
         {
+        // On efface la configuration actuelle
+            NewConfig();
+
         // On ouvre le fichier de sauvegarde
             QSettings settings(FileName, QSettings::IniFormat);
 
