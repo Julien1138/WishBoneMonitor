@@ -135,6 +135,10 @@ void MainWindow::DisconnectSerial()
 {
     QApplication::setOverrideCursor( Qt::WaitCursor ); // changer de curseur
 
+    if (m_pDoc->GetMailBox()->IsConnected())
+    {
+        m_pDoc->UnsetupMailBox();
+    }
     m_pDoc->GetMailBox()->Disconnect();
 
     if (!(m_pDoc->GetMailBox()->IsConnected()))

@@ -51,7 +51,8 @@ entity Sequencer is
         wb_dtr_i_MailBox    : in std_logic;
         wb_atr_i_MailBox    : in std_logic_vector(WB_Addr_Width downto 0);
         
-        RTC_time            : in std_logic_vector(15 downto 0)
+        RTC_time            : in std_logic_vector(15 downto 0);
+        Reset_MailBox       : out std_logic
     );
 end Sequencer;
 
@@ -66,6 +67,8 @@ architecture Sequencer_behavior of Sequencer is
     signal UART_Rx_Frame_CheckSum   : std_logic_vector(7 downto 0);
     signal UART_Rx_Frame_Valid      : std_logic;
     signal UART_Rx_Byte_Counter     : std_logic_vector(3 downto 0);
+    signal WaitForMailBoxReset      : std_logic;
+    signal RxTimeout_Timer          : std_logic_vector(13 downto 0);
     
     signal MailBox_write                : std_logic;
     signal MailBox_written              : std_logic;
@@ -253,7 +256,7 @@ begin
                                UART_Rx_Frame(63 downto 56) xor
                                UART_Rx_Frame(71 downto 64) xor
                                UART_Rx_Frame(79 downto 72);
-    UART_Rx_Frame_Valid <= '1' when UART_Rx_Frame_Header(7 downto 1) = "0000000" and UART_Rx_Frame_CheckSum = 0 and UART_Rx_Byte_Counter = 0 else
+    UART_Rx_Frame_Valid <= '1' when UART_Rx_Frame_CheckSum = 0 and UART_Rx_Byte_Counter = 0 else
                            '0';
     
     UART_Rx_Byte_Counter_process : process(wb_rst_i, wb_clk_i)
@@ -263,6 +266,8 @@ begin
         elsif rising_edge(wb_clk_i) then
             if UART_read = '1' and wb_ack_i_UART = '1' then
                 if UART_Rx_Byte_Counter = 0 then
+                    UART_Rx_Byte_Counter <= X"9";
+                elsif RxTimeout_Timer = 0 then
                     UART_Rx_Byte_Counter <= X"9";
                 else
                     UART_Rx_Byte_Counter <= UART_Rx_Byte_Counter - 1;
@@ -359,6 +364,41 @@ begin
             end if;
         end if;
     end process;
+    
+    Reset_MailBox_process : process(wb_rst_i, wb_clk_i)
+    begin
+        if wb_rst_i = '1' then
+            WaitForMailBoxReset <= '1';
+            Reset_MailBox <= '1';
+        elsif rising_edge(wb_clk_i) then
+            Reset_MailBox <= '0';
+            
+            if UART_Rx_Frame_Valid = '1' and UART_Rx_Frame_Header = X"55" and WaitForMailBoxReset = '1' then
+                Reset_MailBox <= '1';
+                WaitForMailBoxReset <= '0';
+            end if;
+            
+            if UART_read = '1' and wb_ack_i_UART = '1' then
+                WaitForMailBoxReset <= '1';
+            end if;
+            
+        end if;
+    end process;
+    
+    RxTimeout_Timer_process : process(wb_rst_i, wb_clk_i)
+    begin
+        if wb_rst_i = '1' then
+            RxTimeout_Timer <= (others => '1');
+        elsif rising_edge(wb_clk_i) then
+            
+            if UART_read = '1' and wb_ack_i_UART = '1' then
+                RxTimeout_Timer <= (others => '1');
+            elsif RxTimeout_Timer /= 0 then
+                RxTimeout_Timer <= RxTimeout_Timer - 1;
+            end if;
+            
+        end if;
+    end process;
 
     Operation_sequencer_process : process(wb_rst_i, wb_clk_i)
     begin
@@ -385,7 +425,7 @@ begin
                 UART_read <= '0';
             end if;
             
-            if MailBox_write = '0' and MailBox_written = '0' and UART_Rx_Frame_Valid = '1' then
+            if MailBox_write = '0' and MailBox_written = '0' and UART_Rx_Frame_Valid = '1' and UART_Rx_Frame_Header(7 downto 1) = "0000000" then
                 MailBox_write <= '1';
                 MailBox_write_Latch <= '1';
             end if;

@@ -2,6 +2,7 @@
 
 #define HEADER_WRITE    0x01
 #define HEADER_READ     0x00
+#define HEADER_RESET    0x55
 
 MailBoxDriver::MailBoxDriver()
     : m_pPort(NULL)
@@ -68,6 +69,26 @@ bool MailBoxDriver::IsConnected()
     return false;
 }
 
+void MailBoxDriver::ResetMailBox()
+{
+    char Data[10];
+
+    Data[0] = HEADER_RESET;
+    Data[1] = 0;
+    Data[2] = 0;
+    Data[3] = 0;
+    Data[4] = 0;
+    Data[5] = 0;
+    Data[6] = 0;
+    Data[7] = 0;
+    Data[8] = 0;
+    Data[9] = Checksum(Data, 9);
+
+    while (m_pPort->bytesToWrite()); // On attend que le buffer d'envoi soit vide.
+
+    m_pPort->write(Data, 10);
+}
+
 void MailBoxDriver::SendRegister(WishBoneRegister* Reg)
 {
     char Data[10];
@@ -90,48 +111,51 @@ void MailBoxDriver::SendRegister(WishBoneRegister* Reg)
 
 bool MailBoxDriver::DecodeRegister(WishBoneRegister* Reg)
 {
-    char Data[10];
-
-    while (1)
+    if (m_pPort)
     {
-        if (m_pPort->bytesAvailable() < 10)
-            return false;
+        char Data[10];
 
-        m_pPort->peek(Data, 1);
-        if(Data[0] == HEADER_WRITE ||
-           Data[0] == HEADER_READ)
+        while (1)
         {
-            break;
+            if (m_pPort->bytesAvailable() < 10)
+                return false;
+
+            m_pPort->peek(Data, 1);
+            if(Data[0] == HEADER_WRITE ||
+               Data[0] == HEADER_READ)
+            {
+                break;
+            }
+            else
+            {
+                m_pPort->read(Data, 1);
+            }
+        }
+
+
+        m_pPort->read(Data, 10);
+
+        if ((Data[0] == HEADER_WRITE || Data[0] == HEADER_READ) && Checksum(Data, 10) == 0)
+        {
+            Reg->SetAddress(((unsigned char)Data[1] << 8) +
+                             (unsigned char)Data[2]);
+
+            Reg->SetValueNoCheck(((unsigned char)Data[3] << 24) +
+                                 ((unsigned char)Data[4] << 16) +
+                                 ((unsigned char)Data[5] << 8) +
+                                  (unsigned char)Data[6]);
+
+            Reg->SetDate(((unsigned char)Data[7] << 8) +
+                          (unsigned char)Data[8]);
+
+            Reg->SetWrite_nRead(Data[0] == HEADER_WRITE);
+
+            return true;
         }
         else
         {
-            m_pPort->read(Data, 1);
+            return false;
         }
-    }
-
-
-    m_pPort->read(Data, 10);
-
-    if ((Data[0] == HEADER_WRITE || Data[0] == HEADER_READ) && Checksum(Data, 10) == 0)
-    {
-        Reg->SetAddress(((unsigned char)Data[1] << 8) +
-                         (unsigned char)Data[2]);
-
-        Reg->SetValueNoCheck(((unsigned char)Data[3] << 24) +
-                             ((unsigned char)Data[4] << 16) +
-                             ((unsigned char)Data[5] << 8) +
-                              (unsigned char)Data[6]);
-
-        Reg->SetDate(((unsigned char)Data[7] << 8) +
-                      (unsigned char)Data[8]);
-
-        Reg->SetWrite_nRead(Data[0] == HEADER_WRITE);
-
-        return true;
-    }
-    else
-    {
-        return false;
     }
 }
 

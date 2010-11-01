@@ -12,6 +12,7 @@ public:
     bool Connect(QString PortName);
     void Disconnect();
     bool IsConnected();
+    void ResetMailBox();
 
     QextSerialPort* GetPort(){return m_pPort;}
 

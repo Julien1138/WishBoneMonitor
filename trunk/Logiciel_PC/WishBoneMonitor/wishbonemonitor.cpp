@@ -171,6 +171,8 @@ int WishBoneMonitor::RegisterIdx(const unsigned long &Address, const bool &Write
 
 void WishBoneMonitor::SetupMailBox()
 {
+    m_pMailBox->ResetMailBox();
+
     for (int i(0) ; i < m_listRegisters.count() ; i++)
     {
         if (m_listRegisters.value(i)->Period())
@@ -182,5 +184,5 @@ void WishBoneMonitor::SetupMailBox()
 
 void WishBoneMonitor::UnsetupMailBox()
 {
-
+    m_pMailBox->ResetMailBox();
 }
