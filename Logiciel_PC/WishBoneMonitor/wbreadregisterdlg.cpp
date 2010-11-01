@@ -13,8 +13,6 @@ WBReadRegisterDlg::WBReadRegisterDlg(QList<WishBoneRegister*>* plistRegisters, W
     {
         m_ComboRegisterChoice.addItem(m_plistRegisters->value(i)->Name());
     }
-    ((WBReadRegisterDoc*) m_pDoc)->SetpRegister(m_plistRegisters->front());
-    /*connect(&m_ComboRegisterChoice, SIGNAL(currentIndexChanged(QString)), &m_EditTitle, SLOT(setText(QString)));*/
     ((QFormLayout*) m_pLayout)->addRow("Nom du registre", &m_ComboRegisterChoice);
 
     ((QFormLayout*) m_pLayout)->addRow("Titre du Widget", &m_EditTitle);
@@ -44,5 +42,10 @@ void WBReadRegisterDlg::UpdateData()
     {
         m_ComboRegisterChoice.addItem(m_plistRegisters->value(i)->Name());
     }
-    m_ComboRegisterChoice.setCurrentIndex(m_plistRegisters->indexOf(((WBReadRegisterDoc*) m_pDoc)->Register()));
+
+    int CurrentRegisterIdx(m_plistRegisters->indexOf(((WBReadRegisterDoc*) m_pDoc)->Register()));
+    if (CurrentRegisterIdx != -1)
+    {
+        m_ComboRegisterChoice.setCurrentIndex(CurrentRegisterIdx);
+    }
 }

@@ -1,4 +1,4 @@
-#include "paneldoc.h"
+#include "PanelDoc.h"
 #include <QString>
 #include "WBWriteRegisterDoc.h"
 #include "WBReadRegisterDoc.h"
@@ -44,7 +44,7 @@ void PanelDoc::Load(QSettings *pSettings)
             continue;
         }
         Widget->Load(pSettings, m_plistRegisters);
-        m_listWidget.append(Widget);
+        m_listWidget.push_back(Widget);
     }
     pSettings->endArray();
 }
