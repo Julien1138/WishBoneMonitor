@@ -7,6 +7,7 @@ WBWriteRegisterDoc::WBWriteRegisterDoc(MailBoxDriver* pMailBox)
                       , 0
                       , WBWRITE_WIDTH_MIN
                       , WBWRITE_HEIGHT_MIN)
+    , m_pRegister(NULL)
 {
 }
 
@@ -17,6 +18,7 @@ WBWriteRegisterDoc::WBWriteRegisterDoc(const QString &Title, MailBoxDriver* pMai
                       , Y
                       , Width
                       , Height)
+    , m_pRegister(NULL)
 {
 }
 
@@ -26,11 +28,13 @@ WBWriteRegisterDoc::~WBWriteRegisterDoc()
 
 void WBWriteRegisterDoc::Load(QSettings *pSettings, QList<WishBoneRegister*>* plistRegisters)
 {
-    m_pRegister = plistRegisters->value(RegisterIdx(plistRegisters
-                                                  , pSettings->value("RegisterAddress").toUInt()
-                                                  , pSettings->value("RegisterWrite_nRead").toString() == "true" ? true : false));
-
     WishBoneWidgetDoc::Load(pSettings, plistRegisters);
+
+    int Idx(RegisterIdx(plistRegisters
+          , pSettings->value("RegisterAddress").toUInt()
+          , pSettings->value("RegisterWrite_nRead").toString() == "true" ? true : false));
+
+    m_pRegister = plistRegisters->at(Idx);
 }
 
 void WBWriteRegisterDoc::Save(QSettings *pSettings)
