@@ -5,7 +5,7 @@
 #include <QSettings>
 #include "MailBoxDriver.h"
 
-enum WidgetType{eWriteRegister, eReadRegister};
+enum WidgetType{eWriteRegister, eReadRegister, eGraph};
 
 class WishBoneWidgetDoc
 {

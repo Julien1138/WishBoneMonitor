@@ -14,6 +14,9 @@
 #include "WBReadRegisterDoc.h"
 #include "WBReadRegisterView.h"
 #include "WBReadRegisterDlg.h"
+#include "WBGraphDoc.h"
+#include "WBGraphView.h"
+#include "WBGraphDlg.h"
 
 class PanelView : public QWidget
 {

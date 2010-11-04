@@ -30,7 +30,10 @@ SOURCES += main.cpp\
     wbwriteregisterdlg.cpp \
     wbreadregisterdoc.cpp \
     wbreadregisterview.cpp \
-    wbreadregisterdlg.cpp
+    wbreadregisterdlg.cpp \
+    wbgraphdlg.cpp \
+    wbgraphdoc.cpp \
+    wbgraphview.cpp
 
 HEADERS  += mainwindow.h \
     wishbonemonitor.h \
@@ -48,7 +51,10 @@ HEADERS  += mainwindow.h \
     wbwriteregisterdlg.h \
     wbreadregisterdoc.h \
     wbreadregisterview.h \
-    wbreadregisterdlg.h
+    wbreadregisterdlg.h \
+    wbgraphdlg.h \
+    wbgraphdoc.h \
+    wbgraphview.h
 
 CONFIG(debug, debug|release):LIBS  += -lqextserialportd
 else:LIBS  += -lqextserialport

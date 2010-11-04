@@ -157,6 +157,8 @@ bool MailBoxDriver::DecodeRegister(WishBoneRegister* Reg)
             return false;
         }
     }
+
+    return false;
 }
 
 bool MailBoxDriver::DataAvailable()

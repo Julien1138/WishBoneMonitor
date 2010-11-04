@@ -21,7 +21,7 @@ void PanelView::AddWidget()
 {
     bool ok;
     QStringList WidgetTypeList;
-    WidgetTypeList << "WriteRegister" << "ReadRegister";
+    WidgetTypeList << "WriteRegister" << "ReadRegister" << "Graph";
     QString WidgetType(QInputDialog::getItem(this, "Ajouter un Widget", "Quel type de Widget\nvoulez vous ajouter ?", WidgetTypeList, 0, false, &ok));
 
     if(ok)
@@ -37,9 +37,16 @@ void PanelView::AddWidget()
         else if (WidgetType == "ReadRegister")
         {
             WidgetDoc = new WBReadRegisterDoc(WidgetType
-                                             , m_pDoc->GetMailBox()
-                                             , m_ContextMenuPosition.x()
-                                             , m_ContextMenuPosition.y());
+                                            , m_pDoc->GetMailBox()
+                                            , m_ContextMenuPosition.x()
+                                            , m_ContextMenuPosition.y());
+        }
+        else if (WidgetType == "Graph")
+        {
+            WidgetDoc = new WBGraphDoc(WidgetType
+                                     , m_pDoc->GetMailBox()
+                                     , m_ContextMenuPosition.x()
+                                     , m_ContextMenuPosition.y());
         }
         else
         {
@@ -80,7 +87,6 @@ void PanelView::RedrawAllWidgets()
 {
     while (!(m_listWidget.isEmpty()))
     {
-       /* delete (m_listWidget.front());*/
         m_listWidget.front()->deleteLater();
         m_listWidget.pop_front();
     }
@@ -111,6 +117,15 @@ void PanelView::RedrawAllWidgets()
             WidgetView = new WBReadRegisterView((WBReadRegisterDoc*) m_pDoc->GetWidgetList()->value(i)
                                               , (WBReadRegisterDlg*) WidgetDlg
                                               , this);
+        }
+        else if (m_pDoc->GetWidgetList()->value(i)->GetType() == eGraph)
+        {
+            WidgetDlg = new WBGraphDlg(pDoc()->GetRegistersList()
+                                     , (WBGraphDoc*) m_pDoc->GetWidgetList()->value(i)
+                                     , this);
+            WidgetView = new WBGraphView((WBGraphDoc*) m_pDoc->GetWidgetList()->value(i)
+                                       , (WBGraphDlg*) WidgetDlg
+                                       , this);
         }
         else
         {

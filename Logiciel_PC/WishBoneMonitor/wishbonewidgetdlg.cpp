@@ -19,10 +19,10 @@ void WishBoneWidgetDlg::SetTitle(QString Title)
 
 void WishBoneWidgetDlg::OnAccept()
 {
-
+    m_pDoc->SetTitle(m_EditTitle.text());
 }
 
 void WishBoneWidgetDlg::UpdateData()
 {
-
+    m_EditTitle.setText(m_pDoc->Title());
 }
