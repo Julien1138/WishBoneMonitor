@@ -5,11 +5,9 @@
 #include "WBReadRegisterDoc.h"
 
 #include <QDialog>
-#include <QVBoxLayout>
-#include <QHBoxLayout>
+#include <QFormLayout>
 #include <QComboBox>
 #include <QString>
-#include <QCheckBox>
 
 class WBReadRegisterDlg : public WishBoneWidgetDlg
 {

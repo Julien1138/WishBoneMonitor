@@ -29,7 +29,8 @@ WBReadRegisterDlg::WBReadRegisterDlg(QList<WishBoneRegister*>* plistRegisters, W
 
 void WBReadRegisterDlg::OnAccept()
 {
-    ((WBReadRegisterDoc*) m_pDoc)->SetTitle(m_EditTitle.text());
+    WishBoneWidgetDlg::OnAccept();
+
     ((WBReadRegisterDoc*) m_pDoc)->SetpRegister(m_plistRegisters->value(m_ComboRegisterChoice.currentIndex()));
 }
 

@@ -2,6 +2,7 @@
 #include <QString>
 #include "WBWriteRegisterDoc.h"
 #include "WBReadRegisterDoc.h"
+#include "WBGraphDoc.h"
 
 PanelDoc::PanelDoc(MailBoxDriver* pMailBox, QList<WishBoneRegister*>* plistRegisters)
     : m_Title("")
@@ -38,6 +39,10 @@ void PanelDoc::Load(QSettings *pSettings)
         else if (WidgetType == "WBReadRegister")
         {
             Widget = new WBReadRegisterDoc(m_pMailBox);
+        }
+        else if (WidgetType == "WBGraph")
+        {
+            Widget = new WBGraphDoc(m_pMailBox);
         }
         else
         {
