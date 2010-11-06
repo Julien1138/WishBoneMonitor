@@ -72,14 +72,17 @@ void PanelView::DeleteWidget(WishBoneWidgetDoc *Widget)
 
 void PanelView::contextMenuEvent(QContextMenuEvent *event)
 {
-    if (!m_pDoc->GetRegistersList()->empty())
+    if (!m_pDoc->GetMailBox()->IsConnected())
     {
-        m_ContextMenuPosition = mapFromGlobal(event->globalPos());
+        if (!m_pDoc->GetRegistersList()->empty())
+        {
+            m_ContextMenuPosition = mapFromGlobal(event->globalPos());
 
-        QMenu * menu = new QMenu(this);
-        menu->addAction("Ajouter un Widget", this, SLOT(AddWidget()));
+            QMenu * menu = new QMenu(this);
+            menu->addAction("Ajouter un Widget", this, SLOT(AddWidget()));
 
-        menu->exec(event->globalPos());
+            menu->exec(event->globalPos());
+        }
     }
 }
 
