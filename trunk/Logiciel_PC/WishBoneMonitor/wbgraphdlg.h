@@ -29,6 +29,7 @@ public slots:
 
 private:
     QFormLayout*    m_pNbrOfCurvesLayout;
+    QLineEdit*      m_pRunningTimeLineEdit;
     QComboBox*      m_pNbrOfCurvesComboBox;
 
     QVBoxLayout*        m_pListOfCurvesLayout;

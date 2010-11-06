@@ -23,7 +23,8 @@ public slots:
     void    Refresh();
 
 private:
-    QwtPlot*    m_pPlot;
+    QwtPlot*                m_pPlot;
+    QList<QwtPlotCurve*>    m_CurveList;
 
     void    UpdateWidget();
 

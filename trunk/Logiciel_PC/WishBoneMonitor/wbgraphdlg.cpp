@@ -9,6 +9,9 @@ WBGraphDlg::WBGraphDlg(QList<WishBoneRegister*>* plistRegisters, WBGraphDoc* pDo
 
     m_pNbrOfCurvesLayout = new QFormLayout();
     m_pNbrOfCurvesLayout->addRow("Titre du Widget", &m_EditTitle);
+    m_pRunningTimeLineEdit = new QLineEdit();
+    m_pNbrOfCurvesLayout->addRow("Profondeur mémoire", m_pRunningTimeLineEdit);
+    m_pRunningTimeLineEdit->setText(QString::number(((WBGraphDoc*) m_pDoc)->RunningTime()));
     m_pNbrOfCurvesComboBox = new QComboBox();
     m_pNbrOfCurvesComboBox->addItem("0");
     m_pNbrOfCurvesComboBox->addItem("1");
@@ -37,6 +40,8 @@ void WBGraphDlg::OnAccept()
 {
     WishBoneWidgetDlg::OnAccept();
 
+    ((WBGraphDoc*) m_pDoc)->SetRunningTime(m_pRunningTimeLineEdit->text().toDouble());
+
     ((WBGraphDoc*) m_pDoc)->ClearRegisterList();
     for (int i(0) ; i < m_pNbrOfCurvesComboBox->currentText().toInt() ; i++)
     {
@@ -53,6 +58,8 @@ void WBGraphDlg::OnNbrOfCurvesChanged()
 void WBGraphDlg::UpdateData()
 {
     WishBoneWidgetDlg::UpdateData();
+
+    m_pRunningTimeLineEdit->setText(QString::number(((WBGraphDoc*) m_pDoc)->RunningTime()));
 
     m_pNbrOfCurvesComboBox->setCurrentIndex(((WBGraphDoc*) m_pDoc)->NbrOfCurves());
 
