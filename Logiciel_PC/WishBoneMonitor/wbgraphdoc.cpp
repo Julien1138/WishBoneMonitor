@@ -13,6 +13,7 @@ WBGraphDoc::WBGraphDoc(MailBoxDriver* pMailBox)
     m_CurveNameList.clear();
     m_ValueTabList.clear();
     m_DateTabList.clear();
+    m_LastDateList.clear();
 }
 
 WBGraphDoc::WBGraphDoc(const QString &Title, MailBoxDriver* pMailBox, int X, int Y, int Width, int Height)
@@ -28,6 +29,7 @@ WBGraphDoc::WBGraphDoc(const QString &Title, MailBoxDriver* pMailBox, int X, int
     m_CurveNameList.clear();
     m_ValueTabList.clear();
     m_DateTabList.clear();
+    m_LastDateList.clear();
 }
 
 WBGraphDoc::~WBGraphDoc()
@@ -88,6 +90,11 @@ void WBGraphDoc::ClearRegisterList()
         delete m_DateTabList.front();
         m_DateTabList.pop_front();
     }
+    while (!m_LastDateList.isEmpty())
+    {
+        delete m_LastDateList.front();
+        m_LastDateList.pop_front();
+    }
 }
 
 void WBGraphDoc::AddRegister(WishBoneRegister* pRegister, QString CurveName)
@@ -96,52 +103,27 @@ void WBGraphDoc::AddRegister(WishBoneRegister* pRegister, QString CurveName)
     m_CurveNameList.push_back(CurveName);
     m_ValueTabList.push_back(new QVector<double>);
     m_DateTabList.push_back(new QVector<double>);
+    m_LastDateList.push_back(new short);
+    *(m_LastDateList.back()) = 0.0;
 }
 
-void WBGraphDoc::UdpateTables()
+void WBGraphDoc::UdpateTable(int Idx)
 {
-    for (int i(0) ; i < m_RegisterList.count() ; i++)
-    {
-        double Date(m_RegisterList.value(i)->Date()/1000.0);
-        if ((m_DateTabList.value(i)->isEmpty()) ||
-            (Date != m_DateTabList.value(i)->back()))
-        {
-            if (m_RegisterList.value(i)->Signed())
-            {
-                m_ValueTabList.value(i)->push_back(double((signed)(m_RegisterList.value(i)->Value())));
-            }
-            else
-            {
-                m_ValueTabList.value(i)->push_back(double((unsigned)(m_RegisterList.value(i)->Value())));
-            }
+    m_ValueTabList.value(Idx)->push_back(m_RegisterList.value(Idx)->Value());
 
-            if (!m_DateTabList.value(i)->isEmpty())
-            {
-                while (Date < m_DateTabList.value(i)->back())
-                {
-                    Date += (double(0x10000) / 1000);
-                }
-            }
-            m_DateTabList.value(i)->push_back(Date);
-        }
-    }
+    short  TimeDiff((short) (m_RegisterList.value(Idx)->Date() - *(m_LastDateList.value(Idx))));
+    *(m_LastDateList.value(Idx)) = m_RegisterList.value(Idx)->Date();
 
-    double LatestDate(0.0);
-    for (int i(0) ; i < m_RegisterList.count() ; i++)
+    double NextDate(0.0);
+    if (m_DateTabList.value(Idx)->isEmpty())
     {
-        LatestDate = m_DateTabList.value(i)->back() > LatestDate ? m_DateTabList.value(i)->back() : LatestDate;
+        NextDate = (TimeDiff / 1000.0);
     }
-
-    double FirstDate(LatestDate - m_RunningTime);
-    for (int i(0) ; i < m_RegisterList.count() ; i++)
+    else
     {
-        while ((!m_DateTabList.value(i)->isEmpty()) &&
-               (m_DateTabList.value(i)->front() < FirstDate))
-        {
-            m_ValueTabList.value(i)->pop_front();
-            m_DateTabList.value(i)->pop_front();
-        }
+        NextDate = m_DateTabList.value(Idx)->back() + (TimeDiff / 1000.0);
     }
+    m_DateTabList.value(Idx)->push_back(NextDate);
 }
 
 void WBGraphDoc::ResetTables()
@@ -150,6 +132,7 @@ void WBGraphDoc::ResetTables()
     {
         m_ValueTabList.value(i)->clear();
         m_DateTabList.value(i)->clear();
+        *(m_LastDateList.value(i)) = 0.0;
     }
 }
 
@@ -171,4 +154,18 @@ QVector<double>* WBGraphDoc::ValueTab(int Idx)
 QVector<double>* WBGraphDoc::DateTab(int Idx)
 {
     return m_DateTabList.value(Idx);
+}
+
+double WBGraphDoc::LatestDate()
+{
+    double LatestDate(0.0);
+    for (int i(0) ; i < m_RegisterList.count() ; i++)
+    {
+        if (!m_DateTabList.value(i)->isEmpty())
+        {
+            LatestDate = m_DateTabList.value(i)->back() > LatestDate ? m_DateTabList.value(i)->back() : LatestDate;
+        }
+    }
+
+    return LatestDate;
 }

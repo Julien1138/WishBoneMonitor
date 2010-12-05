@@ -8,6 +8,7 @@
 #include <QList>
 #include <qwt_plot.h>
 #include <qwt_plot_curve.h>
+#include <QColor>
 
 class WBGraphView : public WishBoneWidgetView
 {
@@ -21,6 +22,7 @@ signals:
 public slots:
     void    ModeChanged();
     void    Refresh();
+    void    UpdateCurve(int Idx);
 
 private:
     QwtPlot*                m_pPlot;
@@ -29,5 +31,7 @@ private:
     void    UpdateWidget();
 
 };
+
+QColor CurveColor(int Idx);
 
 #endif // WBGRAPHVIEW_H
