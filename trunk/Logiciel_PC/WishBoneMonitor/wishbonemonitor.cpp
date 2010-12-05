@@ -175,7 +175,12 @@ void WishBoneMonitor::SetupMailBox()
 
     for (int i(0) ; i < m_listRegisters.count() ; i++)
     {
-        if (m_listRegisters.value(i)->Period())
+        m_listRegisters.value(i)->SetDate(0);
+    }
+
+    for (int i(0) ; i < m_listRegisters.count() ; i++)
+    {
+        //if (m_listRegisters.value(i)->Period())
         {
             m_pMailBox->SendRegister(m_listRegisters.value(i));
         }
@@ -185,4 +190,9 @@ void WishBoneMonitor::SetupMailBox()
 void WishBoneMonitor::UnsetupMailBox()
 {
     m_pMailBox->ResetMailBox();
+
+    for (int i(0) ; i < m_listRegisters.count() ; i++)
+    {
+        m_listRegisters.value(i)->SetDate(0);
+    }
 }

@@ -1,5 +1,6 @@
 #include "wbgraphview.h"
 #include "qwt_legend.h"
+#include <QSignalMapper>
 
 WBGraphView::WBGraphView(WBGraphDoc*  pDoc, WBGraphDlg*  pDlg, QWidget *parent) :
     WishBoneWidgetView(pDoc, pDlg, parent)
@@ -44,8 +45,6 @@ void WBGraphView::ModeChanged()
 
 void WBGraphView::Refresh()
 {
-    ((WBGraphDoc*) m_pDoc)->UdpateTables();
-
     for (int i(0) ; i < ((WBGraphDoc*) m_pDoc)->NbrOfCurves() ; i++)
     {
         m_CurveList.value(i)->setData(*(((WBGraphDoc*) m_pDoc)->DateTab(i))
@@ -53,6 +52,13 @@ void WBGraphView::Refresh()
     }
 
     m_pPlot->replot();
+}
+
+void WBGraphView::UpdateCurve(int Idx)
+{
+    ((WBGraphDoc*) m_pDoc)->UdpateTable(Idx);
+
+    Refresh();
 }
 
 void WBGraphView::UpdateWidget()
@@ -65,21 +71,47 @@ void WBGraphView::UpdateWidget()
         m_CurveList.pop_front();
     }
 
+    QSignalMapper *mapper = new QSignalMapper();
+
     for (int i(0) ; i < ((WBGraphDoc*) m_pDoc)->NbrOfCurves() ; i++)
     {
         QwtPlotCurve* pCurve = new QwtPlotCurve(((WBGraphDoc*) m_pDoc)->CurveName(i));
         pCurve->setStyle(QwtPlotCurve::Lines);
         pCurve->setCurveAttribute(QwtPlotCurve::Inverted);
         pCurve->setRenderHint(QwtPlotItem::RenderAntialiased);
-        pCurve->setPen(QColor(Qt::darkGreen));
+        pCurve->setPen(CurveColor(i));
         pCurve->attach(m_pPlot);
         m_CurveList.push_back(pCurve);
 
-        connect(((WBGraphDoc*) m_pDoc)->Register(i), SIGNAL(UpdateWidget()), this, SLOT(Refresh()));
+        //connect(((WBGraphDoc*) m_pDoc)->Register(i), SIGNAL(UpdateWidget()), this, SLOT(UpdateCurve(int)));
+
+
+        connect(((WBGraphDoc*) m_pDoc)->Register(i), SIGNAL(UpdateWidget()), mapper, SLOT(map()));
+        mapper->setMapping(((WBGraphDoc*) m_pDoc)->Register(i), i);
     }
+    connect(mapper, SIGNAL(mapped(int)), this, SLOT(UpdateCurve(int)));
 
     if (((WBGraphDoc*) m_pDoc)->NbrOfCurves())
     {
         m_pPlot->setAxisTitle(QwtPlot::yLeft, ((WBGraphDoc*) m_pDoc)->Register(0)->Unit());
+    }
+}
+
+QColor CurveColor(int Idx)
+{
+    switch (Idx)
+    {
+    case 0:
+        return Qt::darkGreen;
+    case 1:
+        return Qt::darkRed;
+    case 2:
+        return Qt::darkBlue;
+    case 3:
+        return Qt::darkMagenta;
+    case 4:
+        return Qt::darkYellow;
+    default:
+        return Qt::darkGreen;
     }
 }

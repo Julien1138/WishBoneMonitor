@@ -27,7 +27,7 @@ public:
 
     void                ClearRegisterList();
     void                AddRegister(WishBoneRegister* pRegister, QString CurveName);
-    void                UdpateTables();
+    void                UdpateTable(int Idx);
     void                ResetTables();
     WishBoneRegister*   Register(int Idx);
     QString             CurveName(int Idx);
@@ -43,7 +43,10 @@ private:
     QList<QString>              m_CurveNameList;
     QList<QVector<double>*>     m_ValueTabList;
     QList<QVector<double>*>     m_DateTabList;
+    QList<short*>               m_LastDateList;
     double                      m_RunningTime;
+
+    double  LatestDate();
 };
 
 #endif // WBGRAPHDOC_H
