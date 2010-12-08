@@ -14,6 +14,9 @@ WBGraphView::WBGraphView(WBGraphDoc*  pDoc, WBGraphDlg*  pDlg, QWidget *parent) 
 
     ((QGridLayout*) m_pLayout)->addWidget(m_pPlot, 0, 0);
 
+    m_Timer = new QTimer(this);
+    connect(m_Timer, SIGNAL(timeout()), this, SLOT(Refresh()));
+
     UpdateWidget();
 
     m_GroupBox.setLayout(m_pLayout);
@@ -31,6 +34,7 @@ WBGraphView::~WBGraphView()
         m_CurveList.pop_front();
     }
     delete m_pPlot;
+    delete m_Timer;
 }
 
 void WBGraphView::ModeChanged()
@@ -40,6 +44,12 @@ void WBGraphView::ModeChanged()
     if (!m_pDoc->ConfigMode())
     {
         ((WBGraphDoc*) m_pDoc)->ResetTables();
+
+        m_Timer->start(100);
+    }
+    else
+    {
+        m_Timer->stop();
     }
 }
 
@@ -51,14 +61,16 @@ void WBGraphView::Refresh()
                                     , *(((WBGraphDoc*) m_pDoc)->ValueTab(i)));
     }
 
+    double Max(((WBGraphDoc*) m_pDoc)->LatestDate());
+    double Min(Max - ((WBGraphDoc*) m_pDoc)->RunningTime());
+    m_pPlot->setAxisScale(QwtPlot::xBottom, Min, Max);
+
     m_pPlot->replot();
 }
 
 void WBGraphView::UpdateCurve(int Idx)
 {
     ((WBGraphDoc*) m_pDoc)->UdpateTable(Idx);
-
-    Refresh();
 }
 
 void WBGraphView::UpdateWidget()
@@ -82,9 +94,6 @@ void WBGraphView::UpdateWidget()
         pCurve->setPen(CurveColor(i));
         pCurve->attach(m_pPlot);
         m_CurveList.push_back(pCurve);
-
-        //connect(((WBGraphDoc*) m_pDoc)->Register(i), SIGNAL(UpdateWidget()), this, SLOT(UpdateCurve(int)));
-
 
         connect(((WBGraphDoc*) m_pDoc)->Register(i), SIGNAL(UpdateWidget()), mapper, SLOT(map()));
         mapper->setMapping(((WBGraphDoc*) m_pDoc)->Register(i), i);

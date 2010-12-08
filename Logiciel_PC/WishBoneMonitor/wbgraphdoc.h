@@ -37,6 +37,7 @@ public:
 
     void    SetRunningTime(double RunningTime){m_RunningTime = RunningTime;}
     double  RunningTime(){return m_RunningTime;}
+    double  LatestDate();
 
 private:
     QList<WishBoneRegister*>    m_RegisterList;
@@ -45,8 +46,6 @@ private:
     QList<QVector<double>*>     m_DateTabList;
     QList<short*>               m_LastDateList;
     double                      m_RunningTime;
-
-    double  LatestDate();
 };
 
 #endif // WBGRAPHDOC_H

@@ -9,6 +9,7 @@
 #include <qwt_plot.h>
 #include <qwt_plot_curve.h>
 #include <QColor>
+#include <QTimer>
 
 class WBGraphView : public WishBoneWidgetView
 {
@@ -27,6 +28,7 @@ public slots:
 private:
     QwtPlot*                m_pPlot;
     QList<QwtPlotCurve*>    m_CurveList;
+    QTimer*                 m_Timer;
 
     void    UpdateWidget();
 
