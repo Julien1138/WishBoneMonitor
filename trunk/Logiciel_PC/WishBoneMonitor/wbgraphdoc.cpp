@@ -7,7 +7,7 @@ WBGraphDoc::WBGraphDoc(MailBoxDriver* pMailBox)
                       , 0
                       , WBGRAPH_WIDTH_MIN
                       , 80)
-    , m_RunningTime(60.0)
+    , m_RunningTime(10.0)
 {
     m_RegisterList.clear();
     m_CurveNameList.clear();
@@ -23,7 +23,7 @@ WBGraphDoc::WBGraphDoc(const QString &Title, MailBoxDriver* pMailBox, int X, int
                       , Y
                       , Width
                       , Height)
-    , m_RunningTime(60.0)
+    , m_RunningTime(10.0)
 {
     m_RegisterList.clear();
     m_CurveNameList.clear();
@@ -109,7 +109,7 @@ void WBGraphDoc::AddRegister(WishBoneRegister* pRegister, QString CurveName)
 
 void WBGraphDoc::UdpateTable(int Idx)
 {
-    m_ValueTabList.value(Idx)->push_back(m_RegisterList.value(Idx)->Value());
+    m_ValueTabList.value(Idx)->push_back(double((signed long)(m_RegisterList.value(Idx)->Value())));
 
     short  TimeDiff((short) (m_RegisterList.value(Idx)->Date() - *(m_LastDateList.value(Idx))));
     *(m_LastDateList.value(Idx)) = m_RegisterList.value(Idx)->Date();
@@ -124,6 +124,20 @@ void WBGraphDoc::UdpateTable(int Idx)
         NextDate = m_DateTabList.value(Idx)->back() + (TimeDiff / 1000.0);
     }
     m_DateTabList.value(Idx)->push_back(NextDate);
+
+    double FirstDate(LatestDate() - m_RunningTime);
+
+    for (int i(0) ; i < m_RegisterList.count() ; i++)
+    {
+        if (!(m_DateTabList.value(i)->empty()))
+        {
+            while (m_DateTabList.value(i)->front() < FirstDate)
+            {
+                m_DateTabList.value(i)->pop_front();
+                m_ValueTabList.value(i)->pop_front();
+            }
+        }
+    }
 }
 
 void WBGraphDoc::ResetTables()
