@@ -18,14 +18,11 @@ use ieee.std_logic_unsigned.all;
 library MailBox_Lib;
 use MailBox_Lib.MailBox_Pack.all;
 
-library wb_Memory_Lib;
-use wb_Memory_Lib.wb_Memory_Pack.all;
-
 entity MailBox is
     generic
     (
-		GlobalClockFrequency    : integer := 50000000;	-- Fréquence de l'horloge globale
-		RTCClockFrequency	    : integer := 1000;      -- Fréquence de l'horloge de datation
+        GlobalClockFrequency    : integer := 50000000;    -- Fréquence de l'horloge globale
+        RTCClockFrequency       : integer := 1000;      -- Fréquence de l'horloge de datation
         WB_Addr_Width           : integer := 4;
         WB_Data_Width           : integer := 32;
         RTC_time_Width          : integer := 16
@@ -254,7 +251,7 @@ begin
         wb_vld_o_B => wb_vld_Timetable_to_Sequencer
     );
 
-    DatingTable_inst : wb_DualPortRAM
+    DatingTable_inst : MailBox_DualPortRAM
     generic map
     (
         WB_Addr_Width => WB_Addr_Width + 1,
@@ -280,7 +277,7 @@ begin
         wb_ack_o_B => wb_ack_DatingTable_to_Sequencer
     );
 
-    DataTable_inst : wb_DualPortRAM
+    DataTable_inst : MailBox_DualPortRAM
     generic map
     (
         WB_Addr_Width => WB_Addr_Width + 1,

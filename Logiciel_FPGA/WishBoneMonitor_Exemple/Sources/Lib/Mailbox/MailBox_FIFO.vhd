@@ -1,10 +1,10 @@
 -----------------------------------------------------------------------------------
 --
--- Project Name : FIFO
+-- Project Name : MailBox_FIFO
 -- Supplier     : Teuchos
 --
--- Design Name  : FIFO
--- Module Name  : FIFO.vhd
+-- Design Name  : MailBox_FIFO
+-- Module Name  : MailBox_FIFO.vhd
 --
 -- Description  : Universal Asynchronous Receiver Transmitter
 -- 
@@ -21,10 +21,10 @@ use ieee.numeric_std.all;
 use ieee.std_logic_unsigned.all;
 use ieee.math_real.all;
 
-library wb_Memory_Lib;
-use wb_Memory_Lib.wb_Memory_Pack.all;
+library MailBox_Lib;
+use MailBox_Lib.MailBox_Pack.all;
 
-entity FIFO is
+entity MailBox_FIFO is
     generic
     (
         FIFOSize        : integer := 1024;
@@ -43,9 +43,9 @@ entity FIFO is
         FIFO_Empty  : out std_logic;
         FIFO_Full   : out std_logic
     );
-end FIFO;
+end MailBox_FIFO;
 
-architecture behavior of FIFO is
+architecture MailBox_FIFO_behavior of MailBox_FIFO is
 
     type FIFO_type is array (FIFOSize-1 downto 0) of std_logic_vector(Data_Width-1 downto 0);
     impure function FillRAM return FIFO_type is
@@ -56,7 +56,7 @@ architecture behavior of FIFO is
        end loop;
        return RAM;
     end function;
-    signal FIFO : FIFO_type := FillRAM;
+    signal MailBox_FIFO : FIFO_type := FillRAM;
     
     signal Write_Idx        : std_logic_vector(integer(ceil(log2(real(FIFOSize)))) - 1 downto 0);
     signal Read_Idx         : std_logic_vector(integer(ceil(log2(real(FIFOSize)))) - 1 downto 0);
@@ -71,7 +71,7 @@ begin
         elsif rising_edge(clk) then
         
             if Write_en = '1' then
-                FIFO(to_integer(unsigned(Write_Idx))) <= Data_in;
+                MailBox_FIFO(to_integer(unsigned(Write_Idx))) <= Data_in;
                 Write_Idx <= Write_Idx + 1;
             end if;
             
@@ -84,7 +84,7 @@ begin
             Read_Idx <= (others => '0');
         elsif rising_edge(clk) then
         
-            Data_out <= FIFO(to_integer(unsigned(Read_Idx)));
+            Data_out <= MailBox_FIFO(to_integer(unsigned(Read_Idx)));
             
             if Read_en = '1' then
                 Read_Idx <= Read_Idx + 1;
@@ -115,4 +115,4 @@ begin
     FIFO_Full <= '1' when signed(NbrOfElements) = -1 else
                  '0';
 
-end behavior;
+end MailBox_FIFO_behavior;

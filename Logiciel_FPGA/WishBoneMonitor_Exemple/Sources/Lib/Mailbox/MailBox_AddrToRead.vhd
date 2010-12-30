@@ -14,10 +14,10 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use ieee.std_logic_unsigned.all;
-use ieee.math_real.all;
+-- use ieee.math_real.all;
 
-library wb_Memory_Lib;
-use wb_Memory_Lib.wb_Memory_Pack.all;
+library MailBox_Lib;
+use MailBox_Lib.MailBox_Pack.all;
 
 entity MailBox_AddrToRead is
     generic
@@ -43,7 +43,7 @@ entity MailBox_AddrToRead is
     );
 end MailBox_AddrToRead;
 
-architecture Behavioral of MailBox_AddrToRead is
+architecture MailBox_AddrToRead_behavior of MailBox_AddrToRead is
     
     signal AddrToRead_vector    : std_logic_vector(2**(WB_Addr_Width + 1) - 1 downto 0);
 
@@ -107,7 +107,7 @@ begin
     
     Read_en <= AddrRead;
 
-    FIFO_inst : FIFO
+    FIFO_inst : MailBox_FIFO
     generic map
     (
         FIFOSize => 2**(WB_Addr_Width + 1),
@@ -127,4 +127,4 @@ begin
     AddrToRead <= AddrToRead_int;
     AddrAvailable <= not FIFO_Empty;
 
-end Behavioral;
+end MailBox_AddrToRead_behavior;

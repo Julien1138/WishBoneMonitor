@@ -16,8 +16,8 @@ use ieee.numeric_std.all;
 use ieee.std_logic_unsigned.all;
 use ieee.math_real.all;
 
-library wb_Memory_Lib;
-use wb_Memory_Lib.wb_Memory_Pack.all;
+library MailBox_Lib;
+use MailBox_Lib.MailBox_Pack.all;
 
 entity MailBox_Timetable is
     generic
@@ -52,7 +52,7 @@ entity MailBox_Timetable is
     );
 end MailBox_Timetable;
 
-architecture Behavioral of MailBox_Timetable is
+architecture MailBox_Timetable_behavior of MailBox_Timetable is
     
     signal Activated_Addresses  : std_logic_vector((2**WB_Addr_Width) - 1 downto 0);
     
@@ -93,7 +93,7 @@ begin
         end if;
     end process;
 
-    wb_DualPortRAM_inst : wb_DualPortRAM
+    wb_DualPortRAM_inst : MailBox_DualPortRAM
     generic map
     (
         WB_Addr_Width => WB_Addr_Width,
@@ -119,4 +119,4 @@ begin
         wb_ack_o_B => wb_ack_o_B
     );
 
-end Behavioral;
+end MailBox_Timetable_behavior;
