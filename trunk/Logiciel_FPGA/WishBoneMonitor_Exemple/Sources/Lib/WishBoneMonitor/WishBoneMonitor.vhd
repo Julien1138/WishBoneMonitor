@@ -115,7 +115,7 @@ begin
     Sequencer_inst : WBM_Sequencer
     generic map
     (
-        WB_Addr_Width => 4
+        WB_Addr_Width => WB_Addr_Width
     )
     port map
     (
@@ -150,7 +150,7 @@ begin
     (
         GlobalClockFrequency => 50e6,
         RTCClockFrequency => 1e3,
-        WB_Addr_Width => 4,
+        WB_Addr_Width => WB_Addr_Width,
         WB_Data_Width => 32,
         RTC_time_Width => 16
     )
