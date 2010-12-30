@@ -1,7 +1,7 @@
 ----------------------------------------------------------------------------------
 -- Engineer:        Julien Aupart
 -- 
--- Module Name:     wb_DualPortRAM
+-- Module Name:     MailBox_DualPortRAM
 --
 -- Description:        
 --
@@ -16,10 +16,10 @@ use ieee.numeric_std.all;
 use ieee.std_logic_unsigned.all;
 use ieee.math_real.all;
 
-library wb_Memory_Lib;
-use wb_Memory_Lib.wb_Memory_Pack.all;
+library MailBox_Lib;
+use MailBox_Lib.MailBox_Pack.all;
 
-entity wb_DualPortRAM is
+entity MailBox_DualPortRAM is
     generic
     (
         WB_Addr_Width   : integer := 4;
@@ -48,9 +48,9 @@ entity wb_DualPortRAM is
         wb_stb_i_B : in std_logic;
         wb_ack_o_B : out std_logic
     );
-end wb_DualPortRAM;
+end MailBox_DualPortRAM;
 
-architecture Behavioral of wb_DualPortRAM is
+architecture MailBox_DualPortRAM_behavior of MailBox_DualPortRAM is
     
     type ram_type is array ((2**WB_Addr_Width) - 1 downto 0) of std_logic_vector (WB_Data_Width - 1 downto 0);
     impure function FillRAM return ram_type is
@@ -126,4 +126,4 @@ begin
     end process;
     wb_ack_o_B <= wb_ack_o_B_int;
 
-end Behavioral;
+end MailBox_DualPortRAM_behavior;

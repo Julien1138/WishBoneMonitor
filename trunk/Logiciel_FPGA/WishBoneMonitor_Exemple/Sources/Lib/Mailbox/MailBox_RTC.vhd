@@ -19,8 +19,8 @@ use ieee.math_real.all;
 entity MailBox_RTC is
     generic
     (
-		GlobalClockFrequency    : integer := 50000000;	-- Fréquence de l'horloge globale
-		RTCClockFrequency	    : integer := 1000;      -- Fréquence de l'horloge de datation
+        GlobalClockFrequency    : integer := 50000000;    -- Fréquence de l'horloge globale
+        RTCClockFrequency       : integer := 1000;      -- Fréquence de l'horloge de datation
         RTC_time_Width          : integer := 16
     );
     port
@@ -31,9 +31,9 @@ entity MailBox_RTC is
     );
 end MailBox_RTC;
 
-architecture Behavioral of MailBox_RTC is
+architecture MailBox_RTC_behavior of MailBox_RTC is
 
-    constant RTCClockPeriode : integer := integer(real(GlobalClockFrequency)/real(RTCClockFrequency));
+    constant RTCClockPeriode    : integer := integer(real(GlobalClockFrequency)/real(RTCClockFrequency));
 
     signal clk_periode_counter  : std_logic_vector(integer(ceil(log2(real(RTCClockPeriode)))) - 1 downto 0);
     signal RTC_time_count       : std_logic_vector(RTC_time_Width - 1 downto 0);
@@ -65,4 +65,4 @@ begin
     end process;
     RTC_time <= RTC_time_count;
 
-end Behavioral;
+end MailBox_RTC_behavior;

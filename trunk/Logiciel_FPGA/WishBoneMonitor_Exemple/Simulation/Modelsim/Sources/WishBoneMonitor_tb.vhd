@@ -9,7 +9,7 @@ use UART_LIB.UART_PACK.all;
 entity WishBoneMonitor_tb is
 end WishBoneMonitor_tb;
 
-architecture behavior of WishBoneMonitor_tb is
+architecture WishBoneMonitor_tb_behavior of WishBoneMonitor_tb is
 
     signal wb_we_i         : std_logic := '0';
     signal wb_dat_i        : std_logic_vector(7 downto 0) := (others => '0');
@@ -20,7 +20,7 @@ architecture behavior of WishBoneMonitor_tb is
     signal wb_rty_o        : std_logic;
     signal wb_wait_o       : std_logic;
 
-    component WishBoneMonitor
+    component WishBoneMonitor_Exemple
         port
         (
         -- Global inputs :
@@ -504,7 +504,7 @@ begin
         Tx => Rx
     );
     
-    WishBoneMonitor_tb : WishBoneMonitor
+    WishBoneMonitor_tb : WishBoneMonitor_Exemple
     port map
     (
         rst => rst,
@@ -515,4 +515,4 @@ begin
         Slider => Slider
     );
 
-end behavior;
+end WishBoneMonitor_tb_behavior;

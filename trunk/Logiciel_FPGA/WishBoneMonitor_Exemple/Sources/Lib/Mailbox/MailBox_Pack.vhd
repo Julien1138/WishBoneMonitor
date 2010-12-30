@@ -233,5 +233,57 @@ package MailBox_Pack is
             AddrAvailable   : out std_logic -- Address Available to be read
         );
     end component;
+    
+    component MailBox_DualPortRAM
+        generic
+        (
+            WB_Addr_Width   : integer;
+            WB_Data_Width   : integer
+        );
+        port
+        (
+            wb_clk_i        : in std_logic;
+            wb_rst_i        : in std_logic;
+            
+        -- Interface A
+            wb_we_i_A   : in std_logic := '0';
+            wb_adr_i_A  : in std_logic_vector(WB_Addr_Width - 1 downto 0);
+            wb_dat_i_A  : in std_logic_vector(WB_Data_Width - 1 downto 0) := (others => '0');
+            wb_dat_o_A  : out std_logic_vector(WB_Data_Width - 1 downto 0);
+            wb_cyc_i_A  : in std_logic;
+            wb_stb_i_A  : in std_logic;
+            wb_ack_o_A  : out std_logic;
+            
+        -- Interface B
+            wb_we_i_B  : in std_logic := '0';
+            wb_adr_i_B : in std_logic_vector(WB_Addr_Width - 1 downto 0);
+            wb_dat_i_B : in std_logic_vector(WB_Data_Width - 1 downto 0) := (others => '0');
+            wb_dat_o_B : out std_logic_vector(WB_Data_Width - 1 downto 0);
+            wb_cyc_i_B : in std_logic;
+            wb_stb_i_B : in std_logic;
+            wb_ack_o_B : out std_logic
+        );
+    end component;
+    
+    component MailBox_FIFO
+        generic
+        (
+            FIFOSize        : integer;
+            Data_Width      : integer
+        );
+        port
+        (
+            rst         : in std_logic;
+            clk         : in std_logic;
+            
+            Write_en    : in std_logic;
+            Data_in     : in std_logic_vector(Data_Width - 1 downto 0);
+            Read_en     : in std_logic;
+            Data_out    : out std_logic_vector(Data_Width - 1 downto 0);
+            
+            FIFO_Empty  : out std_logic;
+            FIFO_Full   : out std_logic
+        );
+    end component;
 
 end MailBox_Pack;

@@ -84,7 +84,7 @@ entity MailBox_Sequencer is
     );
 end MailBox_Sequencer;
 
-architecture Behavioral of MailBox_Sequencer is
+architecture MailBox_Sequencer_behavior of MailBox_Sequencer is
     
     signal Scan_counter : std_logic_vector(WB_Addr_Width downto 0);
     signal Scan_enable  : std_logic;
@@ -429,4 +429,4 @@ begin
         end if;
     end process;
 
-end Behavioral;
+end MailBox_Sequencer_behavior;
