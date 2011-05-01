@@ -22,6 +22,7 @@ public:
     bool            Signed(){return (m_pComboSign->currentText() == "Signé");}
     long            ValueMin(){return m_pEditValueMin->text().toLong(0,0);}
     long            ValueMax(){return m_pEditValueMax->text().toLong(0,0);}
+    double          ScaleCoefficient(){return m_pEditScaleCoefficient->text().toDouble();}
     QString         Unit(){return m_pEditUnit->text();}
     bool            Write_nRead(){return m_pRadioWrite->isChecked();}
     unsigned long   Periode(){return m_pEditPeriode->text().toULong(0,0);}
@@ -40,6 +41,7 @@ private:
     QLineEdit*      m_pEditAddress;
     QLineEdit*      m_pEditValueMin;
     QLineEdit*      m_pEditValueMax;
+    QLineEdit*      m_pEditScaleCoefficient;
     QLineEdit*      m_pEditUnit;
     QLineEdit*      m_pEditPeriode;
     QHBoxLayout*    m_pRadioLayout;

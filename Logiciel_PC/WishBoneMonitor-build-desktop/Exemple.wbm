@@ -1,5 +1,5 @@
 [RegisterList]
-Registers\1\Name=Leds
+Registers\1\Name=Leds Write
 Registers\1\Address=0
 Registers\1\ValueMin=0
 Registers\1\ValueMax=2147483647
@@ -15,7 +15,15 @@ Registers\2\Signed=false
 Registers\2\Unit=
 Registers\2\Write_nRead=false
 Registers\2\Period=100
-Registers\size=2
+Registers\3\Name=Leds Read
+Registers\3\Address=0
+Registers\3\ValueMin=2147483648
+Registers\3\ValueMax=2147483647
+Registers\3\Signed=false
+Registers\3\Unit=
+Registers\3\Write_nRead=false
+Registers\3\Period=100
+Registers\size=3
 
 [PanelList]
 Panels\1\Title=Test Panel
@@ -41,12 +49,12 @@ Panels\1\Widgets\3\PosY=20
 Panels\1\Widgets\3\Width=559
 Panels\1\Widgets\3\Height=356
 Panels\1\Widgets\3\Widget=WBGraph
-Panels\1\Widgets\3\RunningTime=10
+Panels\1\Widgets\3\RunningTime=30
 Panels\1\Widgets\3\Curves\1\RegisterAddress=1
 Panels\1\Widgets\3\Curves\1\RegisterWrite_nRead=false
 Panels\1\Widgets\3\Curves\1\CurveName=Sliders
 Panels\1\Widgets\3\Curves\2\RegisterAddress=0
-Panels\1\Widgets\3\Curves\2\RegisterWrite_nRead=true
+Panels\1\Widgets\3\Curves\2\RegisterWrite_nRead=false
 Panels\1\Widgets\3\Curves\2\CurveName=Leds
 Panels\1\Widgets\3\Curves\size=2
 Panels\1\Widgets\size=3

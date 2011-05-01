@@ -106,7 +106,10 @@ void WBGraphDlg::UpdateDisplay()
         QComboBox* pComboBox = new QComboBox();
         for (int i(0) ; i < m_plistRegisters->count() ; i++)
         {
-            pComboBox->addItem(m_plistRegisters->value(i)->Name());
+            //if (!(m_plistRegisters->value(i)->Write_nRead()))
+            {
+                pComboBox->addItem(m_plistRegisters->value(i)->Name());
+            }
         }
         pLayout->addRow("Nom du registre", pComboBox);
         m_pListOfCurveComboBox.push_back(pComboBox);
