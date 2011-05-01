@@ -14,9 +14,9 @@ RegisterListView::RegisterListView(WishBoneMonitor* pDoc, QWidget *parent) :
     QWidget(parent),
     m_pDoc(pDoc)
 {
-    m_Table.setColumnCount(9);
+    m_Table.setColumnCount(10);
     QStringList HLabels;
-    HLabels << "Adresse" << "Nom" << "Unité" << "Signe" << "Valeur Min" << "Valeur Max" << "Direction" << "Periode (ms)" << "";
+    HLabels << "Adresse" << "Nom" << "Echelle" << "Unité" << "Signe" << "Valeur Min" << "Valeur Max" << "Direction" << "Periode (ms)" << "";
     m_Table.setHorizontalHeaderLabels(HLabels);
 
     m_Layout.addWidget(&m_Table, 0, 0);
@@ -38,104 +38,123 @@ void RegisterListView::UpdateDisplay()
 
     for (int i(0) ; i < m_pDoc->GetRegisterList()->count() ; i++)
     {
+        int k(0);
+
         // Adresse
-        m_Table.setItem(i, 0, new QTableWidgetItem("0x" + QString::number(m_pDoc->GetRegisterList()->value(i)->Address(), 16)));
+        m_Table.setItem(i, k, new QTableWidgetItem("0x" + QString::number(m_pDoc->GetRegisterList()->value(i)->Address(), 16)));
         if (!(m_pDoc->ConfigMode()))
         {
-            m_Table.item(i, 0)->setFlags(m_Table.item(i, 0)->flags() & ~Qt::ItemIsEnabled);
+            m_Table.item(i, k)->setFlags(m_Table.item(i, k)->flags() & ~Qt::ItemIsEnabled);
         }
+        k++;
 
         // Nom
-        m_Table.setItem(i, 1, new QTableWidgetItem(m_pDoc->GetRegisterList()->value(i)->Name()));
+        m_Table.setItem(i, k, new QTableWidgetItem(m_pDoc->GetRegisterList()->value(i)->Name()));
         if (!(m_pDoc->ConfigMode()))
         {
-            m_Table.item(i, 1)->setFlags(m_Table.item(i, 1)->flags() & ~Qt::ItemIsEnabled);
+            m_Table.item(i, k)->setFlags(m_Table.item(i, k)->flags() & ~Qt::ItemIsEnabled);
         }
+        k++;
+
+        // Coefficient d'échelle
+        m_Table.setItem(i, k, new QTableWidgetItem(QString::number((double) m_pDoc->GetRegisterList()->value(i)->ScaleCoefficient())));
+        if (!(m_pDoc->ConfigMode()))
+        {
+            m_Table.item(i, k)->setFlags(m_Table.item(i, k)->flags() & ~Qt::ItemIsEnabled);
+        }
+        k++;
 
         // Unité
-        m_Table.setItem(i, 2, new QTableWidgetItem(m_pDoc->GetRegisterList()->value(i)->Unit()));
+        m_Table.setItem(i, k, new QTableWidgetItem(m_pDoc->GetRegisterList()->value(i)->Unit()));
         if (!(m_pDoc->ConfigMode()))
         {
-            m_Table.item(i, 2)->setFlags(m_Table.item(i, 2)->flags() & ~Qt::ItemIsEnabled);
+            m_Table.item(i, k)->setFlags(m_Table.item(i, k)->flags() & ~Qt::ItemIsEnabled);
         }
+        k++;
 
         // Signe
         QComboBox* pComboSigne = new QComboBox;
         pComboSigne->addItem("Signé");
         pComboSigne->addItem("Non Signé");
-        m_Table.setCellWidget(i, 3, pComboSigne);
+        m_Table.setCellWidget(i, k, pComboSigne);
         pComboSigne->setCurrentIndex(m_pDoc->GetRegisterList()->value(i)->Signed() ? 0 : 1);
         pComboSigne->setEnabled(m_pDoc->ConfigMode());
         connect(pComboSigne, SIGNAL(currentIndexChanged(int)), mapper, SLOT(map()));
         mapper->setMapping(pComboSigne, i);
         connect(pComboSigne, SIGNAL(currentIndexChanged(int)), this, SLOT(ModifySignBox(int)));
+        k++;
 
         // Valeur Min
         if (m_pDoc->GetRegisterList()->value(i)->Signed())
         {
-            m_Table.setItem(i, 4, new QTableWidgetItem(QString::number((signed long) (m_pDoc->GetRegisterList()->value(i)->ValueMin()))));
+            m_Table.setItem(i, k, new QTableWidgetItem(QString::number((signed long) (m_pDoc->GetRegisterList()->value(i)->ValueMin()))));
         }
         else
         {
-            m_Table.setItem(i, 4, new QTableWidgetItem(QString::number((unsigned long) (m_pDoc->GetRegisterList()->value(i)->ValueMin()))));
+            m_Table.setItem(i, k, new QTableWidgetItem(QString::number((unsigned long) (m_pDoc->GetRegisterList()->value(i)->ValueMin()))));
         }
         if (!m_pDoc->GetRegisterList()->value(i)->Write_nRead())
         {
-            m_Table.item(i, 4)->setFlags(m_Table.item(i, 4)->flags() & ~Qt::ItemIsEnabled);
+            m_Table.item(i, k)->setFlags(m_Table.item(i, k)->flags() & ~Qt::ItemIsEnabled);
         }
         if (!(m_pDoc->ConfigMode()))
         {
-            m_Table.item(i, 4)->setFlags(m_Table.item(i, 4)->flags() & ~Qt::ItemIsEnabled);
+            m_Table.item(i, k)->setFlags(m_Table.item(i, k)->flags() & ~Qt::ItemIsEnabled);
         }
+        k++;
 
         // Valeur Max
         if (m_pDoc->GetRegisterList()->value(i)->Signed())
         {
-            m_Table.setItem(i, 5, new QTableWidgetItem(QString::number((signed long) (m_pDoc->GetRegisterList()->value(i)->ValueMax()))));
+            m_Table.setItem(i, k, new QTableWidgetItem(QString::number((signed long) (m_pDoc->GetRegisterList()->value(i)->ValueMax()))));
         }
         else
         {
-            m_Table.setItem(i, 5, new QTableWidgetItem(QString::number((unsigned long) (m_pDoc->GetRegisterList()->value(i)->ValueMax()))));
+            m_Table.setItem(i, k, new QTableWidgetItem(QString::number((unsigned long) (m_pDoc->GetRegisterList()->value(i)->ValueMax()))));
         }
         if (!m_pDoc->GetRegisterList()->value(i)->Write_nRead())
         {
-            m_Table.item(i, 5)->setFlags(m_Table.item(i, 5)->flags() & ~Qt::ItemIsEnabled);
+            m_Table.item(i, k)->setFlags(m_Table.item(i, k)->flags() & ~Qt::ItemIsEnabled);
         }
         if (!(m_pDoc->ConfigMode()))
         {
-            m_Table.item(i, 5)->setFlags(m_Table.item(i, 5)->flags() & ~Qt::ItemIsEnabled);
+            m_Table.item(i, k)->setFlags(m_Table.item(i, k)->flags() & ~Qt::ItemIsEnabled);
         }
+        k++;
 
         // Direction
         QComboBox* pComboDir = new QComboBox;
         pComboDir->addItem("Lecture");
         pComboDir->addItem("Ecriture");
-        m_Table.setCellWidget(i, 6, pComboDir);
+        m_Table.setCellWidget(i, k, pComboDir);
         pComboDir->setCurrentIndex(m_pDoc->GetRegisterList()->value(i)->Write_nRead() ? 1 : 0);
         pComboDir->setEnabled(m_pDoc->ConfigMode());
         connect(pComboDir, SIGNAL(currentIndexChanged(int)), mapper, SLOT(map()));
         mapper->setMapping(pComboDir, i);
         connect(pComboDir, SIGNAL(currentIndexChanged(int)), this, SLOT(ModifyDirectionBox(int)));
+        k++;
 
         // Periode
-        m_Table.setItem(i, 7, new QTableWidgetItem(QString::number(m_pDoc->GetRegisterList()->value(i)->Period())));
+        m_Table.setItem(i, k, new QTableWidgetItem(QString::number(m_pDoc->GetRegisterList()->value(i)->Period())));
         if (m_pDoc->GetRegisterList()->value(i)->Write_nRead())
         {
             m_pDoc->GetRegisterList()->value(i)->SetPeriod(0);
-            m_Table.item(i, 7)->setFlags(m_Table.item(i, 7)->flags() & ~Qt::ItemIsEnabled);
-            m_Table.item(i, 7)->setText(QString::number(m_pDoc->GetRegisterList()->value(i)->Period()));
+            m_Table.item(i, k)->setFlags(m_Table.item(i, k)->flags() & ~Qt::ItemIsEnabled);
+            m_Table.item(i, k)->setText(QString::number(m_pDoc->GetRegisterList()->value(i)->Period()));
         }
         if (!(m_pDoc->ConfigMode()))
         {
-            m_Table.item(i, 7)->setFlags(m_Table.item(i, 7)->flags() & ~Qt::ItemIsEnabled);
+            m_Table.item(i, k)->setFlags(m_Table.item(i, k)->flags() & ~Qt::ItemIsEnabled);
         }
+        k++;
 
         // Bouton supprimer
         QPushButton* pDelButton = new QPushButton("Supprimer");
-        m_Table.setCellWidget(i, 8, pDelButton);
+        m_Table.setCellWidget(i, k, pDelButton);
         connect(pDelButton, SIGNAL(pressed()), mapper, SLOT(map()));
         mapper->setMapping(pDelButton, i);
         connect(pDelButton, SIGNAL(clicked()), this, SLOT(DelReg()));
+        k++;
     }
 
     connect(mapper, SIGNAL(mapped(int)), &m_Table, SLOT(selectRow(int)));
@@ -154,6 +173,7 @@ void RegisterListView::AddReg()
                              Dlg.ValueMin(),
                              Dlg.ValueMax(),
                              Dlg.Signed(),
+                             Dlg.ScaleCoefficient(),
                              Dlg.Unit(),
                              Dlg.Write_nRead(),
                              Dlg.Periode());
@@ -209,17 +229,21 @@ void RegisterListView::ModifyRegister(int currentRow, int currentColumn)
         }
         else if (currentColumn == 2)
         {
-            m_pDoc->GetRegisterList()->value(currentRow)->SetUnit(m_Table.item(currentRow, currentColumn)->text());
+            m_pDoc->GetRegisterList()->value(currentRow)->SetScaleCoefficient(m_Table.item(currentRow, currentColumn)->text().toDouble());
         }
-        else if (currentColumn == 4)
+        else if (currentColumn == 3)
         {
-            m_pDoc->GetRegisterList()->value(currentRow)->SetValueMin(m_Table.item(currentRow, currentColumn)->text().toLong(0,0));
+            m_pDoc->GetRegisterList()->value(currentRow)->SetUnit(m_Table.item(currentRow, currentColumn)->text());
         }
         else if (currentColumn == 5)
         {
+            m_pDoc->GetRegisterList()->value(currentRow)->SetValueMin(m_Table.item(currentRow, currentColumn)->text().toLong(0,0));
+        }
+        else if (currentColumn == 6)
+        {
             m_pDoc->GetRegisterList()->value(currentRow)->SetValueMax(m_Table.item(currentRow, currentColumn)->text().toLong(0,0));
         }
-        else if (currentColumn == 7)
+        else if (currentColumn == 8)
         {
             m_pDoc->GetRegisterList()->value(currentRow)->SetPeriod(m_Table.item(currentRow, currentColumn)->text().toLong(0,0));
         }

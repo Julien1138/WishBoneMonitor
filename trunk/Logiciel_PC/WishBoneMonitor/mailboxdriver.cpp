@@ -96,10 +96,10 @@ void MailBoxDriver::SendRegister(WishBoneRegister* Reg)
     Data[0] = (Reg->Write_nRead() ? HEADER_WRITE : HEADER_READ);
     Data[1] = (char) (Reg->Address() >> 8);
     Data[2] = (char) (Reg->Address());
-    Data[3] = (char) (Reg->Value() >> 24);
-    Data[4] = (char) (Reg->Value() >> 16);
-    Data[5] = (char) (Reg->Value() >> 8);
-    Data[6] = (char) (Reg->Value());
+    Data[3] = (char) (Reg->ValueHex() >> 24);
+    Data[4] = (char) (Reg->ValueHex() >> 16);
+    Data[5] = (char) (Reg->ValueHex() >> 8);
+    Data[6] = (char) (Reg->ValueHex());
     Data[7] = (char) (Reg->Period() >> 8);
     Data[8] = (char) (Reg->Period());
     Data[9] = Checksum(Data, 9);
@@ -140,10 +140,10 @@ bool MailBoxDriver::DecodeRegister(WishBoneRegister* Reg)
             Reg->SetAddress(((unsigned char)Data[1] << 8) +
                              (unsigned char)Data[2]);
 
-            Reg->SetValueNoCheck(((unsigned char)Data[3] << 24) +
-                                 ((unsigned char)Data[4] << 16) +
-                                 ((unsigned char)Data[5] << 8) +
-                                  (unsigned char)Data[6]);
+            Reg->SetValueHex(((unsigned char)Data[3] << 24) +
+                             ((unsigned char)Data[4] << 16) +
+                             ((unsigned char)Data[5] <<  8) +
+                              (unsigned char)Data[6]);
 
             Reg->SetDate(((unsigned char)Data[7] << 8) +
                           (unsigned char)Data[8]);
