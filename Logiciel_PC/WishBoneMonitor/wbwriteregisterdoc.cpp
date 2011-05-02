@@ -46,7 +46,7 @@ void WBWriteRegisterDoc::Save(QSettings *pSettings)
     pSettings->setValue("RegisterWrite_nRead", m_pRegister->Write_nRead() ? "true" : "false");
 }
 
-void WBWriteRegisterDoc::WriteRegister(unsigned long Value)
+void WBWriteRegisterDoc::WriteRegister(double Value)
 {
     m_pRegister->SetValue(Value);
     m_pMailBox->SendRegister(m_pRegister);

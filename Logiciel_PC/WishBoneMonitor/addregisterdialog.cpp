@@ -27,6 +27,7 @@ AddRegisterDialog::AddRegisterDialog(bool Writable, QWidget *parent) :
     m_pEditValueMax->setEnabled(false);
     m_pFormLayout->addRow("Valeur max du registre", m_pEditValueMax);
     m_pEditScaleCoefficient = new QLineEdit;
+    m_pEditScaleCoefficient->setText("1.0");
     m_pFormLayout->addRow("Coefficient d'échelle", m_pEditScaleCoefficient);
     m_pEditUnit = new QLineEdit;
     m_pFormLayout->addRow("Unité du registre", m_pEditUnit);

@@ -28,7 +28,7 @@ public:
 
     bool    HasSetButton(){return !(m_pRegister->Period());}
 
-    void    WriteRegister(unsigned long Value);
+    void    WriteRegister(double Value);
 
 private:
     WishBoneRegister*   m_pRegister;

@@ -22,6 +22,7 @@ public slots:
     void ModifyRegister(int currentRow, int currentColumn);
     void ModifySignBox(int Idx);
     void ModifyDirectionBox(int Idx);
+    void UpdateRegisterValue(int Idx);
 
 private:
     QTableWidget        m_Table;
