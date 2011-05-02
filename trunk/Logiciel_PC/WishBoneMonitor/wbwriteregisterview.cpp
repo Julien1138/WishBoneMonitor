@@ -12,6 +12,7 @@ WBWriteRegisterView::WBWriteRegisterView(WBWriteRegisterDoc*  pDoc, WBWriteRegis
     m_EditValue.setMouseTracking(true);
     m_EditValue.setEnabled(false);
     ((QGridLayout*) m_pLayout)->addWidget(&m_EditValue, 0, 0);
+    connect(&m_EditValue, SIGNAL(returnPressed()), this, SLOT(WriteRegister()));
 
     ((QGridLayout*) m_pLayout)->addWidget(&m_LabelUnit, 0, 1);
 
