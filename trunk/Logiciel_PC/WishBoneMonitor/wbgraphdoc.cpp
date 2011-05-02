@@ -109,7 +109,7 @@ void WBGraphDoc::AddRegister(WishBoneRegister* pRegister, QString CurveName)
 
 void WBGraphDoc::UdpateTable(int Idx)
 {
-    m_ValueTabList.value(Idx)->push_back(double((signed long)(m_RegisterList.value(Idx)->Value())));
+    m_ValueTabList.value(Idx)->push_back(m_RegisterList.value(Idx)->Value());
 
     short  TimeDiff((short) (m_RegisterList.value(Idx)->Date() - *(m_LastDateList.value(Idx))));
     *(m_LastDateList.value(Idx)) = m_RegisterList.value(Idx)->Date();

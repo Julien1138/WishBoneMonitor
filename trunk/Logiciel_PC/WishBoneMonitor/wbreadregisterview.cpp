@@ -41,15 +41,7 @@ void WBReadRegisterView::ReadRegister()
 void WBReadRegisterView::Refresh()
 {
     QString sTemp;
-    if (((WBReadRegisterDoc*) m_pDoc)->Register()->Signed())
-    {
-        sTemp.setNum((signed long) (((WBReadRegisterDoc*) m_pDoc)->Register()->Value()));
-    }
-    else
-    {
-        sTemp.setNum((unsigned long) (((WBReadRegisterDoc*) m_pDoc)->Register()->Value()));
-
-    }
+    sTemp.setNum(((WBReadRegisterDoc*) m_pDoc)->Register()->Value());
     m_EditValue.setText(sTemp);
 
     m_LabelUnit.setText(((WBReadRegisterDoc*) m_pDoc)->Register()->Unit());

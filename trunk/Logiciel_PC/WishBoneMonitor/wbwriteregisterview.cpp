@@ -35,29 +35,13 @@ void WBWriteRegisterView::ModeChanged()
 
 void WBWriteRegisterView::WriteRegister()
 {
-    if (((WBWriteRegisterDoc*) m_pDoc)->Register()->Signed())
-    {
-        ((WBWriteRegisterDoc*) m_pDoc)->WriteRegister((unsigned long)(m_EditValue.text().toLong(0, 0)));
-    }
-    else
-    {
-        ((WBWriteRegisterDoc*) m_pDoc)->WriteRegister(m_EditValue.text().toULong(0, 0));
-    }
-
+    ((WBWriteRegisterDoc*) m_pDoc)->WriteRegister((m_EditValue.text().toDouble()));
 }
 
 void WBWriteRegisterView::Refresh()
 {
     QString sTemp;
-    if (((WBWriteRegisterDoc*) m_pDoc)->Register()->Signed())
-    {
-        sTemp.setNum((signed long) (((WBWriteRegisterDoc*) m_pDoc)->Register()->Value()));
-    }
-    else
-    {
-        sTemp.setNum((unsigned long) (((WBWriteRegisterDoc*) m_pDoc)->Register()->Value()));
-
-    }
+    sTemp.setNum(((WBWriteRegisterDoc*) m_pDoc)->Register()->Value());
     m_EditValue.setText(sTemp);
 
     m_LabelUnit.setText(((WBWriteRegisterDoc*) m_pDoc)->Register()->Unit());

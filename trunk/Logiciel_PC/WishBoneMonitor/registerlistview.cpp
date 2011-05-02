@@ -14,10 +14,22 @@ RegisterListView::RegisterListView(WishBoneMonitor* pDoc, QWidget *parent) :
     QWidget(parent),
     m_pDoc(pDoc)
 {
-    m_Table.setColumnCount(10);
+    m_Table.setColumnCount(11);
     QStringList HLabels;
-    HLabels << "Adresse" << "Nom" << "Echelle" << "Unité" << "Signe" << "Valeur Min" << "Valeur Max" << "Direction" << "Periode (ms)" << "";
+    HLabels << "Adresse" << "Nom" << "Valeur Hex" << "Echelle" << "Unité" << "Signe" << "Valeur Min" << "Valeur Max" << "Direction" << "Periode (ms)" << "";
     m_Table.setHorizontalHeaderLabels(HLabels);
+
+    m_Table.setColumnWidth( 0, 50);     // Adresse
+    m_Table.setColumnWidth( 1, 150);    // Nom
+    m_Table.setColumnWidth( 2, 80);     // Valeur Hex
+    m_Table.setColumnWidth( 3, 50);     // Echelle
+    m_Table.setColumnWidth( 4, 50);     // Unité
+    m_Table.setColumnWidth( 5, 80);     // Signe
+    m_Table.setColumnWidth( 6, 80);     // Valeur Min
+    m_Table.setColumnWidth( 7, 80);     // Valeur Max
+    m_Table.setColumnWidth( 8, 70);     // Direction
+    m_Table.setColumnWidth( 9, 80);     // Periode
+    m_Table.setColumnWidth(10, 70);     // Supprimer
 
     m_Layout.addWidget(&m_Table, 0, 0);
     setLayout(&m_Layout);
@@ -35,6 +47,7 @@ void RegisterListView::UpdateDisplay()
     m_Table.setRowCount(m_pDoc->GetRegisterList()->count());
 
     QSignalMapper *mapper = new QSignalMapper();
+    QSignalMapper *UpdateValueMapper = new QSignalMapper();
 
     for (int i(0) ; i < m_pDoc->GetRegisterList()->count() ; i++)
     {
@@ -42,6 +55,7 @@ void RegisterListView::UpdateDisplay()
 
         // Adresse
         m_Table.setItem(i, k, new QTableWidgetItem("0x" + QString::number(m_pDoc->GetRegisterList()->value(i)->Address(), 16)));
+        m_Table.item(i, k)->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
         if (!(m_pDoc->ConfigMode()))
         {
             m_Table.item(i, k)->setFlags(m_Table.item(i, k)->flags() & ~Qt::ItemIsEnabled);
@@ -56,8 +70,17 @@ void RegisterListView::UpdateDisplay()
         }
         k++;
 
+        // Valeur Hex
+        m_Table.setItem(i, k, new QTableWidgetItem("0x" + QString::number(m_pDoc->GetRegisterList()->value(i)->ValueHex(), 16)));
+        m_Table.item(i, k)->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
+        m_Table.item(i, k)->setFlags(m_Table.item(i, k)->flags() & ~Qt::ItemIsEnabled);
+        connect(m_pDoc->GetRegisterList()->value(i), SIGNAL(UpdateWidget()), UpdateValueMapper, SLOT(map()));
+        UpdateValueMapper->setMapping(m_pDoc->GetRegisterList()->value(i), i);
+        k++;
+
         // Coefficient d'échelle
         m_Table.setItem(i, k, new QTableWidgetItem(QString::number((double) m_pDoc->GetRegisterList()->value(i)->ScaleCoefficient())));
+        m_Table.item(i, k)->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
         if (!(m_pDoc->ConfigMode()))
         {
             m_Table.item(i, k)->setFlags(m_Table.item(i, k)->flags() & ~Qt::ItemIsEnabled);
@@ -101,6 +124,7 @@ void RegisterListView::UpdateDisplay()
         {
             m_Table.item(i, k)->setFlags(m_Table.item(i, k)->flags() & ~Qt::ItemIsEnabled);
         }
+        m_Table.item(i, k)->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
         k++;
 
         // Valeur Max
@@ -120,6 +144,7 @@ void RegisterListView::UpdateDisplay()
         {
             m_Table.item(i, k)->setFlags(m_Table.item(i, k)->flags() & ~Qt::ItemIsEnabled);
         }
+        m_Table.item(i, k)->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
         k++;
 
         // Direction
@@ -146,6 +171,7 @@ void RegisterListView::UpdateDisplay()
         {
             m_Table.item(i, k)->setFlags(m_Table.item(i, k)->flags() & ~Qt::ItemIsEnabled);
         }
+        m_Table.item(i, k)->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
         k++;
 
         // Bouton supprimer
@@ -158,6 +184,7 @@ void RegisterListView::UpdateDisplay()
     }
 
     connect(mapper, SIGNAL(mapped(int)), &m_Table, SLOT(selectRow(int)));
+    connect(UpdateValueMapper, SIGNAL(mapped(int)), this, SLOT(UpdateRegisterValue(int)));
 
     m_UpdateInProgress = false;
 }
@@ -227,23 +254,23 @@ void RegisterListView::ModifyRegister(int currentRow, int currentColumn)
         {
             m_pDoc->GetRegisterList()->value(currentRow)->SetName(m_Table.item(currentRow, currentColumn)->text());
         }
-        else if (currentColumn == 2)
+        else if (currentColumn == 3)
         {
             m_pDoc->GetRegisterList()->value(currentRow)->SetScaleCoefficient(m_Table.item(currentRow, currentColumn)->text().toDouble());
         }
-        else if (currentColumn == 3)
+        else if (currentColumn == 4)
         {
             m_pDoc->GetRegisterList()->value(currentRow)->SetUnit(m_Table.item(currentRow, currentColumn)->text());
         }
-        else if (currentColumn == 5)
+        else if (currentColumn == 6)
         {
             m_pDoc->GetRegisterList()->value(currentRow)->SetValueMin(m_Table.item(currentRow, currentColumn)->text().toLong(0,0));
         }
-        else if (currentColumn == 6)
+        else if (currentColumn == 7)
         {
             m_pDoc->GetRegisterList()->value(currentRow)->SetValueMax(m_Table.item(currentRow, currentColumn)->text().toLong(0,0));
         }
-        else if (currentColumn == 8)
+        else if (currentColumn == 9)
         {
             m_pDoc->GetRegisterList()->value(currentRow)->SetPeriod(m_Table.item(currentRow, currentColumn)->text().toLong(0,0));
         }
@@ -270,4 +297,12 @@ void RegisterListView::ModifyDirectionBox(int Idx)
         m_pDoc->GetRegisterList()->value(m_Table.currentRow())->SetWrite_nRead(Idx == 0 ? false : true);
     }
     UpdateDisplay();
+}
+
+void RegisterListView::UpdateRegisterValue(int Idx)
+{
+    if (m_UpdateInProgress == false)
+    {
+        m_Table.item(Idx, 2)->setText("0x" + QString::number(m_pDoc->GetRegisterList()->value(Idx)->ValueHex(), 16));
+    }
 }
